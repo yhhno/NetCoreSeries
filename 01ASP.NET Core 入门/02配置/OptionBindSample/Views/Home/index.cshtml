@@ -1,0 +1,18 @@
+﻿@model OptionBindSample.Class//把model定义成OptionBindSample.Class
+@{
+    ViewData["Title"] = "index";
+}
+
+<h2>index</h2>
+<h4>Class No: @Model.ClassNo</h4>
+<h4>Class Desc: @Model.ClassDesc</h4>
+<h1>
+    Students
+</h1>
+<div>
+    @foreach (var student in Model.Students)
+    {
+        <span>Name:@student.Name</span>
+        <span>AGe:@student.Age</span>
+    }
+</div>

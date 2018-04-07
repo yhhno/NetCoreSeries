@@ -1,0 +1,473 @@
+什么都能阻挡前进的脚步?
+
+
+40 asp.net core mvc 课程介绍  
+一个完整的mvc实例, 在上一章认证与授权的基础上继续完善
+
+Individual authentication模板  基于 什么模板创建一个模板,,后面的都是基于这个模板一步步做下气
+EF Core Migration 更新
+Identity mvc :UI
+Identity mvc EF+Identity实现 
+Identity mvc 注册逻辑实现
+Identity mvc 登录逻辑实现
+Identity mvc ReturnUrl实现
+identity mvc model后端验证
+Identity mvc model前端验证
+Identity mvc DbContextSeed初始化 系统第一次启动时,会检查用户情况,如果没有就默认创建第一个用户,以及数据库的更新等等
+为什么会反复回撤听呢? 前面的忘了, 如何不忘呢? 还是之前学习时,没有形成清晰的脉络呢? 带入感,
+
+
+41 Individual authentication模板
+新建一个mvc项目 有EFcore和Identity core
+dotnet new mvc --help
+dotnet new mvc -au individual -uld --name identitySample
+使用ef migration命令对数据库进行初始化
+dotnet ef database update  这个命令会根据migration文件夹下的文件,来进行数据库的创建和更新
+vs 2017  Update-Database
+
+
+
+42EF core Migration命令  手动命令和代码自动
+手动命令  根据当前匹配的连接字符串, 在控制台输入命令 进行更新
+migration就是增加一个配置文件,对当前ef model更改会增加一个配置文件
+
+powershell中使用
+dotnet ef migrations add initialCreate     增加一个migration   
+dotnet ef database update                把当前的Migration更新到数据库中
+dotnet ef migrations  remove              删除一个最新的Migration,进行降级
+dotnet ef database update LastGoodMigration  对指定的Migration进行更新,也就是降级到某个Migration
+dotnet ef Migrations script                把当前的更新,生成一个脚本,我们可以那这个脚本去更新,, 测试环境可以使用 
+
+
+Add-Migration
+Update-Database
+Remove-Migration
+Update-Database LastGoodMigration
+Script-Migration 
+
+
+下面进行一些练习
+给user表添加一个列 newcolum.
+ApplicationUser 添加一个Newcolumn属性
+dotnet ef migrations add AddNewColumn  这个命令会在migrations文件夹下创建一个文件, 记录当前ef model的更新
+此时数据库还没有更新
+dotnet ef database update 把最新的migration更新到数据库中
+再给User表添加一个列Address
+applicationUser 添加一个Address 属性
+dotnet ef migrations add addAddress
+dotnet ef database update
+此时想把数据库回滚下,也就是移除address,
+dotnet ef database update AddNewColumn  数据库回滚,删除AddNewColumn之后所有的更新
+dotnet ef migrations remove 移除最新的migrations文件   如果降级多次,是不是可以连续使用
+
+
+
+43 identity mvc Ui
+上节是添加的模板网站,具有完整的登录注册,前端后端
+但本节我们从头到尾自己实现下登录注册
+拷贝MvcCookieAuthSample 更名为MvcCookieAuthSampleAddUI
+在Account控制器下添加 Register和Login两个action
+在views添加两个视图 从其他的页面拷贝点html代码
+新建ViewModels文件夹,新建RegisterViewModel来接收Register页面的值
+设置_layout页面
+在Register和Login页面上添加
+@using MvcCookieAuthSampleAddUI.ViewModels;
+@model RegisterViewModel;
+
+问题:Razor语法不是很了解
+vs code中 rezor的智能感知不是很好?  怎么办?
+
+
+44Identity mvc : EF+Identity实现
+vs code中 razor的智能感知不是很好,找插件,插件不合适, 怎么办? 用vs2017呀
+先把EF添加进来
+新建一个Data文件夹,在文件夹下新建一个类ApplicationDbContext.
+ApplicationDbContext继承IdentityDbContext
+添加命名空间using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+在models文件夹下添夹ApplicationUser类和ApplicationUserRole类
+applicationUser类继承IdentityUser类
+添加引用using Microsoft.AspNetCore.Identity;
+如果我们不想改变任何东西的话,就直接继承IdentityUser就好了,默认主键为guid,
+如果想主键为int类型的话,就需要给IdentityUser一个泛型参数, IdentityUser<int>
+ApplicationUserRole类,类似处理
+然后修改ApplicationDbContext
+public class ApplicationDbContext:IdentityDbContext<ApplicationUser,ApplicationUserRole,int>//为什么要有泛型参数呢?
+    {
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options):base(options)//需要一个构造函数来接收options
+        {
+
+        }
+    }
+	
+然后在startup中,去配置下 绑定下
+配置EF
+//配置EF
+services.AddDbContext<ApplicationDbContext>(options =>
+{
+	options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));//EF使用SqlServer,并获取连接字符串,也就是获取配置信息
+});
+配置Identity
+    //配置Identity
+services.AddIdentity<ApplicationUser, ApplicationUserRole>()//为啥是这两个参数
+	.AddEntityFrameworkStores<ApplicationDbContext>()//为啥有这步骤
+	.AddDefaultTokenProviders();//这个有啥用
+//Identity默认情况下,对密码格式限制非常严格,我们修改下,应该是配置,那肯定是修改option了
+services.Configure<IdentityOptions>(options=> {
+	options.Password.RequireLowercase = false;
+	options.Password.RequireUppercase = false;
+	options.Password.RequireNonAlphanumeric = false;
+});
+
+然后把Account控制器补充完整
+添加Usermanager和signinManager  共Register和login的方法体内使用
+private UserManager<ApplicationUser> _userManager;//与User的管理有关, 增删改查
+private SignInManager<ApplicationUser> _signInManager;//与登录的管理有关,
+public AccountController(UserManager<ApplicationUser> userManager,SignInManager<ApplicationUser> signInManager)//通过依赖注入,获取实例
+{
+	_userManager = userManager;
+	_signInManager = signInManager;
+}
+补充Register的post方法
+
+调试下Register方法
+生成ef的Migration 
+更新到数据库中
+Add-Migration addinit
+Update-Database
+测试一下注册,成功.
+
+EF和Identity 是什么? 一个功能集
+我们用EF和Identity,使用它们的功能集,
+就是这么简单,
+就是这么清晰.
+当然asp.net core 也是一个功能集.
+
+小步慢走,一步记录一下, 
+
+
+45Identity mvc 注册逻辑实现.
+首先把注册逻辑的登录做下.
+//因为CreateAsync为异步方法,所有要用await来接收, 所有Register也要修改为异步方法
+var identityResult =await _userManager.CreateAsync(identityUser, viewModel.Password);
+if (identityResult.Succeeded)//创建成功
+{
+	//_signInManager.SignInAsync是这个HttpContext.SignInAsync()方法的封装
+	await _signInManager.SignInAsync(identityUser, new AuthenticationProperties { IsPersistent=true});
+	return RedirectToAction("Home", "Index");
+}
+真想说,有封装好的功能集,真爽 爽爽
+
+修改ui显示
+
+
+
+46Identity mvc 登录逻辑实现
+登录的Action和View
+  [HttpPost]
+        public async Task<IActionResult> Login(RegisterViewModel viewModel)
+        {
+            //校验用户是否合法
+            var user = await _userManager.FindByEmailAsync(viewModel.Email);
+            if(user==null)//用户不合法
+            {
+
+
+            }
+
+            //用户合法,
+            //登录
+            await _signInManager.SignInAsync(user, new AuthenticationProperties { IsPersistent = true });
+            return RedirectToAction("Index", "Home");
+        }
+修改ui显示, 
+已登录,显示用户名和 登出按钮
+未登录,显示登录和注册按钮
+
+
+47Identity mvc ReturnUrl实现
+ReturnUrl是从某个需要登录的页面,跳转到登录或者注册页面的 
+所以在登录和注册的httpget方法中,有接收参数
+ public IActionResult Register(string returnUrl =null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
+		
+
+ public IActionResult Login(string returnUrl=null)
+{
+	ViewData["ReturnUrl"] = returnUrl;
+	return View();
+}
+通过ViewData["ReturnUrl"],把值传递到view中
+ <form  method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]">
+ 然后在post提交时,传递给登录的httppost方法
+  [HttpPost]
+public async Task<IActionResult> Login(RegisterViewModel viewModel,string returnUrl=null)
+{
+	//校验用户是否合法
+	var user = await _userManager.FindByEmailAsync(viewModel.Email);
+	if(user==null)//用户不合法
+	{
+
+
+	}
+
+	//用户合法,
+	//登录
+	await _signInManager.SignInAsync(user, new AuthenticationProperties { IsPersistent = true });
+	//return RedirectToAction("Index", "Home");
+	return RedirectToLocal(returnUrl);//ReturnUrl 需要做判断, 存在多个地方,所以 抽象个私有方法, IActionResult 可以多次传递
+}
+
+学到一个重构方法和发现一个错误
+
+//ReturnUrl 需要做判断, 存在多个地方,所以 抽象个私有方法, IActionResult 可以多次传递,
+//但是,但看到多个传递时,自己表示很迷茫,看不明白, 这说明了什么?  说明了死记硬背,不理解, 缺点是什么? 出现不一样的,就蒙了, 或者自己不能默写出来.
+private IActionResult RedirectToLocal(string returnUrl)
+{
+	if (Url.IsLocalUrl(returnUrl))//是否本地url的判断
+	{
+		return Redirect(returnUrl);
+	}
+	return RedirectToAction(nameof(HomeController.Index), "home");
+}
+
+此时post的参数是从路由里接过来的, 也可以用一个隐藏的标签保存
+
+
+
+
+48Identity mvc Model后端验证
+第一步在ViewModel上添加条件
+添加using System.ComponentModel.DataAnnotations;
+ public class RegisterViewModel
+    {
+        [Required]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string ConfirmedPassword { get; set; }
+    }
+	
+添加限制条件后,RegisterViewModel就不能在register和Login中重用了
+新建LoginViewModel
+然后替换login方法和login视图
+然后在view中添加错误提示的html
+<span asp-validation-for="Email" class="text-danger"></span>
+
+然后修改控制器方法
+
+ [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel viewModel,string returnUrl=null)
+        {
+            if (ModelState.IsValid) //model验证成功 此处是EF绑定的验证通过,内部处理还可能有错误
+            {
+                //校验用户是否合法
+                var user = await _userManager.FindByEmailAsync(viewModel.Email);
+                if (user == null)//用户不合法
+                {
+
+
+                }
+
+                //用户合法,
+                //登录
+                await _signInManager.SignInAsync(user, new AuthenticationProperties { IsPersistent = true });
+                //return RedirectToAction("Index", "Home");
+                return RedirectToLocal(returnUrl);//ReturnUrl 需要做判断, 存在多个地方,所以 抽象个私有方法, IActionResult 可以多次传递
+            }
+            return View();//model验证不成功,,modelstate中的错误信息显示在view中
+        }
+		
+		
+		
+调试下,出现错误信息
+
+接下来调整下密码的验证规则,  之前的密码验证规则太弱了
+ //Identity默认情况下,对密码格式限制非常严格,我们修改下,应该是配置,那肯定是修改option了
+services.Configure<IdentityOptions>(options=> {
+	options.Password.RequireLowercase = true;
+	options.Password.RequireUppercase = true;
+	options.Password.RequireNonAlphanumeric = true;
+	options.Password.RequiredLength = 12;
+});
+注意密码规则的错误信息,需要手动添加上去
+if (identityResult.Succeeded)//创建成功
+{
+	//_signInManager.SignInAsync是这个HttpContext.SignInAsync()方法的封装
+	await _signInManager.SignInAsync(identityUser, new AuthenticationProperties { IsPersistent = true });
+	//return RedirectToAction("Index", "Home");
+	return RedirectToLocal(returnUrl);//ReturnUrl 需要做判断, 存在多个地方,所以 抽象个私有方法, IActionResult 可以多次传递
+}
+else//创建失败,此处是不符合Identity的密码规则.
+{
+	AddErrors(identityResult);
+}
+
+//为什么要抽象出方法.
+private void AddErrors(IdentityResult identityResult)
+{
+	foreach (var error in identityResult.Errors)
+	{
+		//ModelState在ControllerBase中定义的
+		ModelState.AddModelError(string.Empty, error.Description);//错误也是键值对,比如给某个字段添加错误信息.
+	}
+}
+
+
+显示所有错误信息
+在view中添加
+ <div class="text-danger" asp-validation-summary="All"></div>
+ 
+ 
+ 
+ EF绑定错误和其他业务逻辑错误,如重复之类的.
+ 
+Vs重命名 快捷键
+
+
+
+
+
+
+49Identity mvc  model前端验证
+前端验证要加上 jquery组件 也就是
+<environment include="Development">
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+</environment>
+默认项目中有，_ValidationScriptsPartial.cshtml
+现在我们把它添加到Login的view中
+
+@*因为之前的Layout中有Scripts，所以我们可以调用下*@
+@*@RenderSection("Scripts", required: false)*@
+@section Scripts
+    {
+        @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+没有发生网络请求，出现的错误提示，就是客户端验证， 也就是js验证。
+
+
+
+
+50Identity mvc DbContextSeed初始化
+现在要加的是EF Context的初始化，
+两件事
+1.添加一个seed： 在Data文件下添加ApplicationDbContextSeed.cs
+在每次应用程序启动的时候，给它检测下，如果是第一次执行的时候，需要添加一个记录，比如用户账号，我们第一次进来的时候，要添加一个管理员。那我们就需要第一次进来，系统初始化的时候添加一个用户
+如何实现呢？ 这有什么问题呢？
+ public class ApplicationDbContextSeed
+    {
+        //创建用户，肯定要用到UserManager
+        private UserManager<ApplicationUser> _userManager;
+        public async Task SeedAsync(ApplicationDbContext  context, IServiceProvider  services
+            )//IServiceProvider是依赖注入的容器， 我们拿到它。
+        {
+            ////这个地方我们最好Create一个Scope，因为我们不希望，我们的ApplicationDbContext和其他地方 用同一个，也就是共用。
+            ////依赖注入的命名空间添加进来
+            //using (var scope=services.CreateScope())
+            //{
+            //    //获取一个userManager实例，通过依赖注入容器。,不保存在外部了。
+            //    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
+            //    //我们先查找下是否有用户。
+            //}
+
+            //我们先查找下是否有用户。 true 如果源序列中不包含任何元素，则否则为 false。  有问题？
+            if (context.Users.Any())//没有用户的情况下，也就是系统初始化的另一个维度。 此处存在什么问题？
+            {
+                _userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+
+                //新建一个user
+                var defaultUser = new ApplicationUser
+                {
+                    UserName = "Administrator",
+                    Email = "qq@qq.com",
+                    NormalizedUserName = "Admin"
+                };
+               var result= await _userManager.CreateAsync(defaultUser, "password");
+                if (!result.Succeeded)
+                {
+                    throw new Exception("初始默认用户失败，");
+                }
+            }
+
+
+
+        }
+    }
+我们就完成了，每次启动时，seed方法的初始化。。  实现了每次启动时，检测下？ 也就是实现了初始化。 初始化是啥? 如何实现？ 这有什么问题?
+现实与代码的映射？
+
+信心有了问题？可不好
+
+方法定义好了，如何调用呢？ 这有什么问题呢？
+添加一个扩展方法 WebHostMigrationExtensions类  也就是一个包装器
+  public static  class WebHostMigrationExtensions
+    {
+        //我们要扩展的是IWebHost
+        //这种Action的用法，在asp.net Core中，应用的非常多，用来做配置的，相当于把方法体内要做的事情，放到外边去做，
+
+        //此方法相当于包装器,  此包装器在哪里使用呢？ 就在program中使用
+        public static IWebHost MigrateDbContext<TContext>(this IWebHost host, Action<TContext, IServiceProvider> seed)
+            where TContext: DbContext
+        {
+            //DbContext在做初始化的时候，我们肯定不想和其他DbContext通用，我们想要自己的DbContext
+            using (var scope=host.Services.CreateScope())//此区间的实例，只会在此区间有效
+            {
+                //获取几个实例
+                var services = scope.ServiceProvider;
+                var logger = services.GetRequiredService<ILogger<TContext>>();
+                var context = services.GetService<TContext>();
+                //接下来就来执行。
+                try
+                {
+                    context.Database.Migrate();//相当于 Update-database
+
+                    //执行外部方法，此时提供入参 Action<TContext, IServiceProvider>中 context, services的实例
+                    seed(context, services);
+
+                    //执行成功，
+                    logger.LogInformation($"执行DbContext {typeof(TContext).Name} 的seed方法成功");
+                }
+                catch (Exception ex)
+                {
+
+                    //报错的话，就记录下
+                    logger.LogError(ex, $"执行DbContext {typeof(TContext).Name} 的seed方法失败");
+                }
+            }
+
+           
+            return host;
+        }
+    }
+包装器在哪里调用呢、
+   public class Program
+    {
+        public static void Main(string[] args)
+        {
+            //启动后第一件事情做，，或者启动之前先做 ，两个时候任意都可以，先把数据库跑一遍。
+            BuildWebHost(args)
+                .MigrateDbContext<ApplicationDbContext>((context, services) =>
+                {
+                    //我们在这里做我们的初始化
+                    new ApplicationDbContextSeed().SeedAsync(context, services)
+                    .Wait() ;//异步方法的同步执行。
+                })
+                .Run();
+        }
+	}
+
+	其中包含了依赖注入对象的生命周期， 泛型参数， 扩展方法，Action的使用，
+	
+	
+	删掉数据库，试一下。
+	
+	有问题哦， 密码规则不通过。

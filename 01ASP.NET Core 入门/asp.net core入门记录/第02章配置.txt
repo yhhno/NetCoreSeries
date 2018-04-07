@@ -1,0 +1,184 @@
+09配置介绍
+5个部分
+10 命令行配置
+新建一个netcore版本的控制台应用程序,然后读取命令行的参数
+安装microsoft.aspnetcore.all包
+引用using Microsoft.Extensions.Configuration;
+初始化一个ConfigurationBuilder
+获取configuration
+输出configuration的内容
+设置启动参数   项目 属性  调试 应用程序参数
+
+给configuration一个默认的参数
+初始化一个dictionary
+.AddInMemoryCollection(settings) 添加到ConfigurationBuilder中
+
+
+在命令行中运行我们的程序
+cmd
+d:
+cd  D:\src\NetCoreDemo\NetCore集合\01ASP.NET Core 入门\02配置\CommandLineSample\bin\Debug\netcoreapp2.0
+dir
+dotnet CommandLineSample.dll 
+dotnet CommandLineSample.dll name=hello age=13
+
+
+11json文件配置
+新建一个netcore版本的控制台应用程序,来读取一个json文件
+安装microsoft.aspnetcore.all包
+引用using Microsoft.Extensions.Configuration;
+初始化一个ConfigurationBuilder
+获取configuration
+新建一个json文件 找不到模板文件  右上角所有框 json
+json文件属性修改   生成操作: 内容   复制到输出目录: 始终复制
+读取json文件
+
+
+12Bind读取配置到C#实例
+新建一个asp.net core mvc的网站,通过options和bindding,将我们接送json文件的配置,转换为C#中的一个实体,相互映射,然后配置信息就转化为一个实体类实例,
+先看下startup.cs 通过依赖注入传入外部的configuration
+新建一个class类
+新建一个appsettings的json文件
+输出配置信息
+
+
+
+13在core mvc中使用options
+新建一个空mvc项目
+新建controllers文件夹和Views文件夹,新建HomeController和index视图
+注释app.Run()代码;
+添加 services.AddMvc();//把mvc添加进来,这是依赖注入的配置
+ 添加app.UseMvcWithDefaultRoute(); //13 启用mvc默认路由, 这样我们就把mvc这个中间件添加到应用程序中
+在控制器中依赖注入class的实体类_Myclass,并把_myclas传入到views中
+在index中使用_myclass
+
+上述获取配置的方法代码有点多,可以直接在视图中获取配置
+@using Microsoft.Extensions.Options;
+@inject IOptions<OptionBindSample.Class> ClassAccesser 
+然后直接使用ClassAccesser
+
+
+
+
+14配置的热更新()
+一开始运行网站的时候,从配置文件中读取了配置信息,在不关掉网站的情况下,修改配置信息,当用户下一次请求的时候,就能够获取到最新的的配置信息
+这和asp.net中的webconfig不一样,更改webconfig,站点会自动重启,重新加载.
+也就是在asp.net core 中,修改配置信息不会影响用户的访问,这算是asp.netcore的configuration模块比较有用的地方
+如何做到的呢?
+修改IOptiion为IOptionSnapshot接口. 如果配置信息需要及时更新的话,就用IOptionSnapshot接口
+
+热更新如何实现的?
+我们在控制台程序或者读取json file的时候. 是如何读取配置信息的?
+初始化一个ConfigurationBuilder  
+获取configuration
+新建一个json文件 
+读取json文件
+初始化builder的时候,
+ var builder = new ConfigurationBuilder()
+                .AddJsonFile("class.json",false,true)
+        //
+        // 摘要:
+        //     Adds the JSON configuration provider at path to builder.
+        //
+        // 参数:
+        //   builder:
+        //     The Microsoft.Extensions.Configuration.IConfigurationBuilder to add to.
+        //
+        //   path:
+        //     Path relative to the base path stored in Microsoft.Extensions.Configuration.IConfigurationBuilder.Properties
+        //     of builder.
+        //
+        //   optional:
+        //     Whether the file is optional. 文件不存在,是否会抛异常.
+        //
+        //   reloadOnChange:
+        //     Whether the configuration should be reloaded if the file changes.,当文件改变时,是否重新加载
+        //
+        // 返回结果:
+        //     The Microsoft.Extensions.Configuration.IConfigurationBuilder.
+        public static IConfigurationBuilder AddJsonFile(this IConfigurationBuilder builder, string path, bool optional, bool reloadOnChange);
+reloadOnChange参数实现热更新.
+
+在asp.net core 中封装了读取配置信息的方法,WebHost.CreateDefaultBuilder(args)
+源码  https://github.com/aspnet/MetaPackages/blob/dev/src/Microsoft.AspNetCore/WebHost.cs
+
+   /// <summary>
+        ///   Initializes a new instance of the <see cref="WebHostBuilder"/> class with pre-configured defaults.
+        /// </summary>
+        /// <remarks>
+        ///   The following defaults are applied to the returned <see cref="WebHostBuilder"/>:
+        ///     use Kestrel as the web server and configure it using the application's configuration providers,
+        ///     set the <see cref="IHostingEnvironment.ContentRootPath"/> to the result of <see cref="Directory.GetCurrentDirectory()"/>,
+        ///     load <see cref="IConfiguration"/> from 'appsettings.json' and 'appsettings.[<see cref="IHostingEnvironment.EnvironmentName"/>].json',
+        ///     load <see cref="IConfiguration"/> from User Secrets when <see cref="IHostingEnvironment.EnvironmentName"/> is 'Development' using the entry assembly,
+        ///     load <see cref="IConfiguration"/> from environment variables,
+        ///     load <see cref="IConfiguration"/> from supplied command line args,
+        ///     configures the <see cref="ILoggerFactory"/> to log to the console and debug output,
+        ///     enables IIS integration,
+        ///     and enables the ability for frameworks to bind their options to their default configuration sections.
+        /// </remarks>
+        /// <param name="args">The command line args.</param>
+        /// <returns>The initialized <see cref="IWebHostBuilder"/>.</returns>
+        public static IWebHostBuilder CreateDefaultBuilder(string[] args)  静态扩展方法   静态公有方法,封装私有方法
+        {
+            var builder = new WebHostBuilder()
+                .UseKestrel((builderContext, options) =>
+                {
+                    options.Configure(builderContext.Configuration.GetSection("Kestrel"));
+                })
+                .UseContentRoot(Directory.GetCurrentDirectory())
+                .ConfigureAppConfiguration((hostingContext, config) =>静态扩展方法.  我们也可以在不需要的时候,使用此方法停止热更细,也就是覆盖默认的情况
+                {
+                    var env = hostingContext.HostingEnvironment;
+
+                    config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                          .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+
+                    if (env.IsDevelopment())
+                    {
+                        var appAssembly = Assembly.Load(new AssemblyName(env.ApplicationName));
+                        if (appAssembly != null)
+                        {
+                            config.AddUserSecrets(appAssembly, optional: true);
+                        }
+                    }
+
+                    config.AddEnvironmentVariables();
+
+                    if (args != null)
+                    {
+                        config.AddCommandLine(args);
+                    }
+                })
+                .ConfigureLogging((hostingContext, logging) =>
+                {
+                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    logging.AddConsole();
+                    logging.AddDebug();
+                })
+                .UseIISIntegration()
+                .UseDefaultServiceProvider((context, options) =>
+                {
+                    options.ValidateScopes = context.HostingEnvironment.IsDevelopment();
+                });
+
+            if (args != null)
+            {
+                builder.UseConfiguration(new ConfigurationBuilder().AddCommandLine(args).Build());
+            }
+
+            return builder;
+}
+
+
+
+
+
+15配置框架设计浅析
+FileconfigurationProvider这个类实现了,配置的读取 监控,同步,热更新等操作
+
+如何自定义一个configurationprovider,继承IConfigurationSource,在IConfigurationSource中提供一个Provider, 由provider来读取source,同步之类的操作.
+
+其实也就是一个source,和一个操作source 两部分.  
+具体如何脉络是啥? 流程是啥?  逻辑推理
+具体是如何实现的呢?  看源码

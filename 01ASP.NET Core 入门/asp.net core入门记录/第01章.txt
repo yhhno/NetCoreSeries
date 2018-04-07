@@ -1,0 +1,85 @@
+第一章 介绍和引入
+01 课程介绍
+7章   enjoy coding with asp.net core
+02 环境安装
+windows  mac
+asp.net core  download
+www.microsoft.com/net/download/core
+按照文档一步一步安装
+03 在控制台创建asp.netcore 应用程序
+asp.netcore 安装后以后可以在命令行中使用 dotnet命令
+dotnet 命令
+donet --help
+dotnet new  --help
+
+
+cd ../
+mkdir helloCore
+cd helloCore
+dotnet new mvc
+创建了HelloCore这个项目,并自动运行了dotnet restore
+可以用vs code 和aomer等编辑器打开
+startup.cs和启动文件program.cs和前端包管理配置
+dotnet run
+
+04在vs2017中创建asp.net core应用程序
+vs2017中默认是使用iis express来运行mvc的
+asp.net core它自己是可以自宿的,所以它可以自己托管,
+开发和调试时,推荐不是iis调试,直接使用控制台
+program.cs是所有控制台的入口
+控制台调试会把所有的日志,错误,都输出在控制台上,我们可以直接看到.
+
+05部署到iis
+首先安装aspnetcoremodule
+新建网站 应用程序池配置改为无代码托管
+
+publish 两种方式 控制台和vs
+dotnet publish -o 地址
+通过nginx来做反向代理,让我们通过外部来访问这个网站
+
+06准备Centos和Nginx环境
+vmare安装(非百度搜索)和centos安装 官网下载安装包 镜像
+linux命令行操作.
+putty工具
+安装ngnix  google install ngnix on centos
+
+su root
+cd /
+ls
+sudo yum install epel-release
+sudo yum install nginx
+sudo systemctl start nginx 启动ngnix
+
+sudo firewall-cmd --permanent --zone=public --add-service=http 
+sudo firewall-cmd --permanent --zone=public --add-service=https
+sudo firewall-cmd --reload
+
+07在Centos上安装.net core 运行时
+官网文档 一步一步走
+sudo yum update
+sudo yum install libunwind libicu
+sudo yum install dotnet-runtime-2.0.6
+
+安装完后,就像在windos命令行中一样,用dotnet命令创建一个项目并运行
+curl http://localhost:5000/api/values
+如何开放5000端口
+
+
+08部署到centos
+借助一个FileZilla工具(linux上的一个ftp工具)把我们发布后的文件上传到centos上的一个目录下. 
+然后运行下 
+cd /home
+cd NetCore
+dotnet HelloVS.dll
+然后另起一个终端,curl http://localhost:5000
+
+然后使用ngnix把50端口映射到5000端口下
+
+cd /etc/ngnix
+ls
+vi ngnix.conf
+cd conf.d
+ls
+vi netcore.conf 修改端口配置
+nginx -s reload
+systemctl ngnix restart

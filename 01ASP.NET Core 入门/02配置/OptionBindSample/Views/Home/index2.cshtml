@@ -1,0 +1,26 @@
+﻿@using Microsoft.Extensions.Options;
+
+@*13
+@inject IOptions<OptionBindSample.Class> ClassAccesser*@
+
+
+@*14热更新*@
+@inject IOptionsSnapshot<OptionBindSample.Class> ClassAccesser
+@*注释有问题,单独一行 ClassAccesser直接通过依赖注入框架读取出来*@
+@{
+    ViewData["Title"] = "index";
+}
+@*我们直接在视图中把配置从依赖注入中读取出来*@
+<h2>index</h2>
+<h4>Class No: @ClassAccesser.Value.ClassNo</h4>
+<h4>Class Desc: @ClassAccesser.Value.ClassDesc</h4>
+<h1>
+    Students
+</h1>
+<div>
+    @foreach (var student in ClassAccesser.Value.Students)
+    {
+        <span>Name:@student.Name</span>
+        <span>AGe:@student.Age</span>
+    }
+</div>

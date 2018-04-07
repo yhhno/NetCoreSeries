@@ -1,0 +1,571 @@
+22 asp.net core http处理  课程介绍
+1.http处理过程  包括http的处理和http在asp.net core 中的大致处理过程
+2.webhost的配置与启动 
+3.Middleware与管道  Middleware如何构架一个管道
+4.Routing Middleware介绍
+
+结果是一个http如何在asp.net core 中响应和处理的过程.
+
+
+
+23 http请求的处理过程
+看图说话  大致过程要清楚.
+
+
+24WebHost的配置与启动
+1.覆盖配置文件
+2.更改启动的URL以及
+3.IHostingEnvironment
+4.IApplicationLifetime
+5.dotnet watch run
+
+1.新建asp.net core  web网站
+2.在根目录下创建一个settings.json文件,以覆盖默认的appsettings.json文件
+3.修改program.cs中的方法, 添加ConfigureAppConfiguration扩展方法,进行覆盖操作. 把外部配置加入到config
+4.把配置读出来, 1.通过controller view 读取 2.startup中读取
+5.IApplicationBuilder 是构建管道的构建器.
+6.在app.run方法中添加输出配置的代码.
+7.添加using Microsoft.Extensions.Configuration;
+8.configure方法,添加IConfiguration 参数,  这样就可以获取Config..
+9.输出配置,
+10. 添加.UseUrls("http://localhost:5001"),但网址不会自动打开
+
+
+
+25 IHostEnvironment和IApplicaitonLifetime介绍
+1.在startup.cs中的configure方法中,有一个IHostEnvironment参数.这个参数有一些数据我们可以拿出来.
+2.在asp.net中有一个global.cs文件中会有application的事件 start stop 等  
+3.在asp.net core中 通过IApplicatonLifetime 来实现,通过IApplicatonLifetime来对application的事件来进行绑定
+疑问1:The delegate to be executed when the System.Threading.CancellationToken is canceled.
+疑问2:
+    //
+    // 摘要:
+    //     Propagates notification that operations should be canceled.
+    public struct CancellationToken
+ webhost博客: http://www.jessetalk.cn/2017/11/14/aspnet-core-object-webhost-build/
+ 
+ 
+ 
+ 26.dotnet watch run  和attach到进程调试
+ 1.首先这次使用vs code  使用下来 非常好用, 因为它和命令行结合的比较好
+ d:
+ cd .\project\netcore\
+ dotnet new web --name HelloCore
+ 新建网站后,用vs code打开这个项目, vscode 打开文件夹 选中Hellocore 文件夹
+ 在vscode中,选中Hellocore.csproj项目文件 在终端下,输入dotnet run 运行这个网站
+ 输出helloworld!
+ 怎么调试呢?
+ 在vscode中,有调试的按钮, 并打上断点, 然后刷新网址,就可以进入到断点
+ 此时修改,helloworld 为222222, 刷新网址,此时并不能显示新修改的内容, 需要重启,并debug,才是显示新内容.
+此时dotnet watch run 出现了.
+在终端中使用 dotnet watch run 运行网站,此时就和vscode编辑器没有关系了.
+添加 dotnet watch run 工具, microsoft.dotnet.watcher.tools
+dotnet restore
+dotnet watch run 启动项目  
+此时如果修改代码的话, 重新访问网址时, 项目会自动重启,重新编译,重新启动
+
+asp.net core attatch 到进程调试
+
+
+
+为什么之前看了看不懂呢? 学习了也没效果呢?
+1.没信心
+2.不是系统的学习,只是简单的使用, 整体的脉络没有. 脑子中每个清晰的脉络,心中没数.
+
+
+27 Middleware 管道介绍
+1.Middleware与管道的概念
+2用Middleware来组成管道实践 app的run use map等方法,把中间件组成管道
+3.管道的实现机制(RequestDelegate与applicationbuilder两部分组成的)
+
+使用app.use方法的两种重载  Func<HttpContext, Func<Task>, Task> middleware 是啥意思?
+
+  //app是用来构建管道的,用use run map等方法来构造
+app.map是路由的中间件
+
+
+
+28 RequestDelegate管道实现思路
+上节讲到http pipeline管道是由Middleware组成的
+RequestDelegate是Middleware的核心, applicationbuilder把所有的middleware给拼起来
+
+看一下源代码 了解整个脉络的细节
+https://github.com/aspnet/HttpAbstractions
+这个项目就有applicationbuilder的实现
+
+// Copyright (c) .NET Foundation. All rights reserved.
+// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Http.Internal;
+using Microsoft.Extensions.Internal;
+
+namespace Microsoft.AspNetCore.Builder.Internal
+{
+    public class ApplicationBuilder : IApplicationBuilder
+    {
+        private readonly IList<Func<RequestDelegate, RequestDelegate>> _components = new List<Func<RequestDelegate, RequestDelegate>>();
+
+        public ApplicationBuilder(IServiceProvider serviceProvider)
+        {
+            Properties = new Dictionary<string, object>(StringComparer.Ordinal);
+            ApplicationServices = serviceProvider;
+        }
+
+        public ApplicationBuilder(IServiceProvider serviceProvider, object server)
+            : this(serviceProvider)
+        {
+            SetProperty(Constants.BuilderProperties.ServerFeatures, server);
+        }
+
+        private ApplicationBuilder(ApplicationBuilder builder)
+        {
+            Properties = new CopyOnWriteDictionary<string, object>(builder.Properties, StringComparer.Ordinal);
+        }
+
+        public IServiceProvider ApplicationServices
+        {
+            get
+            {
+                return GetProperty<IServiceProvider>(Constants.BuilderProperties.ApplicationServices);
+            }
+            set
+            {
+                SetProperty<IServiceProvider>(Constants.BuilderProperties.ApplicationServices, value);
+            }
+        }
+
+        public IFeatureCollection ServerFeatures
+        {
+            get
+            {
+                return GetProperty<IFeatureCollection>(Constants.BuilderProperties.ServerFeatures);
+            }
+        }
+
+        public IDictionary<string, object> Properties { get; }
+
+        private T GetProperty<T>(string key)
+        {
+            object value;
+            return Properties.TryGetValue(key, out value) ? (T)value : default(T);
+        }
+
+        private void SetProperty<T>(string key, T value)
+        {
+            Properties[key] = value;
+        }
+
+        public IApplicationBuilder Use(Func<RequestDelegate, RequestDelegate> middleware)
+        {
+            _components.Add(middleware);
+            return this;
+        }
+
+        public IApplicationBuilder New()
+        {
+            return new ApplicationBuilder(this);
+        }
+
+        public RequestDelegate Build()
+        {
+            RequestDelegate app = context =>
+            {
+                context.Response.StatusCode = 404;
+                return Task.CompletedTask;
+            };
+
+            foreach (var component in _components.Reverse())
+            {
+                app = component(app);
+            }
+
+            return app;
+        }
+    }
+}
+
+
+
+public IApplicationBuilder Use(Func<RequestDelegate, RequestDelegate> middleware)
+        {
+            _components.Add(middleware);
+            return this;
+        }
+		
+		
+  public RequestDelegate Build()
+        {
+            RequestDelegate app = context =>//给一个最后的RequestDelegate,以它为起点, 遍历list,串起来,,第一个调用,最后一个执行
+            {
+                context.Response.StatusCode = 404;
+                return Task.CompletedTask;
+            };
+
+            foreach (var component in _components.Reverse())//list反转
+            {
+                app = component(app);//接收一个RequestDelegate,返回一个RequestDelegate
+            }
+
+            return app; 此时的app为第一个添加的RequestDelegate.
+        }
+
+		
+		
+		
+		    public static IApplicationBuilder Use(this IApplicationBuilder app, Func<HttpContext, Func<Task>, Task> middleware)
+        {
+            return app.Use(next =>
+            {
+                return context =>
+                {
+                    Func<Task> simpleNext = () => next(context);
+                    return middleware(context, simpleNext);
+                };
+            });
+        }
+		
+		
+		
+		   public static void Run(this IApplicationBuilder app, RequestDelegate handler)
+        {
+            if (app == null)
+            {
+                throw new ArgumentNullException(nameof(app));
+            }
+
+            if (handler == null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            app.Use(_ => handler);
+        }
+		
+		
+		
+		
+		   public static IApplicationBuilder Map(this IApplicationBuilder app, PathString pathMatch, Action<IApplicationBuilder> configuration)
+        {
+            if (app == null)
+            {
+                throw new ArgumentNullException(nameof(app));
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+
+            if (pathMatch.HasValue && pathMatch.Value.EndsWith("/", StringComparison.Ordinal))
+            {
+                throw new ArgumentException("The path must not end with a '/'", nameof(pathMatch));
+            }
+
+            // create branch
+            var branchBuilder = app.New();
+            configuration(branchBuilder);
+            var branch = branchBuilder.Build();
+
+            var options = new MapOptions
+            {
+                Branch = branch,
+                PathMatch = pathMatch,
+            };
+            return app.Use(next => new MapMiddleware(next, options).Invoke);
+        }
+	applicationBuilder如何实现的,各种use map  run 方法如何实现的.
+	
+	
+	
+	29  自动动手构架RequestDelegate管道
+	1.新建一个控制台程序.
+	d:
+	cd project
+	cd dotnetcore
+	dotnet new console --name MyPipeline
+	新建一个类RequestDelegate和Context
+	在RequestDelegate类中,定义委托RequestDelegate
+	
+	在Program文件中
+	添加_list
+	添加Use方法
+	使用use
+	使用use
+	定义requestDelegate实例 end
+	foreach _list
+	
+	调用end
+	
+	
+	
+	
+	
+	30 RoutingMiddleware介绍和mvc引入
+	Routing的使用
+	源码看一下:https://github.com/aspnet/Routing
+	
+	 public static IApplicationBuilder UseRouter(this IApplicationBuilder builder, IRouter router)
+        {
+            if (builder == null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (router == null)
+            {
+                throw new ArgumentNullException(nameof(router));
+            }
+
+            if (builder.ApplicationServices.GetService(typeof(RoutingMarkerService)) == null)
+            {
+                throw new InvalidOperationException(Resources.FormatUnableToFindServices(
+                    nameof(IServiceCollection),
+                    nameof(RoutingServiceCollectionExtensions.AddRouting),
+                    "ConfigureServices(...)"));
+            }
+
+            return builder.UseMiddleware<RouterMiddleware>(router);
+        }
+		
+		
+		builder.UseMiddleware<RouterMiddleware>(router); //最终添加到List<RequestDelegate,RequestDelegate>列表中,  使用 app.use方法
+		
+		
+		  public async Task Invoke(HttpContext httpContext)
+        {
+            var context = new RouteContext(httpContext);
+            context.RouteData.Routers.Add(_router);
+
+            await _router.RouteAsync(context);
+
+            if (context.Handler == null)
+            {
+                _logger.RequestDidNotMatchRoutes();
+                await _next.Invoke(httpContext);
+            }
+            else
+            {
+                httpContext.Features[typeof(IRoutingFeature)] = new RoutingFeature()
+                {
+                    RouteData = context.RouteData,
+                };
+
+                await context.Handler(context.HttpContext);
+            }
+        }
+		
+		
+		
+		
+		
+		 public virtual Task RouteAsync(RouteContext context)
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            EnsureMatcher();
+            EnsureLoggers(context.HttpContext);
+
+            var requestPath = context.HttpContext.Request.Path;
+
+            if (!_matcher.TryMatch(requestPath, context.RouteData.Values))
+            {
+                // If we got back a null value set, that means the URI did not match
+                return Task.CompletedTask;
+            }
+
+            // Perf: Avoid accessing dictionaries if you don't need to write to them, these dictionaries are all
+            // created lazily.
+            if (DataTokens.Count > 0)
+            {
+                MergeValues(context.RouteData.DataTokens, DataTokens);
+            }
+
+            if (!RouteConstraintMatcher.Match(
+                Constraints,
+                context.RouteData.Values,
+                context.HttpContext,
+                this,
+                RouteDirection.IncomingRequest,
+                _constraintLogger))
+            {
+                return Task.CompletedTask;
+            }
+            _logger.MatchedRoute(Name, ParsedTemplate.TemplateText);
+
+            return OnRouteMatched(context);
+        }
+		
+		
+		
+		
+        protected override Task OnRouteMatched(RouteContext context)
+        {
+            context.RouteData.Routers.Add(_target);
+            return _target.RouteAsync(context);//看的不认真,导致中间脉络断了,  _target应该为routeHandler
+        }
+		
+		 public Task RouteAsync(RouteContext context)
+        {
+            context.Handler = _requestDelegate;
+            return Task.CompletedTask;
+        }
+		
+		
+		 最后执行await context.Handler(context.HttpContext); 此时的handle为自定义的RequestDelegate
+		 
+		 
+		 
+		 
+		 mvc中的OnRouteMatched中的_Target为MvcRouteHandler,
+		 接下来执行的OnRouteMatched的RouteAsync()方法
+		 
+		 
+		 
+		 添加mvc中间件是如何执行的呢?
+		 
+		   public static IApplicationBuilder UseMvc(
+            this IApplicationBuilder app,
+            Action<IRouteBuilder> configureRoutes)
+        {
+            if (app == null)
+            {
+                throw new ArgumentNullException(nameof(app));
+            }
+
+            if (configureRoutes == null)
+            {
+                throw new ArgumentNullException(nameof(configureRoutes));
+            }
+
+            // Verify if AddMvc was done before calling UseMvc
+            // We use the MvcMarkerService to make sure if all the services were added.
+            if (app.ApplicationServices.GetService(typeof(MvcMarkerService)) == null)
+            {
+                throw new InvalidOperationException(Resources.FormatUnableToFindServices(
+                    nameof(IServiceCollection),
+                    "AddMvc",
+                    "ConfigureServices(...)"));
+            }
+
+            var middlewarePipelineBuilder = app.ApplicationServices.GetRequiredService<MiddlewareFilterBuilder>();
+            middlewarePipelineBuilder.ApplicationBuilder = app.New();
+
+            var routes = new RouteBuilder(app)
+            {
+                DefaultHandler = app.ApplicationServices.GetRequiredService<MvcRouteHandler>(),
+            };
+
+            configureRoutes(routes);
+
+            routes.Routes.Insert(0, AttributeRouting.CreateAttributeMegaRoute(app.ApplicationServices));
+
+            return app.UseRouter(routes.Build());
+}
+
+
+
+
+namespace Microsoft.AspNetCore.Mvc.Internal
+{
+    public class MvcRouteHandler : IRouter
+    {
+        private readonly IActionContextAccessor _actionContextAccessor;
+        private readonly IActionInvokerFactory _actionInvokerFactory;
+        private readonly IActionSelector _actionSelector;
+        private readonly ILogger _logger;
+        private readonly DiagnosticSource _diagnosticSource;
+
+        public MvcRouteHandler(
+            IActionInvokerFactory actionInvokerFactory,
+            IActionSelector actionSelector,
+            DiagnosticSource diagnosticSource,
+            ILoggerFactory loggerFactory)
+            : this(actionInvokerFactory, actionSelector, diagnosticSource, loggerFactory, actionContextAccessor: null)
+        {
+        }
+
+        public MvcRouteHandler(
+            IActionInvokerFactory actionInvokerFactory,
+            IActionSelector actionSelector,
+            DiagnosticSource diagnosticSource,
+            ILoggerFactory loggerFactory,
+            IActionContextAccessor actionContextAccessor)
+        {
+            // The IActionContextAccessor is optional. We want to avoid the overhead of using CallContext
+            // if possible.
+            _actionContextAccessor = actionContextAccessor;
+
+            _actionInvokerFactory = actionInvokerFactory;
+            _actionSelector = actionSelector;
+            _diagnosticSource = diagnosticSource;
+            _logger = loggerFactory.CreateLogger<MvcRouteHandler>();
+        }
+
+        public VirtualPathData GetVirtualPath(VirtualPathContext context)
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            // We return null here because we're not responsible for generating the url, the route is.
+            return null;
+        }
+
+        public Task RouteAsync(RouteContext context)
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            var candidates = _actionSelector.SelectCandidates(context);
+            if (candidates == null || candidates.Count == 0)
+            {
+                _logger.NoActionsMatched(context.RouteData.Values);
+                return Task.CompletedTask;
+            }
+
+            var actionDescriptor = _actionSelector.SelectBestCandidate(context, candidates);
+            if (actionDescriptor == null)
+            {
+                _logger.NoActionsMatched(context.RouteData.Values);
+                return Task.CompletedTask;
+            }
+
+            context.Handler = (c) =>
+            {
+                var routeData = c.GetRouteData();
+
+                var actionContext = new ActionContext(context.HttpContext, routeData, actionDescriptor);
+                if (_actionContextAccessor != null)
+                {
+                    _actionContextAccessor.ActionContext = actionContext;
+                }
+
+                var invoker = _actionInvokerFactory.CreateInvoker(actionContext);
+                if (invoker == null)
+                {
+                    throw new InvalidOperationException(
+                        Resources.FormatActionInvokerFactory_CouldNotCreateInvoker(
+                            actionDescriptor.DisplayName));
+                }
+
+                return invoker.InvokeAsync();
+            };
+
+            return Task.CompletedTask;
+        }
+    }
+}
+
+最后执行await context.Handler(context.HttpContext); 此时的handle为MvcRouteHandler中自定义的handle

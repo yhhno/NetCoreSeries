@@ -1,0 +1,559 @@
+看的时候不认真, 
+错了,纠正错误有问题.
+代入感没有
+遇到问题,要沉着冷静, 认真分析,问题总会清晰的的
+遇到新东西怎么办呢? 因为有不断新东西出现,容易造成心态问题. 要避免
+认真看,每一步都看认真,还要看透彻,前因后果,逻辑推理都要搞明白, 不能浏览的过, 也不能应付的心态过.
+对自己的行为,目的,任务的划分和完成度没有评价
+
+
+能看明白 也是一种能力.
+不能一看和预想的不一样,看到不清楚的概念,  就怕,就脑子不清楚,不知所措. 阻碍了继续前进.
+只要思路清晰,情况拎得清,什么也不能阻挡前进的脚步.
+
+看的懂源码,也是一种必备能力.
+
+
+31 课时介绍
+1.Cookie-based认证与授权
+2.Cookie-based 认证实现   代码实现下, 主要运用在web
+3.Jwt认证与授权介绍  主要用于移动端和前后段分离,基于Token, 有独特的优势
+4.Jwt认证与授权实现  代码实现下
+5.Jwt 认证与 授权  介绍实现机制,及了解后如何扩展
+6.Rose base 授权
+7.Claims-based授权
+
+
+32.Cookie-based认证介绍
+流程:
+用户要访问admin下的index,当它的授权机制检测到你没有登录的时候,返回你一个302的Redirect,让你跳转到Account/login的页面
+因为我们在index上打上一个Authorize的标签,它会返回一个302,让我们跳转到accounte/login的页面(跳转由Authentication完成)(302跳转)
+在登录页面,输入用户名和密码,点击登录, 后端逻辑判断成功后, 在后端做一个认证,做一个登录的状态,生成一个cookie,cookie存在一个用户已经登录的标识
+用户拿到cookies后,再去访问admin/index, 会检查你的request中有没有cookie,如果有,就拿过来去验证,验证通过后,就可以正确admin/index的返回结果,如果验证没有通过,还是会返回account/login
+
+33 AccountController复制过来没有移除[Authorize]标签
+在我调试的过程中把Authorize标签一移除掉了，但是这段内容在视频中没有体现。如果大家也在AccountController上打上 Authorize标签的话，就会一直循环跳转，希望后面的同学注意一下这个情况 。
+
+
+遇到问题,要沉着冷静, 认真分析,问题总会清晰的的
+遇到新东西怎么办呢?
+34 Cookie-based认证与授权的实现
+用mvc来实现
+dotnet new mvc --name MvcCookieAuthSample
+添加Admin控制器和index视图
+添加认证与授权
+在admin控制器上 引用using Microsoft.AspNetCore.Authorization;  干啥用的搞清楚
+在Admin控制器上添加标签Authorize
+然后需要把认证与授权引用进来  配置和中间件
+在startup.cs 中 引用  因为我们使用的是cookie的认证与授权的方式 所以要添加以下的引用
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+然后在ConfigureServices中添加
+ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();//配置
+				
+在Configure添加
+   app.UseAuthentication(); //添加中间件
+   
+接下来模拟一个登陆的过程
+添加Account控制器,添加Login方法, 只要你访问这个方法,就创建cookies, 不用输入用户名密码
+
+通过使用Httpcontext.SignInAsync(), 写入cookie ,如何写入呢? 和 因为core版本,肯定和以前的不一样. ,应该想到又不一样, 但不能因为有不一样,就慌了手脚.
+新东西,先学会使用,再去分析如何实现,  路子要走对,不能有心态问题.
+	/// <summary>
+		/// Extension method for SignIn.
+		/// </summary>
+		/// <param name="context">The <see cref="T:Microsoft.AspNetCore.Http.HttpContext" /> context.</param>
+		/// <param name="scheme">The name of the authentication scheme.</param>
+		/// <param name="principal">The user.</param>
+		/// <returns>The task.</returns>
+		public static Task SignInAsync(this HttpContext context, string scheme, ClaimsPrincipal principal)
+		
+添加Loginout方法.
+
+既然是写入cookie  cookies在客户端, 可以通过firebug之类的工具,查看认证与授权过程中cookie的情况.
+没有登录的时候,跳转到登录页面,,添加cookie后,会在客户端生成cookie,可以通过F12查看, 当然登出后, cookie就消失了.
+过程要清晰,不能一知半解. 浏览的过.
+
+没有登录的时候,默认有一些跳转页面, 是在哪里设置的? 是否可以修改
+
+既然是设置 ,也就是配置, 我们可以在哪里配置呢? 当然是在配置cookie时 配置.
+
+
+也就是学习core版本,创建cookie方法. 如何学习? 避免什么?
+
+
+
+
+35JWT认证与授权介绍
+应用场景: 移动端或者pc端 前后端分离
+客户端直接对后端进行api的请求
+此时的请求就不是一个页面,是一个api,它不会帮我们做302跳转,api不太可能存在302跳转.
+当我们访问一个需要认证后才能访问的api时,直接返回一个403的状态,它说我们没有权限
+此时需要客户端手动的发起一个登陆的请求,你也可以认为它就是一个拿token的请求.
+不管是叫做登陆或者gettoken都可以,请求中添加用户名密码,返回一个json格式的token,
+此时我们可以把token放在header或者authorization头里面,http头里面,再去请求api,它校验过后,,返回你正确的结果
+什么是jwt呢?它其实是一段token,一串字符串,
+包括了三段信息
+header 
+payload
+signature
+加密后的token,可以在jwt的官方网站中,反编译
+
+
+36应用 JwtBearer authentication
+dotnet new  webapi --name JwtAuthSample
+在Value控制器上添加Authorize标签,
+添加watch run
+dotnet restore
+dotnet watch run
+使用postman 来访问下value api 
+
+添加app.UseAuthentication();//中间件中间件
+添加一个类 JwtSettings  配置实体类,对应配置
+我们需要为jwtmiddleware设置一些配置信息,可以在appsettings.json中去写
+ "JwtSettings" {
+      "Audience": "http://localhost:5000",
+      "Issuer": "http://localhost:5000",
+      "SecretKey": "Hello-Key"
+    }
+接下来我们需要把json文件中的配置信息读出来
+就在startup中去读取
+配置认证与授权
+
+ //配置验证与授权
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;//我去验证的时候,你到底有没验证授权的,我需要用到一种方式
+            })
+            .AddJwtBearer(o =>//配置jwtbearer ,参数的设置
+            {
+                o.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidIssuer = jwtSettings.Issuer,//从配置文件中读取出来的
+                    ValidAudience=jwtSettings.Audience,
+                    //引入一个加密的方式
+                    //SymmetricSecurityKey 参数为byte[]类型
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes//获取byte[]形式
+                        (jwtSettings.Secretkey))
+
+                };
+            });
+此时访问api. 返回401 未授权
+
+
+
+
+37生成JWT Token
+在我们成功阻止未经授权的用户访问api后, 接下来要实现给用户颁发token
+新加ViewModels文件夹,添加LoginViewModel类,来接收用户参数,用户名和密码
+新建一个authorize控制器
+添加token的Action,参数为LoginViewModel
+验证LoginViewMode
+验证参数是否存在
+生成token, 由三部分组成
+添加claim
+添加key 读取配置信息
+添加using Microsoft.Extensions.Options;
+ private JwtSettings _jwtSettings;
+        public AuthorizeController(IOptions<JwtSettings> _jwtSettingsAccesser)//对应需要在startup中注册
+        {
+            _jwtSettings = _jwtSettingsAccesser.Value;
+        }
+在startup中,注册model
+ervices.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));//给我们,在其他地方使用webconfg的
+这样就可以通过私有变量_jwtSettings读取 Secretkey
+添加SigningCredentials
+生成JwtSecurityToken
+返回token
+
+然后就可以使用postman来 测试下
+
+还可以把token 在jwt官方网站上去 检验下
+
+此时已经完成,添加验证, 添加获取token, 带token访问过程.
+
+
+
+
+38JWT设计解析及定制
+改造jwt token,
+因为在官方默认情况下,token是放在header头的Authorization下的,
+但开发者有时有自己使用方式及算法,比如 放在header头下的token,和自己的算法呢
+此时如何集成到asp.net core的认证与授权上呢?
+源码: https://github.com/aspnet/Security 此项目就有asp,net core的认证与授权的实现
+既然要自定义,首先要看下默认情况是如何实现的
+首先在startup中,是如何配置jwt的?
+ .AddJwtBearer() 扩展方法. JwtBearerExtensions类
+ public static AuthenticationBuilder AddJwtBearer(this AuthenticationBuilder builder, string authenticationScheme, string displayName, Action<JwtBearerOptions> configureOptions)
+        {
+            builder.Services.TryAddEnumerable(ServiceDescriptor.Singleton<IPostConfigureOptions<JwtBearerOptions>, JwtBearerPostConfigureOptions>());//添加option到依赖注入中去
+            return builder.AddScheme<JwtBearerOptions, JwtBearerHandler>(authenticationScheme, displayName, configureOptions);
+        }
+
+JwtBearerHandler类,处理认证逻辑
+ protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
+        {
+            string token = null;
+            try
+            {
+                // Give application opportunity to find from a different location, adjust, or reject token
+                var messageReceivedContext = new MessageReceivedContext(Context, Scheme, Options);
+
+                // event can set the token
+                await Events.MessageReceived(messageReceivedContext);
+                if (messageReceivedContext.Result != null)
+                {
+                    return messageReceivedContext.Result;
+                }
+
+                // If application retrieved token from somewhere else, use that.
+                token = messageReceivedContext.Token;
+
+                if (string.IsNullOrEmpty(token))
+                {
+                    string authorization = Request.Headers["Authorization"];
+
+                    // If no authorization header found, nothing to process further
+                    if (string.IsNullOrEmpty(authorization))
+                    {
+                        return AuthenticateResult.NoResult();
+                    }
+
+                    if (authorization.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))
+                    {
+                        token = authorization.Substring("Bearer ".Length).Trim();
+                    }
+
+                    // If no token found, no further work possible
+                    if (string.IsNullOrEmpty(token))
+                    {
+                        return AuthenticateResult.NoResult();
+                    }
+                }
+
+                if (_configuration == null && Options.ConfigurationManager != null)
+                {
+                    _configuration = await Options.ConfigurationManager.GetConfigurationAsync(Context.RequestAborted);
+                }
+
+                var validationParameters = Options.TokenValidationParameters.Clone();
+                if (_configuration != null)
+                {
+                    var issuers = new[] { _configuration.Issuer };
+                    validationParameters.ValidIssuers = validationParameters.ValidIssuers?.Concat(issuers) ?? issuers;
+
+                    validationParameters.IssuerSigningKeys = validationParameters.IssuerSigningKeys?.Concat(_configuration.SigningKeys)
+                        ?? _configuration.SigningKeys;
+                }
+
+                List<Exception> validationFailures = null;
+                SecurityToken validatedToken;
+                foreach (var validator in Options.SecurityTokenValidators)
+                {
+                    if (validator.CanReadToken(token))
+                    {
+                        ClaimsPrincipal principal;
+                        try
+                        {
+                            principal = validator.ValidateToken(token, validationParameters, out validatedToken);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.TokenValidationFailed(ex);
+
+                            // Refresh the configuration for exceptions that may be caused by key rollovers. The user can also request a refresh in the event.
+                            if (Options.RefreshOnIssuerKeyNotFound && Options.ConfigurationManager != null
+                                && ex is SecurityTokenSignatureKeyNotFoundException)
+                            {
+                                Options.ConfigurationManager.RequestRefresh();
+                            }
+
+                            if (validationFailures == null)
+                            {
+                                validationFailures = new List<Exception>(1);
+                            }
+                            validationFailures.Add(ex);
+                            continue;
+                        }
+
+                        Logger.TokenValidationSucceeded();
+
+                        var tokenValidatedContext = new TokenValidatedContext(Context, Scheme, Options)
+                        {
+                            Principal = principal,
+                            SecurityToken = validatedToken
+                        };
+
+                        await Events.TokenValidated(tokenValidatedContext);
+                        if (tokenValidatedContext.Result != null)
+                        {
+                            return tokenValidatedContext.Result;
+                        }
+
+                        if (Options.SaveToken)
+                        {
+                            tokenValidatedContext.Properties.StoreTokens(new[]
+                            {
+                                new AuthenticationToken { Name = "access_token", Value = token }
+                            });
+                        }
+
+                        tokenValidatedContext.Success();
+                        return tokenValidatedContext.Result;
+                    }
+                }
+
+                if (validationFailures != null)
+                {
+                    var authenticationFailedContext = new AuthenticationFailedContext(Context, Scheme, Options)
+                    {
+                        Exception = (validationFailures.Count == 1) ? validationFailures[0] : new AggregateException(validationFailures)
+                    };
+
+                    await Events.AuthenticationFailed(authenticationFailedContext);
+                    if (authenticationFailedContext.Result != null)
+                    {
+                        return authenticationFailedContext.Result;
+                    }
+
+                    return AuthenticateResult.Fail(authenticationFailedContext.Exception);
+                }
+
+                return AuthenticateResult.Fail("No SecurityTokenValidator available for token: " + token ?? "[null]");
+            }
+            catch (Exception ex)
+            {
+                Logger.ErrorProcessingMessage(ex);
+
+                var authenticationFailedContext = new AuthenticationFailedContext(Context, Scheme, Options)
+                {
+                    Exception = ex
+                };
+
+                await Events.AuthenticationFailed(authenticationFailedContext);
+                if (authenticationFailedContext.Result != null)
+                {
+                    return authenticationFailedContext.Result;
+                }
+
+                throw;
+            }
+        }
+
+		         //认真看,每一步都看认真,还要看透彻,前因后果,逻辑推理都要搞明白, 不能浏览的过, 也不能应付的心态过.
+				//提供一种扩展, 获取token的方式, 此方式可以设置token
+                // Give application opportunity to find from a different location, adjust, or reject token
+                var messageReceivedContext = new MessageReceivedContext(Context, Scheme, Options);
+
+                // event can set the token
+                await Events.MessageReceived(messageReceivedContext);  说明啥  
+	 public virtual Task MessageReceived(MessageReceivedContext context) => OnMessageReceived(context);
+					  
+					         /// <summary>
+        /// Invoked when a protocol message is first received.
+        /// </summary>
+        public Func<MessageReceivedContext, Task> OnMessageReceived { get; set; } = context => Task.CompletedTask;//实现了传递context作用,当然返回一个task,可以实现自定义东西
+
+		
+		
+		
+				 /// <summary>
+    /// Specifies events which the <see cref="JwtBearerHandler"/> invokes to enable developer control over the authentication process.
+    /// </summary>
+    public class JwtBearerEvents
+    {
+        /// <summary>
+        /// Invoked if exceptions are thrown during request processing. The exceptions will be re-thrown after this event unless suppressed.
+        /// </summary>
+        public Func<AuthenticationFailedContext, Task> OnAuthenticationFailed { get; set; } = context => Task.CompletedTask;
+
+        /// <summary>
+        /// Invoked when a protocol message is first received.
+        /// </summary>
+        public Func<MessageReceivedContext, Task> OnMessageReceived { get; set; } = context => Task.CompletedTask;
+
+        /// <summary>
+        /// Invoked after the security token has passed validation and a ClaimsIdentity has been generated.
+        /// </summary>
+        public Func<TokenValidatedContext, Task> OnTokenValidated { get; set; } = context => Task.CompletedTask;
+
+        /// <summary>
+        /// Invoked before a challenge is sent back to the caller.
+        /// </summary>
+        public Func<JwtBearerChallengeContext, Task> OnChallenge { get; set; } = context => Task.CompletedTask;
+
+        public virtual Task AuthenticationFailed(AuthenticationFailedContext context) => OnAuthenticationFailed(context);
+
+        public virtual Task MessageReceived(MessageReceivedContext context) => OnMessageReceived(context);
+
+        public virtual Task TokenValidated(TokenValidatedContext context) => OnTokenValidated(context);
+
+        public virtual Task Challenge(JwtBearerChallengeContext context) => OnChallenge(context);
+    }
+				
+				
+				
+				
+				 public class MessageReceivedContext : ResultContext<JwtBearerOptions>
+					{
+						public MessageReceivedContext(
+							HttpContext context,
+							AuthenticationScheme scheme,
+							JwtBearerOptions options)
+							: base(context, scheme, options) { }
+
+						/// <summary>
+						/// Bearer Token. This will give the application an opportunity to retrieve a token from an alternative location.
+						/// </summary>
+						public string Token { get; set; }
+					}
+								
+		
+
+//在预留扩展的方式中没有获取token的情况下, 在http的header头下的Authorization中读取token		
+ if (string.IsNullOrEmpty(token))
+                {
+                    string authorization = Request.Headers["Authorization"];
+
+                    // If no authorization header found, nothing to process further
+                    if (string.IsNullOrEmpty(authorization))
+                    {
+                        return AuthenticateResult.NoResult();
+                    }
+
+                    if (authorization.StartsWith("Bearer ", StringComparison.OrdinalIgnoreCase))//添加bearer
+                    {
+                        token = authorization.Substring("Bearer ".Length).Trim();
+                    }
+
+                    // If no token found, no further work possible
+                    if (string.IsNullOrEmpty(token))
+                    {
+                        return AuthenticateResult.NoResult();
+                    }
+                }			
+
+
+//遍历验证逻辑, 也就是说 如果要实现自定义逻辑, 需要添加到此集合中,
+  foreach (var validator in Options.SecurityTokenValidators)
+                {
+                    if (validator.CanReadToken(token))
+                    {
+                        ClaimsPrincipal principal;
+                        try
+                        {
+                            principal = validator.ValidateToken(token, validationParameters, out validatedToken);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.TokenValidationFailed(ex);
+
+                            // Refresh the configuration for exceptions that may be caused by key rollovers. The user can also request a refresh in the event.
+                            if (Options.RefreshOnIssuerKeyNotFound && Options.ConfigurationManager != null
+                                && ex is SecurityTokenSignatureKeyNotFoundException)
+                            {
+                                Options.ConfigurationManager.RequestRefresh();
+                            }
+
+                            if (validationFailures == null)
+                            {
+                                validationFailures = new List<Exception>(1);
+                            }
+                            validationFailures.Add(ex);
+                            continue;
+                        }
+
+                        Logger.TokenValidationSucceeded();
+
+                        var tokenValidatedContext = new TokenValidatedContext(Context, Scheme, Options)
+                        {
+                            Principal = principal,
+                            SecurityToken = validatedToken
+                        };
+
+                        await Events.TokenValidated(tokenValidatedContext);
+                        if (tokenValidatedContext.Result != null)
+                        {
+                            return tokenValidatedContext.Result;
+                        }
+
+                        if (Options.SaveToken)
+                        {
+                            tokenValidatedContext.Properties.StoreTokens(new[]
+                            {
+                                new AuthenticationToken { Name = "access_token", Value = token }
+                            });
+                        }
+
+                        tokenValidatedContext.Success();
+                        return tokenValidatedContext.Result;
+                    }
+                }				
+		
+我们要做的就是把token的读取方式和token 的验证逻辑换掉
+它开放处理Event和SecurityTokenValidators供我们使用
+
+换掉token读取方式
+ //38
+                o.SecurityTokenValidators.Clear();//清空验证逻辑
+               //添加新的token获取方式;
+                o.Events = new JwtBearerEvents()
+                {
+                    OnMessageReceived = context =>
+                    {
+                        var token = context.Request.Headers["mytoken"];
+                        context.Token = token.FirstOrDefault();
+                        return Task.CompletedTask;
+                    }
+                };
+添加一个验证类MyTokenValidator,实现接口ISecurityTokenValidator
+添加验证逻辑
+ public ClaimsPrincipal ValidateToken(string securityToken, TokenValidationParameters validationParameters, out SecurityToken validatedToken)
+        {
+            validatedToken = null;
+            if (securityToken != "123456")
+                return null;
+            var identity = new ClaimsIdentity(JwtBearerDefaults.AuthenticationScheme);
+            identity.AddClaim(new Claim("name", "jesse"));
+            identity.AddClaim(new Claim(ClaimsIdentity.DefaultRoleClaimType, "admin"));
+
+            var principal = new ClaimsPrincipal(identity);
+            return principal;
+        }
+在startup上,添加 验证逻辑配置
+
+  o.SecurityTokenValidators.Add(new MyTokenValidator());
+  
+  
+  
+  
+  
+  不能一听到授权,不清楚,就怕,就脑子不清楚,不知道咋办,一片浑浊.,
+  39 Role以及Claim授权  
+  基于role的授权,基于Calim的授权, 基于policy的授权  claim和policy 有点像 其实是同一种机制
+  aspnet core 逐渐淘汰基于role的授权,鼓励基于claim的授权.
+  最后介绍自定义授权的方式
+  
+  基于role的授权是如何实现的 也是根据claim来的
+  控制器中, [Authoriza(Roles="user")]
+  对应生成token时
+     new Claim(ClaimTypes.Role,"user"),
+	 
+
+	 基于Calim的授权是如何实现的
+	 在startup类中添加配置
+	  //39 添加基于Policy授权
+            services.AddAuthorization(options =>
+            {
+			//不能一看和预想的不一样,就怕,就脑子不清楚,不知所措. 阻碍了继续前进.
+            options.AddPolicy("SuperAdminOnly", policy => policy.RequireClaim("SuperAdminOnly"));
+            });
+			
+	控制器		[Authoriza(policy="SuperAdminOnly")]
+	生成token时,添加new Claim("SuperAdminOnly","true"),
+	
+	
+	

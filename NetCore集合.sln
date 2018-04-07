@@ -7,9 +7,126 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01ASP.NET Core 入门", "01
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01介绍与入门", "01介绍与入门", "{B8BEE902-B49C-4A78-9311-B046B792A6AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloVs", "01ASP.NET Core 入门\第一章\HelloVs\HelloVs.csproj", "{434C671E-5823-49C9-81B1-461B9279C86F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloVs", "01ASP.NET Core 入门\第一章\HelloVs\HelloVs.csproj", "{434C671E-5823-49C9-81B1-461B9279C86F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02配置", "02配置", "{60AEBBFA-12B3-42CB-8A85-C4BBC3B7B8EB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandLineSample", "01ASP.NET Core 入门\02配置\CommandLineSample\CommandLineSample.csproj", "{55223A47-6C90-4265-B1AB-AF27B9443B42}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JsonConfigSample", "01ASP.NET Core 入门\02配置\JsonConfigSample\JsonConfigSample.csproj", "{F79E1582-C756-4300-A219-DEF2902FC1FD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OptionBindSample", "01ASP.NET Core 入门\02配置\OptionBindSample\OptionBindSample.csproj", "{5614356D-2BAC-4FF8-8EA1-3CBFDD8C8A50}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NewFolder1", "NewFolder1", "{BDA90655-8473-4AF7-9222-7F37293066C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03依赖注入", "03依赖注入", "{5C64A167-5C53-4742-9A0B-F235DC66A46B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04Asp.Net Core Http的介绍", "04Asp.Net Core Http的介绍", "{EEC64484-D2FC-42D5-9788-CA8940DD2DB3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloCore", "01ASP.NET Core 入门\04asp.net core http的使用\HelloCore\HelloCore.csproj", "{D455CF07-374C-4123-B8B6-F513E29158A4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Middleware组成管道实践", "01ASP.NET Core 入门\04asp.net core http的使用\Middleware组成管道实践\Middleware组成管道实践.csproj", "{4E7DF928-5D7A-4506-9F56-353348AF7908}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HTTPAbstractions源码", "HTTPAbstractions源码", "{DE99B12B-6EC8-4E4C-9FE0-E253D1D5B243}"
+	ProjectSection(SolutionItems) = preProject
+		01ASP.NET Core 入门\04asp.net core http的使用\HttpAbstractions-dev.zip = 01ASP.NET Core 入门\04asp.net core http的使用\HttpAbstractions-dev.zip
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyPipeLine", "01ASP.NET Core 入门\04asp.net core http的使用\MyPipeLine\MyPipeLine.csproj", "{C56BD7A6-0D15-4068-9E1F-9B5CF869CE0C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "routing源码", "routing源码", "{96D34412-3AD0-4BB0-B70A-34E793E433A3}"
+	ProjectSection(SolutionItems) = preProject
+		01ASP.NET Core 入门\04asp.net core http的使用\Routing-dev.zip = 01ASP.NET Core 入门\04asp.net core http的使用\Routing-dev.zip
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05认证与授权", "05认证与授权", "{59D86EFD-22F5-431B-90C0-8BD9CC039B53}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcCookieAuthSample", "01ASP.NET Core 入门\05认证与授权\MvcCookieAuthSample\MvcCookieAuthSample.csproj", "{CF046FBF-4E7C-4B5A-8D6C-2393A951FDB7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JwtAuthSample", "01ASP.NET Core 入门\05认证与授权\JwtAuthSample\JwtAuthSample.csproj", "{4914088A-2940-4E35-A011-FF589FAE001B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Security源码", "Security源码", "{54ED5219-9186-4F8F-B31F-ED151F73F157}"
+	ProjectSection(SolutionItems) = preProject
+		01ASP.NET Core 入门\05认证与授权\Security-dev.zip = 01ASP.NET Core 入门\05认证与授权\Security-dev.zip
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06ASP.NET Core MVC", "06ASP.NET Core MVC", "{BE9C3737-86F0-4C6B-8551-D17E1D5A6C5E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IdentitySample", "01ASP.NET Core 入门\06aspnet core mvc\IdentitySample\IdentitySample.csproj", "{2DD062EA-2AAE-48E9-A6C7-7F1FD492317C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcCookieAuthSampleAddUI", "01ASP.NET Core 入门\06aspnet core mvc\MvcCookieAuthSampleAddUI\MvcCookieAuthSampleAddUI.csproj", "{E89025DB-DDDD-4C23-8FA5-898FC8C64CFC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "图片和文档记录", "图片和文档记录", "{A3577F10-EA69-4434-B288-A2AC8F5E89E5}"
+	ProjectSection(SolutionItems) = preProject
+		01ASP.NET Core 入门\asp.net core入门记录\point.txt = 01ASP.NET Core 入门\asp.net core入门记录\point.txt
+		01ASP.NET Core 入门\asp.net core入门记录\第01章.txt = 01ASP.NET Core 入门\asp.net core入门记录\第01章.txt
+		01ASP.NET Core 入门\asp.net core入门记录\第02章配置.txt = 01ASP.NET Core 入门\asp.net core入门记录\第02章配置.txt
+		01ASP.NET Core 入门\asp.net core入门记录\第03章依赖注入.txt = 01ASP.NET Core 入门\asp.net core入门记录\第03章依赖注入.txt
+		01ASP.NET Core 入门\asp.net core入门记录\第04章asp.net core http的使用.txt = 01ASP.NET Core 入门\asp.net core入门记录\第04章asp.net core http的使用.txt
+		01ASP.NET Core 入门\asp.net core入门记录\第05章认证与授权.txt = 01ASP.NET Core 入门\asp.net core入门记录\第05章认证与授权.txt
+		01ASP.NET Core 入门\asp.net core入门记录\第06章aspnetcore mvc.txt = 01ASP.NET Core 入门\asp.net core入门记录\第06章aspnetcore mvc.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01课程介绍", "01课程介绍", "{2C9CA7EB-1134-4877-A8FA-EF56D8654E9F}"
+	ProjectSection(SolutionItems) = preProject
+		01ASP.NET Core 入门\asp.net core入门记录\01课程介绍\.png = 01ASP.NET Core 入门\asp.net core入门记录\01课程介绍\.png
+		01ASP.NET Core 入门\asp.net core入门记录\01课程介绍\enjoy.png = 01ASP.NET Core 入门\asp.net core入门记录\01课程介绍\enjoy.png
+		01ASP.NET Core 入门\asp.net core入门记录\01课程介绍\学习的内容.png = 01ASP.NET Core 入门\asp.net core入门记录\01课程介绍\学习的内容.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02配置管理", "02配置管理", "{2A12D53E-3E1D-4C94-846F-BCC8DC30A1F4}"
+	ProjectSection(SolutionItems) = preProject
+		01ASP.NET Core 入门\asp.net core入门记录\02配置管理\配置-介绍.png = 01ASP.NET Core 入门\asp.net core入门记录\02配置管理\配置-介绍.png
+		01ASP.NET Core 入门\asp.net core入门记录\02配置管理\配置使用的背后.png = 01ASP.NET Core 入门\asp.net core入门记录\02配置管理\配置使用的背后.png
+		01ASP.NET Core 入门\asp.net core入门记录\02配置管理\配置的自定义(source和provider的自定义).png = 01ASP.NET Core 入门\asp.net core入门记录\02配置管理\配置的自定义(source和provider的自定义).png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03依赖注入", "03依赖注入", "{FCE5C66B-7A77-48AC-B673-EA5E38E3AED2}"
+	ProjectSection(SolutionItems) = preProject
+		01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\DI初始化源码解析.png = 01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\DI初始化源码解析.png
+		01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\依赖倒置原则-面对变化.png = 01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\依赖倒置原则-面对变化.png
+		01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\依赖倒置原则介绍.png = 01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\依赖倒置原则介绍.png
+		01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\依赖是什么.png = 01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\依赖是什么.png
+		01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\依赖注入-课程介绍.png = 01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\依赖注入-课程介绍.png
+		01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\依赖注入的实现.png = 01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\依赖注入的实现.png
+		01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\依赖的代码.png = 01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\依赖的代码.png
+		01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\单元测试-被测试方法的业务逻辑.png = 01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\单元测试-被测试方法的业务逻辑.png
+		01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\单元测试代码-业务逻辑2的反向测试方法.png = 01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\单元测试代码-业务逻辑2的反向测试方法.png
+		01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\单元测试代码-业务逻辑2的正向测试方法.png = 01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\单元测试代码-业务逻辑2的正向测试方法.png
+		01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\单元测试代码-单元测试保证业务逻辑始终正确.png = 01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\单元测试代码-单元测试保证业务逻辑始终正确.png
+		01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\控制反转.png = 01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\控制反转.png
+		01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\控制正转.png = 01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\控制正转.png
+		01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\显式依赖.png = 01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\显式依赖.png
+		01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\隐式依赖.png = 01ASP.NET Core 入门\asp.net core入门记录\03依赖注入\隐式依赖.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04asp.net core http的使用", "04asp.net core http的使用", "{F709A27F-9001-4FF1-8CF6-B92F1B3018FE}"
+	ProjectSection(SolutionItems) = preProject
+		01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\http在asp.net core中的详细过程.png = 01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\http在asp.net core中的详细过程.png
+		01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\http处理的课程介绍.png = 01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\http处理的课程介绍.png
+		01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\http流程和http在asp.net core的处理过程.png = 01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\http流程和http在asp.net core的处理过程.png
+		01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\Middleware管道介绍.png = 01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\Middleware管道介绍.png
+		01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\RoutingMiddleware.png = 01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\RoutingMiddleware.png
+		01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\webhost的配置与启动-课程介绍.png = 01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\webhost的配置与启动-课程介绍.png
+		01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\一个管道注册三个中间件.png = 01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\一个管道注册三个中间件.png
+		01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\在vscode中,添加 dotnet watch run 方法.png = 01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\在vscode中,添加 dotnet watch run 方法.png
+		01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\管道实现机制.png = 01ASP.NET Core 入门\asp.net core入门记录\04asp.net core http的使用\管道实现机制.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "05认证与授权", "05认证与授权", "{CB4E8CD4-9C23-4BDC-8586-993E1B9D1578}"
+	ProjectSection(SolutionItems) = preProject
+		01ASP.NET Core 入门\asp.net core入门记录\05认证与授权\Cookie-based认证流程.png = 01ASP.NET Core 入门\asp.net core入门记录\05认证与授权\Cookie-based认证流程.png
+		01ASP.NET Core 入门\asp.net core入门记录\05认证与授权\Jwt是什么.png = 01ASP.NET Core 入门\asp.net core入门记录\05认证与授权\Jwt是什么.png
+		01ASP.NET Core 入门\asp.net core入门记录\05认证与授权\JWT认证与授权流程.png = 01ASP.NET Core 入门\asp.net core入门记录\05认证与授权\JWT认证与授权流程.png
+		01ASP.NET Core 入门\asp.net core入门记录\05认证与授权\postman 测试 jwt token.png = 01ASP.NET Core 入门\asp.net core入门记录\05认证与授权\postman 测试 jwt token.png
+		01ASP.NET Core 入门\asp.net core入门记录\05认证与授权\Run watch 添加方式.png = 01ASP.NET Core 入门\asp.net core入门记录\05认证与授权\Run watch 添加方式.png
+		01ASP.NET Core 入门\asp.net core入门记录\05认证与授权\认证与授权-课程介绍.png = 01ASP.NET Core 入门\asp.net core入门记录\05认证与授权\认证与授权-课程介绍.png
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06ASPNet core mvc", "06ASPNet core mvc", "{0DD61B59-2336-43DC-B55C-0BED5EE117EB}"
+	ProjectSection(SolutionItems) = preProject
+		01ASP.NET Core 入门\asp.net core入门记录\06ASPNet core mvc\EF Migraton 命令.png = 01ASP.NET Core 入门\asp.net core入门记录\06ASPNet core mvc\EF Migraton 命令.png
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +138,46 @@ Global
 		{434C671E-5823-49C9-81B1-461B9279C86F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{434C671E-5823-49C9-81B1-461B9279C86F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{434C671E-5823-49C9-81B1-461B9279C86F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{55223A47-6C90-4265-B1AB-AF27B9443B42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{55223A47-6C90-4265-B1AB-AF27B9443B42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{55223A47-6C90-4265-B1AB-AF27B9443B42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{55223A47-6C90-4265-B1AB-AF27B9443B42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F79E1582-C756-4300-A219-DEF2902FC1FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F79E1582-C756-4300-A219-DEF2902FC1FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F79E1582-C756-4300-A219-DEF2902FC1FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F79E1582-C756-4300-A219-DEF2902FC1FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5614356D-2BAC-4FF8-8EA1-3CBFDD8C8A50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5614356D-2BAC-4FF8-8EA1-3CBFDD8C8A50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5614356D-2BAC-4FF8-8EA1-3CBFDD8C8A50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5614356D-2BAC-4FF8-8EA1-3CBFDD8C8A50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D455CF07-374C-4123-B8B6-F513E29158A4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D455CF07-374C-4123-B8B6-F513E29158A4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D455CF07-374C-4123-B8B6-F513E29158A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D455CF07-374C-4123-B8B6-F513E29158A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E7DF928-5D7A-4506-9F56-353348AF7908}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E7DF928-5D7A-4506-9F56-353348AF7908}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E7DF928-5D7A-4506-9F56-353348AF7908}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E7DF928-5D7A-4506-9F56-353348AF7908}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C56BD7A6-0D15-4068-9E1F-9B5CF869CE0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C56BD7A6-0D15-4068-9E1F-9B5CF869CE0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C56BD7A6-0D15-4068-9E1F-9B5CF869CE0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C56BD7A6-0D15-4068-9E1F-9B5CF869CE0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF046FBF-4E7C-4B5A-8D6C-2393A951FDB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF046FBF-4E7C-4B5A-8D6C-2393A951FDB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF046FBF-4E7C-4B5A-8D6C-2393A951FDB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF046FBF-4E7C-4B5A-8D6C-2393A951FDB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4914088A-2940-4E35-A011-FF589FAE001B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4914088A-2940-4E35-A011-FF589FAE001B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4914088A-2940-4E35-A011-FF589FAE001B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4914088A-2940-4E35-A011-FF589FAE001B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DD062EA-2AAE-48E9-A6C7-7F1FD492317C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DD062EA-2AAE-48E9-A6C7-7F1FD492317C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DD062EA-2AAE-48E9-A6C7-7F1FD492317C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DD062EA-2AAE-48E9-A6C7-7F1FD492317C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E89025DB-DDDD-4C23-8FA5-898FC8C64CFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E89025DB-DDDD-4C23-8FA5-898FC8C64CFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E89025DB-DDDD-4C23-8FA5-898FC8C64CFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E89025DB-DDDD-4C23-8FA5-898FC8C64CFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -29,6 +186,31 @@ Global
 		{B8BEE902-B49C-4A78-9311-B046B792A6AF} = {C13BC10C-3C19-4D0F-B4AC-2873925FB1E4}
 		{434C671E-5823-49C9-81B1-461B9279C86F} = {B8BEE902-B49C-4A78-9311-B046B792A6AF}
 		{60AEBBFA-12B3-42CB-8A85-C4BBC3B7B8EB} = {C13BC10C-3C19-4D0F-B4AC-2873925FB1E4}
+		{55223A47-6C90-4265-B1AB-AF27B9443B42} = {60AEBBFA-12B3-42CB-8A85-C4BBC3B7B8EB}
+		{F79E1582-C756-4300-A219-DEF2902FC1FD} = {60AEBBFA-12B3-42CB-8A85-C4BBC3B7B8EB}
+		{5614356D-2BAC-4FF8-8EA1-3CBFDD8C8A50} = {60AEBBFA-12B3-42CB-8A85-C4BBC3B7B8EB}
+		{BDA90655-8473-4AF7-9222-7F37293066C3} = {60AEBBFA-12B3-42CB-8A85-C4BBC3B7B8EB}
+		{5C64A167-5C53-4742-9A0B-F235DC66A46B} = {C13BC10C-3C19-4D0F-B4AC-2873925FB1E4}
+		{EEC64484-D2FC-42D5-9788-CA8940DD2DB3} = {C13BC10C-3C19-4D0F-B4AC-2873925FB1E4}
+		{D455CF07-374C-4123-B8B6-F513E29158A4} = {EEC64484-D2FC-42D5-9788-CA8940DD2DB3}
+		{4E7DF928-5D7A-4506-9F56-353348AF7908} = {EEC64484-D2FC-42D5-9788-CA8940DD2DB3}
+		{DE99B12B-6EC8-4E4C-9FE0-E253D1D5B243} = {EEC64484-D2FC-42D5-9788-CA8940DD2DB3}
+		{C56BD7A6-0D15-4068-9E1F-9B5CF869CE0C} = {EEC64484-D2FC-42D5-9788-CA8940DD2DB3}
+		{96D34412-3AD0-4BB0-B70A-34E793E433A3} = {EEC64484-D2FC-42D5-9788-CA8940DD2DB3}
+		{59D86EFD-22F5-431B-90C0-8BD9CC039B53} = {C13BC10C-3C19-4D0F-B4AC-2873925FB1E4}
+		{CF046FBF-4E7C-4B5A-8D6C-2393A951FDB7} = {59D86EFD-22F5-431B-90C0-8BD9CC039B53}
+		{4914088A-2940-4E35-A011-FF589FAE001B} = {59D86EFD-22F5-431B-90C0-8BD9CC039B53}
+		{54ED5219-9186-4F8F-B31F-ED151F73F157} = {59D86EFD-22F5-431B-90C0-8BD9CC039B53}
+		{BE9C3737-86F0-4C6B-8551-D17E1D5A6C5E} = {C13BC10C-3C19-4D0F-B4AC-2873925FB1E4}
+		{2DD062EA-2AAE-48E9-A6C7-7F1FD492317C} = {BE9C3737-86F0-4C6B-8551-D17E1D5A6C5E}
+		{E89025DB-DDDD-4C23-8FA5-898FC8C64CFC} = {BE9C3737-86F0-4C6B-8551-D17E1D5A6C5E}
+		{A3577F10-EA69-4434-B288-A2AC8F5E89E5} = {C13BC10C-3C19-4D0F-B4AC-2873925FB1E4}
+		{2C9CA7EB-1134-4877-A8FA-EF56D8654E9F} = {A3577F10-EA69-4434-B288-A2AC8F5E89E5}
+		{2A12D53E-3E1D-4C94-846F-BCC8DC30A1F4} = {A3577F10-EA69-4434-B288-A2AC8F5E89E5}
+		{FCE5C66B-7A77-48AC-B673-EA5E38E3AED2} = {A3577F10-EA69-4434-B288-A2AC8F5E89E5}
+		{F709A27F-9001-4FF1-8CF6-B92F1B3018FE} = {A3577F10-EA69-4434-B288-A2AC8F5E89E5}
+		{CB4E8CD4-9C23-4BDC-8586-993E1B9D1578} = {A3577F10-EA69-4434-B288-A2AC8F5E89E5}
+		{0DD61B59-2336-43DC-B55C-0BED5EE117EB} = {A3577F10-EA69-4434-B288-A2AC8F5E89E5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8A31F480-001A-4E05-B2EE-5DCE2F5B36A8}
