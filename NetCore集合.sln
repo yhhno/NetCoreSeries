@@ -59,12 +59,14 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "图片和文档记录", "图片和文档记录", "{A3577F10-EA69-4434-B288-A2AC8F5E89E5}"
 	ProjectSection(SolutionItems) = preProject
 		01ASP.NET Core 入门\asp.net core入门记录\point.txt = 01ASP.NET Core 入门\asp.net core入门记录\point.txt
+		01ASP.NET Core 入门\asp.net core入门记录\章节介绍.png = 01ASP.NET Core 入门\asp.net core入门记录\章节介绍.png
 		01ASP.NET Core 入门\asp.net core入门记录\第01章.txt = 01ASP.NET Core 入门\asp.net core入门记录\第01章.txt
 		01ASP.NET Core 入门\asp.net core入门记录\第02章配置.txt = 01ASP.NET Core 入门\asp.net core入门记录\第02章配置.txt
 		01ASP.NET Core 入门\asp.net core入门记录\第03章依赖注入.txt = 01ASP.NET Core 入门\asp.net core入门记录\第03章依赖注入.txt
 		01ASP.NET Core 入门\asp.net core入门记录\第04章asp.net core http的使用.txt = 01ASP.NET Core 入门\asp.net core入门记录\第04章asp.net core http的使用.txt
 		01ASP.NET Core 入门\asp.net core入门记录\第05章认证与授权.txt = 01ASP.NET Core 入门\asp.net core入门记录\第05章认证与授权.txt
 		01ASP.NET Core 入门\asp.net core入门记录\第06章aspnetcore mvc.txt = 01ASP.NET Core 入门\asp.net core入门记录\第06章aspnetcore mvc.txt
+		01ASP.NET Core 入门\asp.net core入门记录\逻辑思维大图.png = 01ASP.NET Core 入门\asp.net core入门记录\逻辑思维大图.png
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01课程介绍", "01课程介绍", "{2C9CA7EB-1134-4877-A8FA-EF56D8654E9F}"
@@ -128,6 +130,135 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06ASPNet core mvc", "06ASPN
 		01ASP.NET Core 入门\asp.net core入门记录\06ASPNet core mvc\EF Migraton 命令.png = 01ASP.NET Core 入门\asp.net core入门记录\06ASPNet core mvc\EF Migraton 命令.png
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02ASP.NET Core 分布式项目实战", "02ASP.NET Core 分布式项目实战", "{72D16933-C8D9-4CB9-8FAA-572679170112}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01Identity Server 4 准备", "01Identity Server 4 准备", "{EA1D4649-8746-44DB-91C1-06767EF65CDF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "图片文档记录", "图片文档记录", "{84447735-6D13-493D-97A3-281CFE5E930A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "第01章Identity server准备", "第01章Identity server准备", "{1A43A279-396A-4CF2-A718-57F04223459D}"
+	ProjectSection(SolutionItems) = preProject
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\01课程介绍.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\01课程介绍.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\02最小可行化产品MVP.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\02最小可行化产品MVP.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\03两种软件开发模式 瀑布与敏捷.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\03两种软件开发模式 瀑布与敏捷.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\04第一章计划于目录.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\04第一章计划于目录.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\05业务介绍.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\05业务介绍.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\06架构设计.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\06架构设计.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\07OAuth2介绍.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\07OAuth2介绍.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\08IdentityServer4登录中心.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\08IdentityServer4登录中心.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\09客户端集成IdentityServer.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\09客户端集成IdentityServer.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\10第三方ClientCredential模式调用.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\10第三方ClientCredential模式调用.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\11ClientCredential模式总结.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\11ClientCredential模式总结.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\12OAuth密码模式IdentityServer4实现.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\12OAuth密码模式IdentityServer4实现.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\13详解OAuth2授权码流程.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\13详解OAuth2授权码流程.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\14OAuth2与open id connect对比.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\14OAuth2与open id connect对比.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\15OAuth2+oidc实现server部分.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\15OAuth2+oidc实现server部分.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\16Oauth2+oidc实现client部分.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\16Oauth2+oidc实现client部分.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\17Identity server4回顾.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\17Identity server4回顾.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\18Consent实现思路介绍.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\18Consent实现思路介绍.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\19Consent视图制作.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\19Consent视图制作.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\20Conset controller get 请求逻辑实现.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\20Conset controller get 请求逻辑实现.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\21运行Consent Page.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\21运行Consent Page.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\22Consent确认逻辑实现.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\22Consent确认逻辑实现.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\23Consent代码重构.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\23Consent代码重构.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\24集成ASP.Net Core Identity.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\24集成ASP.Net Core Identity.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\25ProfileServer实现（调试）.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\25ProfileServer实现（调试）.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\26OpenIdConnec获取用户信息的两种方式.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\26OpenIdConnec获取用户信息的两种方式.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\27集成EFCore配置Client和API.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第01章Identity server准备\27集成EFCore配置Client和API.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "第02章Docker准备", "第02章Docker准备", "{BE1610F6-DC99-4ABB-841C-D73FCFA7B6A9}"
+	ProjectSection(SolutionItems) = preProject
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (10).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (10).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (11).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (11).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (12).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (12).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (13).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (13).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (14).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (14).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (15).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (15).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (16).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (16).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (17).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (17).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (18).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (18).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (19).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (19).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (2).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (2).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (20).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (20).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (21).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (21).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (22).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (22).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (23).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (23).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (24).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (24).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (3).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (3).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (4).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (4).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (5).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (5).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (6).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (6).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (7).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (7).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (8).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (8).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (9).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy (9).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document - Copy.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第02章Docker准备\New Text Document.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "第03章项目开发-用户服务", "第03章项目开发-用户服务", "{0A83B19B-CE26-44EE-AE8D-5BCED69B2983}"
+	ProjectSection(SolutionItems) = preProject
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (10).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (10).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (11).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (11).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (12).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (12).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (13).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (13).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (14).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (14).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (15).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (15).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (16).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (16).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (17).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (17).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (18).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (18).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (19).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (19).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (2).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (2).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (20).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (20).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (21).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (21).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (22).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (22).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (3).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (3).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (4).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (4).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (5).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (5).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (6).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (6).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (7).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (7).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (8).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (8).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (9).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (9).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "第04章项目开发-网关与认证", "第04章项目开发-网关与认证", "{1A8BB43D-4A70-4CF9-8517-99E8D1D0DBEF}"
+	ProjectSection(SolutionItems) = preProject
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (10).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (10).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (11).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (11).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (2).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (2).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (3).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (3).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (4).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (4).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (5).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (5).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (6).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (6).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (7).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (7).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (8).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (8).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (9).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (9).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "第05章项目开发-通讯录服务", "第05章项目开发-通讯录服务", "{5DC1264A-5527-4E92-9F73-5AE8747342ED}"
+	ProjectSection(SolutionItems) = preProject
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (10).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (10).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (11).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (11).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (2).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (2).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (3).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (3).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (4).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (4).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (5).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (5).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (6).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (6).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (7).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (7).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (8).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (8).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (9).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (9).txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document.txt
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "第06章", "第06章", "{F6F458C4-350C-41E2-89A4-06252A1DA7F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityServerCenter", "02ASP.NET Core分布式项目实践\01Identity Server 4 准备\IdentityServerCenter\IdentityServerCenter.csproj", "{1BFF4EF1-4DE2-42AE-8760-9A688865AEE2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -178,6 +309,10 @@ Global
 		{E89025DB-DDDD-4C23-8FA5-898FC8C64CFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E89025DB-DDDD-4C23-8FA5-898FC8C64CFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E89025DB-DDDD-4C23-8FA5-898FC8C64CFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BFF4EF1-4DE2-42AE-8760-9A688865AEE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BFF4EF1-4DE2-42AE-8760-9A688865AEE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BFF4EF1-4DE2-42AE-8760-9A688865AEE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BFF4EF1-4DE2-42AE-8760-9A688865AEE2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -211,6 +346,15 @@ Global
 		{F709A27F-9001-4FF1-8CF6-B92F1B3018FE} = {A3577F10-EA69-4434-B288-A2AC8F5E89E5}
 		{CB4E8CD4-9C23-4BDC-8586-993E1B9D1578} = {A3577F10-EA69-4434-B288-A2AC8F5E89E5}
 		{0DD61B59-2336-43DC-B55C-0BED5EE117EB} = {A3577F10-EA69-4434-B288-A2AC8F5E89E5}
+		{EA1D4649-8746-44DB-91C1-06767EF65CDF} = {72D16933-C8D9-4CB9-8FAA-572679170112}
+		{84447735-6D13-493D-97A3-281CFE5E930A} = {72D16933-C8D9-4CB9-8FAA-572679170112}
+		{1A43A279-396A-4CF2-A718-57F04223459D} = {84447735-6D13-493D-97A3-281CFE5E930A}
+		{BE1610F6-DC99-4ABB-841C-D73FCFA7B6A9} = {84447735-6D13-493D-97A3-281CFE5E930A}
+		{0A83B19B-CE26-44EE-AE8D-5BCED69B2983} = {84447735-6D13-493D-97A3-281CFE5E930A}
+		{1A8BB43D-4A70-4CF9-8517-99E8D1D0DBEF} = {84447735-6D13-493D-97A3-281CFE5E930A}
+		{5DC1264A-5527-4E92-9F73-5AE8747342ED} = {84447735-6D13-493D-97A3-281CFE5E930A}
+		{F6F458C4-350C-41E2-89A4-06252A1DA7F0} = {84447735-6D13-493D-97A3-281CFE5E930A}
+		{1BFF4EF1-4DE2-42AE-8760-9A688865AEE2} = {EA1D4649-8746-44DB-91C1-06767EF65CDF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8A31F480-001A-4E05-B2EE-5DCE2F5B36A8}

@@ -1,0 +1,144 @@
+我们接下来给大家讲Identity server
+概念上来讲非常简单，就是一套framework相当于，它基于asp.net core已经帮我们实现了OAuth2.0的认证授权，包括OpenId OpenIdconnect这两种流程协议。所以我们只需要基本上理解OAuth流程，然后学会怎么使用它就可以了
+identity server 是有一个官方的文档的
+我们先从最简单的模式开始
+大家在使用微信支付和支付宝支付的时候会用到客户端模式，其实很简单，我只需要知道一个clientid和client secrect就可以访问你的api， 大家还记得在支付宝和微信的时候，它都会给你个key ，你有一个这个key你就可以去访问它的api了，那么这种情况下，因为微信和支付宝不一样，它的这种模式相当于你虽然调用了它的api，但是最终能完成支付还是待用户输入它的密码，而用户输入密码这个过程呢其实是在支付宝那边收到保护的，所以它的这种安全性级别在这种情况下使用是没有关系的
+ 另外的情况下是什么样子呢?比如说我写了一个api，我可以给内部的一些程序来发一些clientid和client secrect让它调用我的api，这种一般是给受信任的客户端来访问的，所以我们的clientid和client secrect是不能丢掉的，不然有可能别人也来访问这个api，因为我们不想支付宝还要用户输入用户名和密码，所以要看使用场景
+
+ 我们先会实现一个简单的identity server,然后用一个客户端，还有一个api，这个api它就会用 Client Credentials Grant这种模式才能访问
+ 我会先把代码的实践讲完，最后在给大家做一次回顾，在实现代码这个过程中有5步
+ 添加Nuget包 Identity server 4
+ 添加Startup配置
+ 添加config.cs配置类
+ 更改Identity server 4配置  也就是 添加 apiresources  和clients
+ 添加客户端配置
+ 新建三个项目 第一个是实现一个server 在server中添加nuget包，加startup配置，最后进行Identity server的配置，然后把配置注册到我们的services 就是asp.net core的里面，然后最后再实现我们的客户端
+
+ 我们会新建一个webapi的项目
+ cd d:\project
+ mkdir IdentityServerSample
+ cd .\IdentityServerSample\
+ dotnet new webapi --name IdentityServerCenter  这个会成为我们的api
+ 添加identity server nuget包 ctrl +P  >nuget package manager: add package    identity server4
+ 然后dotnet restore 一下
+接下来要做的第二步就是 添加startup配置
+在添加mvc之前 添加 Identitysever
+   public void ConfigureServices(IServiceCollection services)
+        {
+            //在添加mvc之前 添加 Identitysever
+            services.AddIdentityServer()
+                .AddDeveloperSigningCredential();
+            services.AddMvc();
+        }
+
+添加好之后，按照惯例 一个是依赖注入的配置，把它添加到我们的依赖注入里面去， 一个是就是要使用Identityserver
+   public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        {
+            if (env.IsDevelopment())
+            {
+                app.UseDeveloperExceptionPage();
+            }
+
+
+            //app.UseMvc();//不使用mvc先注释了
+
+            app.UseIdentityServer();
+        }
+
+接下来设置 启动url和端口
+        public static IWebHost BuildWebHost(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>()
+            .UseUrls("http://localhost:5000")
+                .Build();
+    }
+
+接下来添加一个config的类 这个类里面是用来初始化Identityserver
+这个类里面我们会写一些静态方法
+GetResources()方法这个会用来所有可以访问的对象
+接下来定义我的Getclients（）
+
+
+接下来，我们会在startup中启用这个定义的config类 也就是 更改Identity server 4配置 
+ public void ConfigureServices(IServiceCollection services)
+        {
+            //在添加mvc之前 添加 Identitysever
+            services.AddIdentityServer()
+                .AddDeveloperSigningCredential()
+
+				//更改Identity server 4配置 
+                .AddInMemoryApiResources(Config.GetResources())
+                .AddInMemoryClients(Config.GetClients());
+
+
+            services.AddMvc();
+        }
+
+这样说配置就算完了，接下来我们就启动下，看一下
+
+dotnet run
+大家注意到在startup中添加mvc的管道  mvc和webapi是一个管道 但是我们没有添加
+
+此时来访问 http：//localhost:5000 没有任何其他的响应
+Identityserver会提供一个地址
+http://localhost:21272/.well-known/openid-configuration
+会提供一些基本的配置，基本的信息
+
+{
+    "issuer": "http://localhost:21272", 
+    "jwks_uri": "http://localhost:21272/.well-known/openid-configuration/jwks", 
+    "authorization_endpoint": "http://localhost:21272/connect/authorize", 
+    "token_endpoint": "http://localhost:21272/connect/token", 
+    "userinfo_endpoint": "http://localhost:21272/connect/userinfo", 
+    "end_session_endpoint": "http://localhost:21272/connect/endsession", 
+    "check_session_iframe": "http://localhost:21272/connect/checksession", 
+    "revocation_endpoint": "http://localhost:21272/connect/revocation", 
+    "introspection_endpoint": "http://localhost:21272/connect/introspect", 
+    "frontchannel_logout_supported": true, 
+    "frontchannel_logout_session_supported": true, 
+    "backchannel_logout_supported": true, 
+    "backchannel_logout_session_supported": true, 
+    "scopes_supported": [
+        "api", 
+        "offline_access"
+    ], 
+    "claims_supported": [ ], 
+    "grant_types_supported": [
+        "authorization_code", 
+        "client_credentials", 
+        "refresh_token", 
+        "implicit"
+    ], 
+    "response_types_supported": [
+        "code", 
+        "token", 
+        "id_token", 
+        "id_token token", 
+        "code id_token", 
+        "code token", 
+        "code id_token token"
+    ], 
+    "response_modes_supported": [
+        "form_post", 
+        "query", 
+        "fragment"
+    ], 
+    "token_endpoint_auth_methods_supported": [
+        "client_secret_basic", 
+        "client_secret_post"
+    ], 
+    "subject_types_supported": [
+        "public"
+    ], 
+    "id_token_signing_alg_values_supported": [
+        "RS256"
+    ], 
+    "code_challenge_methods_supported": [
+        "plain", 
+        "S256"
+    ]
+}
+
+
+
+我们下一节课就会 实现apiresource 也就是写一个api
