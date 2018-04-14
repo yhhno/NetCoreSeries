@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using System.Collections.Generic;//对应IEnumerable  List
 using IdentityServer4.Models;//对应 ApiResource
+using IdentityServer4.Test;//对应TestUser
 
 namespace IdentityServerCenter
 {
@@ -33,11 +34,35 @@ namespace IdentityServerCenter
                     AllowedGrantTypes=GrantTypes.ClientCredentials,//允许访问的方式
                     ClientSecrets =
                     {
-                        new Secret("secrect".Sha256())//我们最好对clientsecrect进行简单的加密  Sha256为Identity server的一个扩展方法
+                        new Secret("secret".Sha256())//我们最好对clientsecrect进行简单的加密  Sha256为Identity server的一个扩展方法
                     },
                     AllowedScopes={ "api"}// 允许访问的资源
+                },
+                new Client()//密码模式的client
+                {
+                    ClientId="pwdClient",
+                    AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
+                    ClientSecrets={
+                    new Secret("secret".Sha256())},
+                    //RequireClientSecret=false,//此时不需要传递client_secret
+                    AllowedScopes={ "api"}
                 }
             };
         }
+        public static List<TestUser> GetTestUsers()
+        {
+            return new List<TestUser>
+            {
+               new TestUser
+               {
+                   SubjectId="1",//是它id的一个键
+                   Username="jesse",
+                   Password="123456"
+               }
+            };
+
+        }
+
+
     }
 }

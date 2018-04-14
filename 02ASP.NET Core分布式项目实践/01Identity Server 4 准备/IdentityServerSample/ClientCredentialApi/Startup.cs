@@ -9,12 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-
-
-
-using IdentityServer4;//对应services.AddIdentityServer()
-
-namespace IdentityServerCenter
+namespace ClientCredentialApi
 {
     public class Startup
     {
@@ -28,13 +23,14 @@ namespace IdentityServerCenter
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //在添加mvc之前 添加 Identitysever
-            services.AddIdentityServer()
-                .AddDeveloperSigningCredential()
+            services.AddAuthentication("Bearer")//就是jwt模式 //添加授权
+                .AddIdentityServerAuthentication(options =>//添加identityserver 授权 并并设置它的选项和配置
+                {
+                    options.Authority = "http://localhost:5000";//需要授权找谁
+                    options.RequireHttpsMetadata = false;
+                    options.ApiName = "api";//为自己定义个名字
+                });
 
-                //更改Identity server 4配置 
-                .AddInMemoryApiResources(Config.GetResources())
-                .AddInMemoryClients(Config.GetClients());
 
             services.AddMvc();
         }
@@ -47,10 +43,9 @@ namespace IdentityServerCenter
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseAuthentication();
 
-            //app.UseMvc();//不使用mvc先注释了
-
-            app.UseIdentityServer();//使用中间件
+            app.UseMvc();
         }
     }
 }

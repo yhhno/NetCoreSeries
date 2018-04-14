@@ -20,7 +20,7 @@ namespace IdentityServerCenter
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
-            .UseUrls("http://localhost:5000")
+            .UseUrls("http://localhost:5000")//控制台方式会成功，iis方式好像没用
                 .Build();
     }
 }

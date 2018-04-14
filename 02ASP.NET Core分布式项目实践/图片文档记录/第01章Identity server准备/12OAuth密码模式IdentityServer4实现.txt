@@ -1,71 +1,162 @@
-1.课程介绍
-这是一个实战的课程
-通过asp.net core高级开发过程中所遇到的
-技术上的问题
-项目管理上的问题
-与产品经理包括整个项目运维的问题。  产品理解的角度
-都会涉及到。
-希望能给大家的职业生涯发展有所帮助
-
-课程目标及面向群体
-1.进一步理解asp.net core 授权认证框架，mvc管道   
-这两部分比较难，所以本课程会更深入的讲解和做一些实践开发，在我们的项目开发中也会用到
-2.掌握Oauth2,结合Identity Server4实现OAuth2和OpenID Connect Server  
-授权认证的开源实现，我们要理解Oauth2的四种流程，以及结合Identity Server4实现OAuth2和OpenID Connect Server  也就是我们要做一个单点登录
-3.掌握asp.net core 与Redis MongoDB RabitMQ mySql 配合使用
-我们会在整个项目过程中 接触到Redis MongoDB RabitMQ mySql这些技术在asp.net core中使用
-4.理解DDD，学会在项目中进行领域分析与建模，并使用CQRS进行项目开发
-我们会在这个项目中，引入DDD开发，ddd是面向领域驱动设计，所以我们也会在这个过程当中，一起来做领域分析与建模，并使用CQRS进行项目开发
-5.掌握Docker，并能够利用Docker+GitlabCI/CD 快速部署整套测试环境
-我们在测试环境，用docker和gitlab 来做测试环境的持续的发布和部署
-
-面向群体
+问题1: 就在这一瞬间，不知道如何模拟? 如何模式用户名密码呢？ 出现不知道的情况， 没有深究
+问题2：   添加代码模拟密码模式  我们看到的东西，背后就是这样的，   有时候，我们看到的东西，想象不出来背后是什么
 
 
+我们上节把client credential grant 给实现了
+这节我们来讲Resource owner password credentials grant 密码模式
+密码模式会比客户端模式严格，安全级别高一些，它主要是还要求用户输入 就是第三方要求拥有 输入 用户名和密码，之后才可以访问我的api
+代码实现下
+共两步骤 来集成密码模式
+1.Config添加用户的配置
+2.添加client的配置 
+用户的配置是什么呢？因为我们要用户名和密码，所以我们需要一个测试的用户，我们现在是直接在定义个测试的用户，到正式情况下，我们会从数据库当中去取用户，测试的情况下，用户比较简答
+首先引用Identityserver.Text
+添加GetTestUsers()方法
+ public static List<TestUser> GetTestUsers()
+        {
+            return new List<TestUser>
+            {
+               new TestUser
+               {
+                   SubjectId="1",//是它id的一个键
+                   Username="jesse",
+                   Password="123456"
+               }
+            };
+
+        }
+添加client  说明啥？ 每个client的模式都是自己设置的， 不是同一设置的， 这样client的模式都可以不一样，灵活极大
+ public static IEnumerable<Client> GetClients()
+        {
+            //到最后我们会做一个web界面，把它全部统一添加进去，现在其实它是相当于在内存里来管理我们的clients  为啥内存  因为放在list里面
+            return new List<Client>//也是会返回客户端的枚举
+            {
+                new Client()
+                {
+                    ClientId="client",//clientid
+                    AllowedGrantTypes=GrantTypes.ClientCredentials,//允许访问的方式
+                    ClientSecrets =
+                    {
+                        new Secret("secrect".Sha256())//我们最好对clientsecrect进行简单的加密  Sha256为Identity server的一个扩展方法
+                    },
+                    AllowedScopes={ "api"}// 允许访问的资源
+                },
+                new Client()//密码模式的client
+                {
+                    ClientId="pwdClient",
+                    AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
+                    ClientSecrets={
+                    new Secret("secret".Sha256())},
+                    AllowedScopes={ "adpi"}
+                }
+            };
+        }
+
+然后配置GetTestUsers到startup中去
+ public void ConfigureServices(IServiceCollection services)
+        {
+            //在添加mvc之前 添加 Identitysever
+            services.AddIdentityServer()
+                .AddDeveloperSigningCredential()
+
+                //更改Identity server 4配置 
+                .AddInMemoryApiResources(Config.GetResources())
+                .AddInMemoryClients(Config.GetClients())
+
+
+                //添加GetTestUsers到配置中区
+                .AddTestUsers(Config.GetTestUsers());
+
+            services.AddMvc();
+        }
+
+
+
+我们运行起来看下，dotnet run  运行认证服务器
+运行 api
+我们在postman中模拟下我们这个登陆， 也就是模拟下密码模式  就在这一瞬间，不知道如何模拟? 如何模式用户名密码呢？ 出现不知道的情况， 没有深究
+为什么postman 可以模拟呢？
+ 获取token地址： "token_endpoint": "http://localhost:21272/connect/token", 
+ 在postman中 post 这个地址 body中添加 五个个参数 client_id：pwdClient   client_secrect：secrect  grant_type：password  username:jesse  password:123456
+ 然后就可以获取token
+ 注意此时 必须使用x-www-form-urlencoded格式， 而客户端模式 form-data与x-www-form-urlencoded格式都可以
+
+  获取到token之后  启动ClientCredentialApi 客户端
+ 访问api时， header 添加 Authorization ： bearer +token  get方式访问，   
+ 访问成功
+
+ 到此为止， 模拟算是完成了
+
+ 我们建一个控制台程序
+ dotnet new console --name PwdClient
+ 添加nuget包 IdentityModel IdentityModel提供类库访问
+
+ 为什么要用vs code这个工具呢？
+ 1刚开始使用我也不习惯，觉得特别难操作，但是使用完之后呢 因为它很轻很快，vs2017 有时候会卡，用这个感觉很顺畅
+ 2.我希望在net下是跨平台开发的额，有时候会用mac笔记本开发，这样的话，切换 也没有不熟悉的地方，用熟悉后我觉得都可以
+ 大家在刚开始学一个新技术或者新语言或者新工具的时候，刚开始都是一样的，都会有一些陌生，觉得很痛苦，然后就会有一些挫败感，而这个挫败感，我觉得是每一次你学新东西都会遇到的，当然如果你克服这种挫败感之后，如果是好的东西，会加快你的效率
+
+ dotnet restore
+  
+  添加代码模拟密码模式  我们看到的东西，背后就是这样的，   有时候，我们看到的东西，想象不出来背后是什么
+   static void Main(string[] args)
+        {
+
+            //step1 检测验证服务器是否可访问， 可访问返回验证服务器信息
+            //返回一个文档，，Client for retrieving OpenID Connect discovery documents 看不明白，就不看了，
+            var diso = DiscoveryClient.GetAsync("http://localhost:5000").Result;//因为是异步方法，同步调用的话，调用result属性
+            if (diso.IsError)
+            {
+                Console.WriteLine(diso.Error);
+            }
+
+            //step2 根据返回的验证服务器信息， 新建tokenclient 获取token
+            var tokenClient = new TokenClient(diso.TokenEndpoint, "pwdClient", "secrect");//之前不明白带有Client结尾的类库是干嘛的？
+            var tokenResponse = tokenClient.RequestResourceOwnerPasswordAsync("jesse","123456","api").Result;//同步调用
+            if (tokenResponse.IsError)
+            {
+                Console.WriteLine(tokenResponse.Error);
+            }
+            else
+            {
+                Console.WriteLine(tokenResponse.Json);
+            }
+
+            //step3, 携带获取的token， 访问api服务器
+            var httpClient = new HttpClient();//这里有个啥问题？
+            httpClient.SetBearerToken(tokenResponse.AccessToken);
+            var response = httpClient.GetAsync("http://localhost:5001/api/values").Result;
+            if (response.IsSuccessStatusCode)
+            {
+                Console.WriteLine(response.Content.ReadAsStringAsync().Result);
+            }
+
+
+            Console.ReadLine();
+        }
 
 
 
 
-2最小可行化产品MVP
-我们来看下产品开发的过程。
-首先我们要知道一个软件是如何被生产出来的，然后再参与到生产当中
-我们会给大家讲两点
-1.产品MVP的概念
-2.两种软件开发模式 一个是瀑布（传统的），一个是敏捷
+我们来看下密码模式和客户端模式的区别
+我们现在还是以第三方的集成的角度来理解OAuth
+客户端模式中，
+不知道是谁，访问api时返回401，所以第三方使我们颁发了一个client_secret和clientid 给了它，，它拥有一个clientid和clientsecret 用这两个参数去认证服务器认证，认证通过后，获取token， 然后携带token就可以访问api了
+这种方式呢 比如说我们第三方平台上有10000个用户，只要有clientid和clientsecret，那么10000个用户的数据都可以访问到   此时的用户是 resource owner
 
-产品MVP概念 最小可行化产品
-是一种避免开发出客户并不真正需要的产品的开发策略。
-不知道大家会不会有这样的经历，你们开发出来的产品，不是客户想要的，在早期开发中，我们可能还接触不到这一点，刚作为一个程序员，我们只是写写代码就可以了，等你越往高级的程度去过渡，你就要开始思考下，你所开发的东西，是否能真正满足用户的需求，这时候我们就要思考用户的需求到底是什么？我们需要开发的是什么样的一个东西，在一些失败的经验当中，有一些产品往往被设计的过渡复杂，以至于导致开发周期特别的长
-比如说一个产品 一个大的功能要经历一个月 两个月 甚至半年 一年的时间去开发的话，往往在开发完成之后，这个功能可能就跟用户想象的差得比较远，甚至技术与需求早就发生了变化，特别是在互联网公司，节奏要求更快，而且用户的想法也会变得很快
-
-
-所以产品mvp就是：
-快速地构建出符合产品预期功能的最小功能集合，我们只开发一部分功能 然后通过不断的迭代来改进这个产品。
-是让开发团队用最小的代价实现一个产品，同时去了解和验证这个产品有没有满足用户需求， 以此最大程度上了解和验证对用户问题的解决程度。
-
-对于mvp的理解
-开发一个汽车：
-错误的理解：
-先做一块的零件，在做一块的零件，最后拼成一辆车
-正确的理解：
-而是我们真正理解用户的需求是我们需要帮助他出行，当然我们不是要做一个滴滴打车软件，而是做一个工具，这个工具是实用性质的，最开始是滑板，同样可以让的出行变得方便，然后变成自行车，后面是摩托车，最后是变成四个轮子的车，最终我们的目的是让用户越来越爽，可以坐在这里很轻松，很快的到达某个地点，这个就是四个迭代的版本，每个版本都满足了用户的需求，只是在每个版本的基础之上，这个需求会让用户的满足程度更高，
-所以我们需要特别注意的一点就是 在最小化和可用之间找到一个平衡点，我们既不是要最大化的可用，把所有的功能都加进来，也不是说越少越好，开发越少的功能越好，在每一个版本推出的时候，我们至少要做出来一些对用户有用的东西，能够满足他需求的东西
-
-我们再看下完整的过程。也就是我们所说的迭代的过程，它本身在一开始最早的时候，我们是去做一个实验和构建，有一个想法，然后呢，我们在开发出来之后，其实是需要去测量，我们需要拿到用户的反馈，去进行一些学习和分析，因为往往，在最开始 一开始去做一件事情的时候，包括我们这一次做视频这样的一个产品，我们也并不是非常了解到底我们需要的是什么样的一个东西，如果我们只是按照自己脑子里的所想的去YY的话，可能做出来的东西，并没有那么好的去满足用户的需求，也就是说视频可能做得不是你最终想要的所有的东西，在我们测量的过程当中，发布一版之后，去拿到反馈之后，再去学习用户的一些想法和过程，不断的去改进我们的产品，在这个过程当中 我们是要以用户问题为中心，而不是以解决方案为中心  我们最终是去解决问题， 而不是我推出的就是这样的一个东西，这样的一个解决方案，然后呢  用户反馈的需求 进行改进,逐步改进我们产品的设计和实现,针对我们做得这个视频项目,大家也可以在群里去提意见和反馈,包括你想要的一些东西,我们这一次围绕整体的目标,去
-不断的把我们这个视频项目 内容做到更全更完善,以帮助大家实现从中高级开发人员进阶的过程,
-
-我们再回顾一下
-1.以用户问题为中心,而是以你要推出的东西为中心,因为我们真正要解决的是问题.
-2.不断的去迭代,去反馈,改进我们的产品
-3.每一个迭代的过程中,所推出来用户看到的东西,都是有用的,
-所以在这个过程中,我希望大家也能够给我积极的提供一些反馈和意见,然后这个视频项目内容的改善,也离不开你们的帮助,希望我们的这个视频可以帮助到未来所有想高级asp.net core开发人员过渡这一阶段的同伴
-
-以用户问题为中心，而不是以解决方案为中心 
-首先着眼于基本的客户需求，通过客户反馈，逐步修正产品设计和实现
-在各个迭代版本中,做出来的产品始终是可为客户所用的产品
+而密码模式
+相当于你必须要有每个用户的用户名和密码，有了用户名和密码之后，你才可以拿这个用户的数据，所以在这个地方，大家会注意到，它的安全级别高，它需要通过用户名和密码，找授权服务器拿到token之后，才能进行访问这个用户的api，
+第三方是这个样子的，就是大家有可能注意到我们访问认证服务器的时候，输入了client_secret的参数，这个client_secret我肯定不能直接在http协议下或者暴露在客户端传输的地方，那么抓包肯定一下子就抓到了，我们可以这个client_secret不传也可以的
+在认证服务
+  new Client()//密码模式的client
+                {
+                    ClientId="pwdClient",
+                    AllowedGrantTypes=GrantTypes.ResourceOwnerPassword,
+                    ClientSecrets={
+                    new Secret("secret".Sha256())},
+                    //RequireClientSecret=false,//此时不需要传递client_secret
+                    AllowedScopes={ "adpi"}
+                }
 
 
-
-
-
-task3 两种软件开发模式 : 瀑布与敏捷
+也就是你可以不输入client_secret,只要给我一个clientid和用户名密码就可以了，这种一般是说比较信得过第三方，才可以这样做，为什么？ 因为 比如说简书需要用新浪微博用户名和密码来登录新浪微博，以及通过新浪开放平台api直接用你这个账号。给你这个账号发微博，我肯定不可能把新浪微博的用户名和密码都给简书，这样就太不安全了，用户也会不信任的，
