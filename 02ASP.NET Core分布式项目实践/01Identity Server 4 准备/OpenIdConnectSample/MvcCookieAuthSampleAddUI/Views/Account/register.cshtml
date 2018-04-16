@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewData["Title"] = "Register";
+}
+@using MvcCookieAuthSampleAddUI.ViewModels;
+@model RegisterViewModel;
+
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post" asp-route-returnUrl="@ViewData["ReturnUrl"]">
+            <h4>Create a new account.</h4>
+            <hr />
+            <div class="text-danger" asp-validation-summary="All"></div>
+            <div class="form-group">
+                @*asp-for是绑定到当前的model,或者使用name属性,提交的时候会把name和value提交过去键值对方式*@
+                <label asp-for="Email"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ConfirmedPassword"></label>
+                <input asp-for="ConfirmedPassword" type="password" class="form-control" />
+                <span asp-validation-for="ConfirmedPassword" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-default">Register</button>
+        </form>
+    </div>
+</div>

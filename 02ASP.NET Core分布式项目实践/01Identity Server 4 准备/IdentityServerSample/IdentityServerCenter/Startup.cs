@@ -30,7 +30,7 @@ namespace IdentityServerCenter
         {
             //在添加mvc之前 添加 Identitysever
             services.AddIdentityServer()
-                .AddDeveloperSigningCredential()
+                .AddDeveloperSigningCredential()//我们要一个开发的证书
 
                 //更改Identity server 4配置 
                 .AddInMemoryApiResources(Config.GetResources())

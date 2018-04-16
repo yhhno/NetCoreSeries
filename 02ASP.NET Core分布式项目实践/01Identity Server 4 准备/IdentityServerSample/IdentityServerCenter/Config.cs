@@ -15,7 +15,7 @@ namespace IdentityServerCenter
     public class Config
     {
         //这个会用来所有可以访问的对象，也就是用户的资源
-        public static IEnumerable<ApiResource> GetResources()
+        public static IEnumerable<ApiResource> GetResources()//测试方法 模拟一下
         {
             return new List<ApiResource>
             {
@@ -23,7 +23,7 @@ namespace IdentityServerCenter
             };
         }
 
-        public static IEnumerable<Client> GetClients()
+        public static IEnumerable<Client> GetClients()//测试方法 模拟一下
         {
             //到最后我们会做一个web界面，把它全部统一添加进去，现在其实它是相当于在内存里来管理我们的clients  为啥内存  因为放在list里面
             return new List<Client>//也是会返回客户端的枚举
@@ -49,7 +49,7 @@ namespace IdentityServerCenter
                 }
             };
         }
-        public static List<TestUser> GetTestUsers()
+        public static List<TestUser> GetTestUsers() //测试方法 模拟一下  TestUser为 测试的user类
         {
             return new List<TestUser>
             {
