@@ -17,7 +17,7 @@ using MvcCookieAuthSampleAddUI.Controllers;
 
 using IdentityServer4.Test;
 
-namespace MvcCookieAuthSample.Controllers
+namespace MvcCookieAuthSampleAddUI.Controllers
 {
     public class AccountController : Controller
     {
@@ -120,12 +120,15 @@ namespace MvcCookieAuthSample.Controllers
                 {
                     if (_users.ValidateCredentials(viewModel.UserName, viewModel.Password))//密码正确
                     {
+
+                        //记住功能
                         var props = new AuthenticationProperties
                         {
                             IsPersistent = true,
                             ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromMinutes(30))
                         };
 
+                        //本地登录表示
                         await Microsoft.AspNetCore.Http.AuthenticationManagerExtensions.SignInAsync(HttpContext,
                             user.SubjectId,
                             user.Username,
@@ -170,7 +173,7 @@ namespace MvcCookieAuthSample.Controllers
             ////return Ok();
             //return RedirectToAction("Index", "Home");
 
-
+            //消除本地登录标识
             HttpContext.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }

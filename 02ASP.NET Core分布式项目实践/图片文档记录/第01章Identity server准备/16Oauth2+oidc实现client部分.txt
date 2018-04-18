@@ -1,71 +1,215 @@
-1.课程介绍
-这是一个实战的课程
-通过asp.net core高级开发过程中所遇到的
-技术上的问题
-项目管理上的问题
-与产品经理包括整个项目运维的问题。  产品理解的角度
-都会涉及到。
-希望能给大家的职业生涯发展有所帮助
+学习能力是第一核心竞争力，应用能力的是价值的体现。
+问题1：学习不清晰问题：这些东西官网都有，=》 往往止步于案例范围，应该更深入些，更扩展些， 去深入去官网，扩展去应用实践， 学习清晰，应用更清晰才可以
+问题2：知识来源问题=》这些都是自己可以从官网上学到，关键是自己 不需要别人教，这就考验自学能力了。 
+问题3： //问题 自己看注释，看不出名堂来， 看不明白，也没有意愿去深究，，之记住案例所涉及的的字面意思
 
-课程目标及面向群体
-1.进一步理解asp.net core 授权认证框架，mvc管道   
-这两部分比较难，所以本课程会更深入的讲解和做一些实践开发，在我们的项目开发中也会用到
-2.掌握Oauth2,结合Identity Server4实现OAuth2和OpenID Connect Server  
-授权认证的开源实现，我们要理解Oauth2的四种流程，以及结合Identity Server4实现OAuth2和OpenID Connect Server  也就是我们要做一个单点登录
-3.掌握asp.net core 与Redis MongoDB RabitMQ mySql 配合使用
-我们会在整个项目过程中 接触到Redis MongoDB RabitMQ mySql这些技术在asp.net core中使用
-4.理解DDD，学会在项目中进行领域分析与建模，并使用CQRS进行项目开发
-我们会在这个项目中，引入DDD开发，ddd是面向领域驱动设计，所以我们也会在这个过程当中，一起来做领域分析与建模，并使用CQRS进行项目开发
-5.掌握Docker，并能够利用Docker+GitlabCI/CD 快速部署整套测试环境
-我们在测试环境，用docker和gitlab 来做测试环境的持续的发布和部署
+server就是是授权和认证中心， 这节课把client实现下
+此时登录成功的标识是在本地，我们要做的是把它放到客户端
+ [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel viewModel,string returnUrl=null)
+        {
+            if (ModelState.IsValid) //model验证成功 此处是EF绑定的验证通过,内部处理还可能有错误
+            {
+                //校验用户是否存在
+                var user = _users.FindByUsername(viewModel.UserName);
+                if (user == null)//用户不存在
+                {
 
-面向群体
+                    ModelState.AddModelError(nameof(viewModel.UserName), "username not exists");
+                }
+                else
+                {
+                    if (_users.ValidateCredentials(viewModel.UserName, viewModel.Password))//密码正确
+                    {
 
+					//记住功能
+                        var props = new AuthenticationProperties
+                        {
+                            IsPersistent = true,
+                            ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromMinutes(30))
+                        };
 
-
-
-
-
-2最小可行化产品MVP
-我们来看下产品开发的过程。
-首先我们要知道一个软件是如何被生产出来的，然后再参与到生产当中
-我们会给大家讲两点
-1.产品MVP的概念
-2.两种软件开发模式 一个是瀑布（传统的），一个是敏捷
-
-产品MVP概念 最小可行化产品
-是一种避免开发出客户并不真正需要的产品的开发策略。
-不知道大家会不会有这样的经历，你们开发出来的产品，不是客户想要的，在早期开发中，我们可能还接触不到这一点，刚作为一个程序员，我们只是写写代码就可以了，等你越往高级的程度去过渡，你就要开始思考下，你所开发的东西，是否能真正满足用户的需求，这时候我们就要思考用户的需求到底是什么？我们需要开发的是什么样的一个东西，在一些失败的经验当中，有一些产品往往被设计的过渡复杂，以至于导致开发周期特别的长
-比如说一个产品 一个大的功能要经历一个月 两个月 甚至半年 一年的时间去开发的话，往往在开发完成之后，这个功能可能就跟用户想象的差得比较远，甚至技术与需求早就发生了变化，特别是在互联网公司，节奏要求更快，而且用户的想法也会变得很快
-
-
-所以产品mvp就是：
-快速地构建出符合产品预期功能的最小功能集合，我们只开发一部分功能 然后通过不断的迭代来改进这个产品。
-是让开发团队用最小的代价实现一个产品，同时去了解和验证这个产品有没有满足用户需求， 以此最大程度上了解和验证对用户问题的解决程度。
-
-对于mvp的理解
-开发一个汽车：
-错误的理解：
-先做一块的零件，在做一块的零件，最后拼成一辆车
-正确的理解：
-而是我们真正理解用户的需求是我们需要帮助他出行，当然我们不是要做一个滴滴打车软件，而是做一个工具，这个工具是实用性质的，最开始是滑板，同样可以让的出行变得方便，然后变成自行车，后面是摩托车，最后是变成四个轮子的车，最终我们的目的是让用户越来越爽，可以坐在这里很轻松，很快的到达某个地点，这个就是四个迭代的版本，每个版本都满足了用户的需求，只是在每个版本的基础之上，这个需求会让用户的满足程度更高，
-所以我们需要特别注意的一点就是 在最小化和可用之间找到一个平衡点，我们既不是要最大化的可用，把所有的功能都加进来，也不是说越少越好，开发越少的功能越好，在每一个版本推出的时候，我们至少要做出来一些对用户有用的东西，能够满足他需求的东西
-
-我们再看下完整的过程。也就是我们所说的迭代的过程，它本身在一开始最早的时候，我们是去做一个实验和构建，有一个想法，然后呢，我们在开发出来之后，其实是需要去测量，我们需要拿到用户的反馈，去进行一些学习和分析，因为往往，在最开始 一开始去做一件事情的时候，包括我们这一次做视频这样的一个产品，我们也并不是非常了解到底我们需要的是什么样的一个东西，如果我们只是按照自己脑子里的所想的去YY的话，可能做出来的东西，并没有那么好的去满足用户的需求，也就是说视频可能做得不是你最终想要的所有的东西，在我们测量的过程当中，发布一版之后，去拿到反馈之后，再去学习用户的一些想法和过程，不断的去改进我们的产品，在这个过程当中 我们是要以用户问题为中心，而不是以解决方案为中心  我们最终是去解决问题， 而不是我推出的就是这样的一个东西，这样的一个解决方案，然后呢  用户反馈的需求 进行改进,逐步改进我们产品的设计和实现,针对我们做得这个视频项目,大家也可以在群里去提意见和反馈,包括你想要的一些东西,我们这一次围绕整体的目标,去
-不断的把我们这个视频项目 内容做到更全更完善,以帮助大家实现从中高级开发人员进阶的过程,
-
-我们再回顾一下
-1.以用户问题为中心,而是以你要推出的东西为中心,因为我们真正要解决的是问题.
-2.不断的去迭代,去反馈,改进我们的产品
-3.每一个迭代的过程中,所推出来用户看到的东西,都是有用的,
-所以在这个过程中,我希望大家也能够给我积极的提供一些反馈和意见,然后这个视频项目内容的改善,也离不开你们的帮助,希望我们的这个视频可以帮助到未来所有想高级asp.net core开发人员过渡这一阶段的同伴
-
-以用户问题为中心，而不是以解决方案为中心 
-首先着眼于基本的客户需求，通过客户反馈，逐步修正产品设计和实现
-在各个迭代版本中,做出来的产品始终是可为客户所用的产品
+                        //本地登录表示
+                        await Microsoft.AspNetCore.Http.AuthenticationManagerExtensions.SignInAsync(HttpContext,
+                            user.SubjectId,
+                            user.Username,
+                            props);
 
 
 
+                        return RedirectToLocal(returnUrl);//ReturnUrl 需要做判断, 存在多个地方,所以 抽象个私有方法, IActionResult 可以多次传递
+                    }
+                    else//密码不正确
+                    {
+                        ModelState.AddModelError(nameof(viewModel.Password), "wrong password");
+                    }
+                }
+
+                
+                
+            }
+            return View();//model验证不成功,,modelstate中的错误信息显示在view中
+        }
 
 
-task3 两种软件开发模式 : 瀑布与敏捷
+我们新建一个客户端MVCClient mvc项目
+我们接下来要加入的是openidconnect，因为它本身在asp.net core Authentication 认证模块已经内置实现了openidconnect，所以我们在MVCclient这个网站里面不需要添加任何第三方引用
+我们唯一需要做的就是Authentication给它添加进来  问题=》这些都是自己可以从官网上学到，关键是自己 不需要别人教，这就考验自学能力了。
+Authentication给它添加进来
+这个地方我们用的是cookie方式
+当它需要登录的时候我们使用OIDC 也就是我们的openidconnect server
+
+默认已经实现了 asp.net core认证下面已经内置的openidconnent， 我们这个地方需要加一些配置，
+mvc客户端使用网站这块的登录了
+授权服务器地址
+我们也没有证书啥的
+配置下客户端
+
+  // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddMvc();
+
+            //添加Authentication 配置信息
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = "Cookies"; //这个地方我们用的是cookie方式  这是啥意思？ 本地认证用cookies 也就是是把远程授权后的标识，在客户端的保存方式
+                options.DefaultChallengeScheme = "oidc";//当它需要登录的时候我们使用OIDC 也就是我们的openidconnect server  远程授权方式
+
+            })
+            .AddCookie()
+            .AddOpenIdConnect("oidc", options =>
+            {
+
+                //问题 自己看注释，看不出名堂来， 看不明白，也没有意愿去深究，，之记住案例所涉及的的字面意思
+                options.SignInScheme = "Cookies";//mvc客户端使用网站这块的登录了
+                options.Authority = "http://localhost:5000"; //授权服务器地址
+                options.RequireHttpsMetadata = false;//我们也没有证书啥的
+
+                //配置下客户端
+                options.ClientId = "mvc";
+                options.ClientSecret = "secret";
+                options.SaveTokens = true;//是不是保存cookies
+            });
+
+        }
+
+这些代码可以从identityserver4的官网，示例代码上都可以找到。
+此时客户端配置已经完成了。
+应用中间件
+  app.UseAuthentication();
+客户端配置一个url
+  .UseUrls("http://localhost:5001")
+
+
+  我们给服务端配置一个url
+   .UseUrls("http://localhost:5000")
+
+
+   此时还需要修改下server端代码  
+   如果使用的是openidconnect的话，client中需要添加一些配置
+ RedirectUris  跳转的地址 默认写死 客户端登录地址 它在asp.net core mvc中这个地址是固定的  asp.net core mvc 有个endpooint就是直接默认添加进来就是这个地址，他就会处理认证登录的逻辑  
+   这个地方我们只能写在代码里，如果是通过数据库来保存client的话，我们就会直接把这些东西配置到数据库中，正常情况下在生产情况下我们肯定是通过改数据库，肯定不是改代码
+
+
+ PostLogoutRedirectUris  当它退出的时候，会返回到这个地址
+   修改下Scope
+
+    public static IEnumerable<Client> GetClients()//测试方法 模拟一下 
+        {
+            //到最后我们会做一个web界面，把它全部统一添加进去，现在其实它是相当于在内存里来管理我们的clients  为啥内存  因为放在list里面
+            return new List<Client>//也是会返回客户端的枚举
+            {
+                new Client()
+                {
+                    ClientId="mvc",//clientid
+                    AllowedGrantTypes=GrantTypes.Implicit,//允许访问的方式
+                    ClientSecrets =
+                    {
+                        new Secret("secret".Sha256())//我们最好对clientsecrect进行简单的加密  Sha256为Identity server的一个扩展方法
+                    },
+
+                   //跳转的地址 默认写死 客户端登录地址 它在asp.net core mvc中这个地址是固定的  asp.net core mvc 有个endpooint就是直接默认添加进来就是这个地址，他就会处理认证登录的逻辑 
+                   // 这个地方我们只能写在代码里，如果是通过数据库来保存client的话，我们就会直接把这些东西配置到数据库中，正常情况下在生产情况下我们肯定是通过改数据库，肯定不是改代码
+                    RedirectUris={"http://localhost:5001/signin-oidc" },//赋值类型为数组  
+
+                    //当它退出的时候，会返回到这个地址
+                    PostLogoutRedirectUris={"http://localhost:5001/signout-callback-oidc" },
+            
+                    //之前是允许访问的api，现在是用户信息
+                    AllowedScopes={
+                        IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.OpenId,
+                    }// 允许访问的资源
+                }
+            };
+        }
+
+
+运行下
+server端本身自带登录，只不过呢默认情况下，它自己是一个登陆程序，在它自己那边去使用，然后现在客户端也可以去跑到服务端去登陆
+
+在mvcclient项目中的 Homecontroller中添加Authorize标签 否则它不会自己跳转到登录的地方去,添加标签后，必须登录后才能使用homecontroller
+
+launchSettng.json 修改端口配置
+
+consent 是要做授权的地方 我们这里没有添加，还有去改一个client的配置，这个地方就是用户来点那个按钮，你是不是同意我授权
+
+http://localhost:5000/consent?returnUrl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Dmvc%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A5001%252Fsignin-oidc%26response_type%3Did_token%26scope%3Dopenid%2520profile%26response_mode%3Dform_post%26nonce%3D636596430927424287.ZTg2ZmJiYmEtM2U0Mi00MzhlLWE2YTctMjM4ZDViMDVlN2VlODBkNWI5MDgtMzEyNy00NDA5LTgzYzEtMmQ1MGJiMTRlMDNl%26state%3DCfDJ8BwfQbt0WphBpi6Gk0taZ9mooepfEtFU64CEl1f-5DOwaNIKiXb6RrLZZTTDV8gy2fqh_Pe2ZbHgi286fsms2SvwJwWmFAu4gAYB4fnbd9V1URluG71WDGky5lt4r4EWW5XFsv_0lsnRygrPv88WXzCqIL4ILI3qdWi8M6m45hORv-hkHe1UxbwZtoqteVmd_mgeoVJHEfVnRTCg7BH0RC1aBh5iJ_6bxU8ol8IJdAgwC72p-oNtil4CfoyS9XfTs-9x7QbmFxHHvadBgCMQ3l5QUGI4eFaGn-CUVCEzk4MIyraOaaZ7lKbw4dZFtjHLfQ%26x-client-SKU%3DID_NET%26x-client-ver%3D2.1.4.0
+
+
+修改客户端 client 
+ //当它退出的时候，会返回到这个地址
+                    PostLogoutRedirectUris={"http://localhost:5001/signout-callback-oidc" },
+
+
+
+
+首先第一步访问mvcclient 的home控制器，由于被打上了Authorize标签，
+执行 post http://localhost:5001/signin-oidc
+.AspNetCore.Correlation.oidc.kFtqjgohHBxmJ0LJcRENnmJYZDeX-zWbHr1oj4Ul-CU:"N"
+.AspNetCore.OpenIdConnect.Nonce.CfDJ8BwfQbt0WphBpi6Gk0taZ9n1dbH4IlcezrLdWwlGtOt1qn_zaI89jQICGjiJtkDymlC1Iup0mL2_TyQPv-JHMQ4z6l82TqiiKNuE8lFwCXb_ZrJxkTQF61IAMzbKHy2mATtIUdV7FTH6hXeMNbwlB5aEFI0rxkoVODhSNFk9zYJGLbKC1N1WYoiMgJXhEvjDL-u6wnZoYGCDN-I_rzBCG59oBeL0q2fYctI68jrafJ8ZgSav9NHfdufE23TZPTpgfobo759PdlNX-Cb4Kw0zgNw:"N"
+
+在signin-oidc内部
+http://localhost:5000/connect/authorize?client_id=mvc&redirect_uri=http://localhost:5001/signin-oidc&response_type=id_token&scope=openid profile&response_mode=form_post&nonce=636596445432986544.NTU3NjllYzUtMGU2YS00ZjhiLWFiODItYWJiMDM3ODEwMGQwZWEyNTgwODctNjMxYS00MTFkLWI1YTItZDU0NjhiZjQ2NTg0&state=CfDJ8BwfQbt0WphBpi6Gk0taZ9mYh1UgL5PwA9ZaBULc0OxRuQKnGYwdBVj1Zw51S-LXbkRkjgqdFKoleB-RYjw-afhQ-RKCs3qDLXo9wAhx6GUNTF927g4QXxSAPXQpNHO6pogatu56NsPUitXFbZtQDYZ3C4UNZwmHkIuOXmpgG-9PsnR8427qEoC4sg8oQZyxLcx7zYzGzl2m5mqxLXMOIRzIgDsjFYS9eLUbVHuxKFxrrC2Z9MlM6n1_YkNnLCMmdyNCtILdOoevj3xWY-LbmOjN7QWbV-HyEmVNApKPSZnUb9u0uX-10Ny6oTM3A6rZyA&x-client-SKU=ID_NET&x-client-ver=2.1.4.0
+
+然后被跳转到server的登录页面
+http://localhost:5000/account/login?returnUrl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Dmvc%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A5001%252Fsignin-oidc%26response_type%3Did_token%26scope%3Dopenid%2520profile%26response_mode%3Dform_post%26nonce%3D636596436894905731.MTJmMjA1Y2ItMWE2Ny00MGVhLTg4ZWQtODQ4OTBkNWM4MmE4ODg2ZGVhNDItNzQ3Zi00YTQyLWI4OTUtYzZiY2ZlNzc3MzEz%26state%3DCfDJ8BwfQbt0WphBpi6Gk0taZ9kqj1TZ2tUrfVp3SwtwKChDB6ueAxJxW0Yf3B1fE2RnI-z2hoULmX4fAt5OI60YCvDf245sh_dF5ag_vHA5ML498hHJYqk1p-Km2kQ9AdaGfgrhuV8561soMdxQOtexWtyAhnmfYJzX5iXbZEp5hWMF8Q4Z40tngQvfLvqwGifTkPBO_nFXwE62xUSo2oMm-v8A_PMyBYaCHSNAVljXFeWDy_6YXo0OAk3gqwhkhJXCy6FJO9y-dBOtRSUQL7tpoYhGs6k4b7ivSVVl5YSjwI1d97MAEgjVZedLOHDPMMKU4g%26x-client-SKU%3DID_NET%26x-client-ver%3D2.1.4.0
+
+
+
+
+输入用户名和密码，
+跳转到consent页面
+http://localhost:5000/consent?returnUrl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Dmvc%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A5001%252Fsignin-oidc%26response_type%3Did_token%26scope%3Dopenid%2520profile%26response_mode%3Dform_post%26nonce%3D636596430927424287.ZTg2ZmJiYmEtM2U0Mi00MzhlLWE2YTctMjM4ZDViMDVlN2VlODBkNWI5MDgtMzEyNy00NDA5LTgzYzEtMmQ1MGJiMTRlMDNl%26state%3DCfDJ8BwfQbt0WphBpi6Gk0taZ9mooepfEtFU64CEl1f-5DOwaNIKiXb6RrLZZTTDV8gy2fqh_Pe2ZbHgi286fsms2SvwJwWmFAu4gAYB4fnbd9V1URluG71WDGky5lt4r4EWW5XFsv_0lsnRygrPv88WXzCqIL4ILI3qdWi8M6m45hORv-hkHe1UxbwZtoqteVmd_mgeoVJHEfVnRTCg7BH0RC1aBh5iJ_6bxU8ol8IJdAgwC72p-oNtil4CfoyS9XfTs-9x7QbmFxHHvadBgCMQ3l5QUGI4eFaGn-CUVCEzk4MIyraOaaZ7lKbw4dZFtjHLfQ%26x-client-SKU%3DID_NET%26x-client-ver%3D2.1.4.0
+同意后
+跳转到 http://localhost:5000/
+此时，server端保存的client端的登录标识是在cookie中， server本身有个登录，登录状态也保存在cookie中，与此同时client端也有获得授权的标识，保存在客户端
+此时如果重新访问 http://localhost:5000/， client段会拿着授权的cookie去验证是否正确，正确就是可以访问，不正确就重新登录
+
+
+客户端cookies
+.AspNetCore.Antiforgery.Q5m3NUZw7MA:"CfDJ8BwfQbt0WphBpi6Gk0taZ9mOFJjdRNj7cWb_cW6TV0sjUdPuaXSfeKfemNGLDjh6sMulTcfUc4-EZFd3DG_0QpN_dlC4-jw2oz39LaO4WJ7pM_xayOAADNUcKElTck6W87hBdEb-VcbhiVzKOhaQUng"
+.AspNetCore.Cookies:"CfDJ8BwfQbt0WphBpi6Gk0taZ9mVjk5Bt1RhfeNMmwNNCcIw1q1Sp-yDn4L8vdunzdSCYhD9N_NyHZk1kMDC2VuHO0gJNucUWd09grkKYikgAmn6T8BdB3JooFJql-kPdqTITYYZYAgESXriZ9IA7kNhgx5lOSNH0TABNzn7P5xkOm2Rk72frF_te6OM0RyWiMJGHOOURC7289sF-jGAwKHwrKy805f3i_0qF_pmqKgnu3HSZ7Fr1dW8bNqZs_Rm76lnumNSsPszhVGepSFd7LEWhQu8mGUKzwjKKfs6yHOkYO4KyL5xLTgYK2YHVTXs2r3fzADXa32wN1R7RnncIZDsO9jIvA7w4RQAQNvtZfEGV31aGiYqS0OPQH8HrIEmC9LNBac9c2DCxR9dFpFoXzE2tqLfjMzowvWor7N-OkLq00L4XtnC3XYLm2TX0zUoR-SFpgLXnVn3jBaekR8nURDUGDRNXN46qaqfRpgpX5Qnu8IWbE3OYEl3XnvTraZdLmdmh5-ogtSgmrvkaQlmeHjSx0zQvPxL4BmUFmbpHIUBowBC8LkHB7k8720uLGtEQn-Kfe5m7g0GcyFbf9b3S4muwxhhWgzyxDjYKJcT4ulUfy_NEGN-5xwiERhsegDDlVif6TJ3eSMHt_bA7dbdYWrNUvBE2ZSxZpa8D_bURYGWfBnqDvcJVzN5sfPYNcStRV7nvlZXhrNqprvhU8VNxh3Xx6cKXfzDsn7WePcL2OzB75NwtB04XjQ89juPq6jG4q1jH5Rx7COyQn3H9y48NDi7w2It99SM4sOacttaW8Qrd7Z8uavTOBLtbhPgFdLb6ZH-jwT_sYzZ3Yr6VAwQkDwqeUK_7aHB5FtRuK_6BMhXaVINCJp5IIfY2VbsnEOLw7dQ3yRTmnbxZTKxEsBNS3eCCPCDL69mGSIgRfIkbH1T_J1jI95m70-RbvIoeRkmSInkcYe1Ixe-XJIQITy3GyU7W4-oZxgarqtb8nX4bPh9MS0wvg7vRR8AOCUQBErtGAja7lS5tRgL0xC880qYEeSnuGUlb_-wktEkp0YFzLpELgjWarIX2jrkRwWHlr30KczJjrsE598nZ3XCqpaLMqIxLgcu0muJVMl514FpfnOJRLPueNwZxKsD_CvI36Ux7MIp19fIFq-sPIM8aoxD3obzv_cePJpMfzdDSeJAyCDiSlO0kmOOHoPyGmjXkTguZ9zzGfvBSzRhzMX87avzSACmvnE6MTngMvUsEQ3ZX898LyV2XtuvDsE1DaBCks4DVU4m7gpKhjNuzUbHmAni_6B910HYXlXAhIf7iH9Vmb6kEyJEzubQB2Zz3CDycAZVQELs9UEi3k7UiqM6cYueuavpEl0w_BIxPVQrY7cMjMb3is2842QCMMsvZi8bOqRGQ6WhG4xiFspCkQgeRNf3B-bEfUD1xxLY-NVTOWKKqOOxgd16Zicq70LOEw-J_CkhTYD8LgxYRtW76mloTpx01La11mwAnCw5SYOzBWF4bceUPuvjHZVbcZ_LowtjXOrW4b-h4L4OWcDe9VHHY2DYL0NAD7roiq9C5_cybJ1IcmCNJKNYd94Mklap8sHxs55Jynf1Y8IPdMt8rW_AqUK6--7NbTRPDxCN5L45UvV9DPSwzuLF5-J5sQlMe60SHW_fZg77duSit6zJo9z2wpkdAOibgwHiCMvTP5jvkVKiDtRhPI9r_mKoU2N9QJw1zIUWBnHNDvkBA4uENvzMJHu_tJ3KVshTD1UaPjgAx4IMMy6Nbqm_f2Y3yZlMpNqLXPeQREu0Dj43tE7wRtqhFZdA9E7B-8JoAgJQnFFP6aWBWyOp7nmbjfxSsXLOwO9blZjoE3Z77c5V5S7qAkTblMhxrGDzaugVQ3AK715hB7cs3PMj4neIDu4rZOZv9sT9wUysG_xRAnWDqbtEc-SiFXwo7OuHL2Ix_gHSH6HoKFTg5uLtro-6sSEDVTG6uz0RbyvyQ0aQziwUwdmWSKMXFd0iTtAHDkd08sh9ewQ5Q0J0fi1wd6EHuX75hu5MC7i3W04nUhYQSiAwLYD9gWGdB4tbe6cCdTenepI2GC4wVHbGH1EKdAzeXoGcefarY_eaveoeV7M3fQNOzqlXUwIVwtdQ8olB_v8qbhZ0uM3YRoxh8FOl10BYm5N8Lq1aX9Eefv4lEiaxdX2a9fX7YhvoOENy_3j1So8RWFoDf4a7T9yUNcXa2nHWSFHiWSEXqqm7fG3dTDdPoNcNJsLnDP-RLfRx1RzlLD0HauQj0t-xr-eBYaUOICvpURiNrKj1HTl9kkygWckJsZX9w1rlRA89GqMRxRtJo72DMGPwbHPxY01xqngkW7wRpAjaI4hJZFGmrf28HJifWSZT3pIkN4BSTeSCsGM_F6_oAwOb9ENTxvRZw-1-SywJJhcOv8Jtly7rQXBu81LDjpY3kHeH3scIdwCTAOZfYh597lsAhdTXJMILGz5v3gfR-yt5GZgziVj94OlSUv-TcNqevAUP9_Zz2lqf3GtLKaxtTS07dTh10jPj3vK_sVXC_KEbqUzlE7FXbPrzA6Qp41RKwIX4dpZy9cVoyaGlMCaYWN_d2jC2AlKbzOSuq9_JbmfnWVWtmevujCbUHGvYpvk69VpQV7meS3nArcmxIpY"
+
+
+
+服务端cookies
+.AspNetCore.Antiforgery.Q5m3NUZw7MA:"CfDJ8BwfQbt0WphBpi6Gk0taZ9mOFJjdRNj7cWb_cW6TV0sjUdPuaXSfeKfemNGLDjh6sMulTcfUc4-EZFd3DG_0QpN_dlC4-jw2oz39LaO4WJ7pM_xayOAADNUcKElTck6W87hBdEb-VcbhiVzKOhaQUng"
+.AspNetCore.Cookies:"CfDJ8BwfQbt0WphBpi6Gk0taZ9mVjk5Bt1RhfeNMmwNNCcIw1q1Sp-yDn4L8vdunzdSCYhD9N_NyHZk1kMDC2VuHO0gJNucUWd09grkKYikgAmn6T8BdB3JooFJql-kPdqTITYYZYAgESXriZ9IA7kNhgx5lOSNH0TABNzn7P5xkOm2Rk72frF_te6OM0RyWiMJGHOOURC7289sF-jGAwKHwrKy805f3i_0qF_pmqKgnu3HSZ7Fr1dW8bNqZs_Rm76lnumNSsPszhVGepSFd7LEWhQu8mGUKzwjKKfs6yHOkYO4KyL5xLTgYK2YHVTXs2r3fzADXa32wN1R7RnncIZDsO9jIvA7w4RQAQNvtZfEGV31aGiYqS0OPQH8HrIEmC9LNBac9c2DCxR9dFpFoXzE2tqLfjMzowvWor7N-OkLq00L4XtnC3XYLm2TX0zUoR-SFpgLXnVn3jBaekR8nURDUGDRNXN46qaqfRpgpX5Qnu8IWbE3OYEl3XnvTraZdLmdmh5-ogtSgmrvkaQlmeHjSx0zQvPxL4BmUFmbpHIUBowBC8LkHB7k8720uLGtEQn-Kfe5m7g0GcyFbf9b3S4muwxhhWgzyxDjYKJcT4ulUfy_NEGN-5xwiERhsegDDlVif6TJ3eSMHt_bA7dbdYWrNUvBE2ZSxZpa8D_bURYGWfBnqDvcJVzN5sfPYNcStRV7nvlZXhrNqprvhU8VNxh3Xx6cKXfzDsn7WePcL2OzB75NwtB04XjQ89juPq6jG4q1jH5Rx7COyQn3H9y48NDi7w2It99SM4sOacttaW8Qrd7Z8uavTOBLtbhPgFdLb6ZH-jwT_sYzZ3Yr6VAwQkDwqeUK_7aHB5FtRuK_6BMhXaVINCJp5IIfY2VbsnEOLw7dQ3yRTmnbxZTKxEsBNS3eCCPCDL69mGSIgRfIkbH1T_J1jI95m70-RbvIoeRkmSInkcYe1Ixe-XJIQITy3GyU7W4-oZxgarqtb8nX4bPh9MS0wvg7vRR8AOCUQBErtGAja7lS5tRgL0xC880qYEeSnuGUlb_-wktEkp0YFzLpELgjWarIX2jrkRwWHlr30KczJjrsE598nZ3XCqpaLMqIxLgcu0muJVMl514FpfnOJRLPueNwZxKsD_CvI36Ux7MIp19fIFq-sPIM8aoxD3obzv_cePJpMfzdDSeJAyCDiSlO0kmOOHoPyGmjXkTguZ9zzGfvBSzRhzMX87avzSACmvnE6MTngMvUsEQ3ZX898LyV2XtuvDsE1DaBCks4DVU4m7gpKhjNuzUbHmAni_6B910HYXlXAhIf7iH9Vmb6kEyJEzubQB2Zz3CDycAZVQELs9UEi3k7UiqM6cYueuavpEl0w_BIxPVQrY7cMjMb3is2842QCMMsvZi8bOqRGQ6WhG4xiFspCkQgeRNf3B-bEfUD1xxLY-NVTOWKKqOOxgd16Zicq70LOEw-J_CkhTYD8LgxYRtW76mloTpx01La11mwAnCw5SYOzBWF4bceUPuvjHZVbcZ_LowtjXOrW4b-h4L4OWcDe9VHHY2DYL0NAD7roiq9C5_cybJ1IcmCNJKNYd94Mklap8sHxs55Jynf1Y8IPdMt8rW_AqUK6--7NbTRPDxCN5L45UvV9DPSwzuLF5-J5sQlMe60SHW_fZg77duSit6zJo9z2wpkdAOibgwHiCMvTP5jvkVKiDtRhPI9r_mKoU2N9QJw1zIUWBnHNDvkBA4uENvzMJHu_tJ3KVshTD1UaPjgAx4IMMy6Nbqm_f2Y3yZlMpNqLXPeQREu0Dj43tE7wRtqhFZdA9E7B-8JoAgJQnFFP6aWBWyOp7nmbjfxSsXLOwO9blZjoE3Z77c5V5S7qAkTblMhxrGDzaugVQ3AK715hB7cs3PMj4neIDu4rZOZv9sT9wUysG_xRAnWDqbtEc-SiFXwo7OuHL2Ix_gHSH6HoKFTg5uLtro-6sSEDVTG6uz0RbyvyQ0aQziwUwdmWSKMXFd0iTtAHDkd08sh9ewQ5Q0J0fi1wd6EHuX75hu5MC7i3W04nUhYQSiAwLYD9gWGdB4tbe6cCdTenepI2GC4wVHbGH1EKdAzeXoGcefarY_eaveoeV7M3fQNOzqlXUwIVwtdQ8olB_v8qbhZ0uM3YRoxh8FOl10BYm5N8Lq1aX9Eefv4lEiaxdX2a9fX7YhvoOENy_3j1So8RWFoDf4a7T9yUNcXa2nHWSFHiWSEXqqm7fG3dTDdPoNcNJsLnDP-RLfRx1RzlLD0HauQj0t-xr-eBYaUOICvpURiNrKj1HTl9kkygWckJsZX9w1rlRA89GqMRxRtJo72DMGPwbHPxY01xqngkW7wRpAjaI4hJZFGmrf28HJifWSZT3pIkN4BSTeSCsGM_F6_oAwOb9ENTxvRZw-1-SywJJhcOv8Jtly7rQXBu81LDjpY3kHeH3scIdwCTAOZfYh597lsAhdTXJMILGz5v3gfR-yt5GZgziVj94OlSUv-TcNqevAUP9_Zz2lqf3GtLKaxtTS07dTh10jPj3vK_sVXC_KEbqUzlE7FXbPrzA6Qp41RKwIX4dpZy9cVoyaGlMCaYWN_d2jC2AlKbzOSuq9_JbmfnWVWtmevujCbUHGvYpvk69VpQV7meS3nArcmxIpY" 
+
+
+
+我们现在要做的是拿到identityclaim后在about页面显示下
+因为在htttpcontext下本身就全部都有
+<p>
+    <dl>
+        @foreach (var claim in User.Claims)
+    {
+        <dt>@claim.Type</dt>
+        <dt>@claim.Value</dt>
+}
+    </dl>
+</p>
+但是没有profiles，因为server端的client没有添加
+现在在server端添加profiles

@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using Microsoft.AspNetCore.Authorization;
 
-namespace MvcCookieAuthSample.Controllers
+namespace MvcCookieAuthSampleAddUI.Controllers
 {
     [Authorize]
     public class AdminController : Controller

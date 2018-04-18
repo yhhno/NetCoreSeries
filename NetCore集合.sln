@@ -271,6 +271,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "openidconnect", "openidconn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcCookieAuthSampleAddUI", "02ASP.NET Core分布式项目实践\01Identity Server 4 准备\OpenIdConnectSample\MvcCookieAuthSampleAddUI\MvcCookieAuthSampleAddUI.csproj", "{BB9AFE5C-3243-4F49-A0F9-322D24A87F23}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCClient", "02ASP.NET Core分布式项目实践\01Identity Server 4 准备\OpenIdConnectSample\MVCClient\MVCClient.csproj", "{53590948-73E2-4079-96C1-AE3F86F8E918}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -341,6 +343,10 @@ Global
 		{BB9AFE5C-3243-4F49-A0F9-322D24A87F23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BB9AFE5C-3243-4F49-A0F9-322D24A87F23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BB9AFE5C-3243-4F49-A0F9-322D24A87F23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53590948-73E2-4079-96C1-AE3F86F8E918}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53590948-73E2-4079-96C1-AE3F86F8E918}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53590948-73E2-4079-96C1-AE3F86F8E918}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53590948-73E2-4079-96C1-AE3F86F8E918}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -389,6 +395,7 @@ Global
 		{372FDB22-7035-473E-91D4-9B3DDF7E75E9} = {EA1D4649-8746-44DB-91C1-06767EF65CDF}
 		{3B8F322E-4033-4544-8CB5-C76420A93F2F} = {EA1D4649-8746-44DB-91C1-06767EF65CDF}
 		{BB9AFE5C-3243-4F49-A0F9-322D24A87F23} = {3B8F322E-4033-4544-8CB5-C76420A93F2F}
+		{53590948-73E2-4079-96C1-AE3F86F8E918} = {3B8F322E-4033-4544-8CB5-C76420A93F2F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8A31F480-001A-4E05-B2EE-5DCE2F5B36A8}
