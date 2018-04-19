@@ -52,7 +52,7 @@ namespace MvcCookieAuthSampleAddUI
                     //之前是允许访问的api，现在是用户信息
                     AllowedScopes={
                         IdentityServerConstants.StandardScopes.Profile,
-                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.OpenId,//每一个IdentityResource是一个scope
                     }// 允许访问的资源
                 }
             };
