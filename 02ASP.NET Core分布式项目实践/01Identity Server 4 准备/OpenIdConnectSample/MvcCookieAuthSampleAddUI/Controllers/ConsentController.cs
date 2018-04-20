@@ -96,10 +96,11 @@ namespace MvcCookieAuthSampleAddUI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index(string returnUrl)
+        public async  Task<IActionResult> Index(string returnUrl)
         {
             //逻辑清晰，就生成model
-            var model = BuildConsentViewModel(returnUrl);//专人做专事
+            var model = await BuildConsentViewModel(returnUrl);//专人做专事
+
             return View(model);
         }
     }

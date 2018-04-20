@@ -1,3 +1,27 @@
 ﻿@using MvcCookieAuthSampleAddUI.ViewModels;
-@model ScopeViewModel;  @*啥时候传model实例呢*@
+@model ScopeViewModel; 
+ @*啥时候传model实例呢*@
 
+<li>
+    <label >
+    <input type="checkbox"
+           name="ScopesConsented"
+           id="scopes_@Model.Name"
+           value="@Model.Name"
+           checked="@Model.Checked"
+           disabled="@Model.Required"
+           />
+        <strong>@Model.Name</strong>
+        @if (Model.Emphasize)
+        {
+            <span class="glyphicon glyphicon-exclamation-sign"></span>
+        }
+    </label>
+
+    @if (string.IsNullOrWhiteSpace(Model.Description))
+    {
+        <div>
+            <label for="scopes_@Model.Name">@Model.Description</label>
+        </div>
+    }
+</li>

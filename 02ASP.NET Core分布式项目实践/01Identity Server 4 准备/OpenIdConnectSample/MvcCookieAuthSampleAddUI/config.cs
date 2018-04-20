@@ -32,6 +32,12 @@ namespace MvcCookieAuthSampleAddUI
                 new Client()
                 {
                     ClientId="mvc",//clientid
+                    ClientName="MVC client",
+                    ClientUri="http://localhost:5001",
+                    LogoUri="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1524821554&di=5513cf737bfaec6739833409f485d080&imgtype=jpg&er=1&src=http%3A%2F%2Fjbcdn2.b0.upaiyun.com%2F2016%2F05%2Fb69607c7bb75c609307d5218a825cbd9.png",
+                    AllowRememberConsent=true,
+                
+
                     AllowedGrantTypes=GrantTypes.Implicit,//允许访问的方式
                     ClientSecrets =
                     {
@@ -46,12 +52,14 @@ namespace MvcCookieAuthSampleAddUI
                     PostLogoutRedirectUris={"http://localhost:5001/signout-callback-oidc" },
 
 
-                    //这个地方就是用户来点那个按钮，你是不是同意我授权
-                    RequireConsent=false,
+                    //这个地方就是用户来点那个按钮，你是不是同意我授权,,
+                    //好奇如何实现的呢 
+                    RequireConsent=true,
             
                     //之前是允许访问的api，现在是用户信息
                     AllowedScopes={
                         IdentityServerConstants.StandardScopes.Profile,
+                        IdentityServerConstants.StandardScopes.Email,
                         IdentityServerConstants.StandardScopes.OpenId,//每一个IdentityResource是一个scope
                     }// 允许访问的资源
                 }
