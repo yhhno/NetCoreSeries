@@ -1,0 +1,43 @@
+﻿@using MvcCookieAuthSampleAddUI.ViewModels;
+@model ConsentViewModel;  @*啥时候传model实例呢*@
+@{
+    ViewData["Title"] = "Index";
+}
+
+<p>Consent Page</p>
+@*头部信息*@
+<div class="row page-header">
+    <div class="col-sm-10">
+        @if (!string.IsNullOrWhiteSpace(Model.ClientLogoUrl))
+        {
+            <div><img src="@Model.ClientLogoUrl"/></div>
+
+        }
+        <h1> @Model.ClientName
+       <small>希望使用你的账户</small>
+        </h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-8">
+        <form asp-action="Index">
+            @if (Model.IdentityScopes.Any())//严谨，如果有就循环遍历输出
+            {
+                <ul class="list-group">
+                   @foreach (var scope in Model.IdentityScopes)
+                   {
+@Html.Partial("_ScopeListitem",scope)//说明啥呢？ 为啥传model实例
+                   }
+                </ul>
+            }
+             @if (Model.ResourceScopes.Any())
+             {
+                 @foreach (var scope in Model.ResourceScopes)
+                 {
+                     @Html.Partial("_ScopeListitem",scope)
+                 }
+             }
+             if</form>
+    </div>
+</div>
+

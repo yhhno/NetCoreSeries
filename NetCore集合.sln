@@ -271,7 +271,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "openidconnect", "openidconn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MvcCookieAuthSampleAddUI", "02ASP.NET Core分布式项目实践\01Identity Server 4 准备\OpenIdConnectSample\MvcCookieAuthSampleAddUI\MvcCookieAuthSampleAddUI.csproj", "{BB9AFE5C-3243-4F49-A0F9-322D24A87F23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MVCClient", "02ASP.NET Core分布式项目实践\01Identity Server 4 准备\OpenIdConnectSample\MVCClient\MVCClient.csproj", "{53590948-73E2-4079-96C1-AE3F86F8E918}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MVCClient", "02ASP.NET Core分布式项目实践\01Identity Server 4 准备\OpenIdConnectSample\MVCClient\MVCClient.csproj", "{53590948-73E2-4079-96C1-AE3F86F8E918}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
