@@ -20,6 +20,7 @@ namespace MvcCookieAuthSampleAddUI.ViewModels
 
         { get; set; }//可供Api信息，供选择 
 
+        public string ReturnUrl { get; set; }
 
     }
 }

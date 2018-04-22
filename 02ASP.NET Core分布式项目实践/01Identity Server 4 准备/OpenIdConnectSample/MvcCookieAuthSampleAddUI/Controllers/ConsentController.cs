@@ -45,7 +45,9 @@ namespace MvcCookieAuthSampleAddUI.Controllers
 
             var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.ScopesRequested);//此Resource包括了IdentityResource和APIResource
 
-            return CreateConsentViewModel(request, client, resources);//返回TResult类型就可以了。
+            var vm= CreateConsentViewModel(request, client, resources);//返回TResult类型就可以了。
+            vm.ReturnUrl = returnUrl;
+            return vm;
         }
 
         private ConsentViewModel CreateConsentViewModel(AuthorizationRequest request,Client client,Resources resources
@@ -101,7 +103,17 @@ namespace MvcCookieAuthSampleAddUI.Controllers
             //逻辑清晰，就生成model
             var model = await BuildConsentViewModel(returnUrl);//专人做专事
 
+           if(model==null)
+            {
+
+            }
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(InputConsetViewModel viewModel)
+        {
+
         }
     }
 }

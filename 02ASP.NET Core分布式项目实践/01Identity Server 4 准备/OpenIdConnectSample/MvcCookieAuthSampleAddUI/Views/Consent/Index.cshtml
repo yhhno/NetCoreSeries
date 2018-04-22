@@ -22,7 +22,8 @@
 <div class="row">
     <div class="col-sm-8">
         <form asp-action="Index">
-            @if (Model.IdentityScopes.Any())//严谨，如果有就循环遍历输出
+            <input type="hidden" asp-for="ReturnUrl" />
+                   @if (Model.IdentityScopes.Any())//严谨，如果有就循环遍历输出
             {
                 <ul class="list-group">
                    @foreach (var scope in Model.IdentityScopes)
