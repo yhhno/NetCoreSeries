@@ -1,0 +1,23 @@
+问题1：安装有了问题咋办?hub.docker.com 打不开，  docker pull 有问题？  咋应对呢？
+
+
+这节我们来安装mongodb和mysql
+大家如果来找mongodb的镜像呢 可以去hub.docker
+.com 去找  这个地址是国外的 有可能慢  找个国内的  还有一些安装 启动 使用案例
+
+目前都是单机的  本地使用
+用powershell 
+docker images
+
+docket logs mymongo
+docker rm mymongo
+
+docker run -d -p 27016：27017 --name mymongo mongo  没有使用网络的配置，资料卷 挂载
+
+netstat -aon  本地被使用的端口
+netstat -aon|findstr "27016"
+
+docker stop mymongo
+docket start mymongo
+
+mysql会稍微复杂点 因为我们要对mysql进行一些配置包括它的使用的字符集以及访问的用户
