@@ -1,0 +1,93 @@
+问题1： mysql 没法启动，就想退缩， 有了问题就想退缩，积极主动那里去了？
+问题2： 感知到电脑桌的桌子 椅子坐着特别舒服
+
+mysql 官方上有两个镜像
+docker pull mysql/mysql-server   优化过的
+先把镜像pull到本地
+其实不必先pull到本地，再docker run，
+可以直接docker run 如果命令检测到本地没有镜像的话，它会单独去下载
+官方文档，还可以找到mysql安装的命令，和一些环境变量 MYSQL_ROOT_PASSWORD MYSQL_USER等等
+在mysql进行安装的时候要注意，如果我们用最简单的命令 
+docker run -d -p 3306:3306 --name mysql01 mysql/mysql-server
+这个方式安装，用户名没有，密码没有 host没有，会出现什么状况呢  只可以在本地 localhost访问，这样的话，通过host也是没有办法访问的 连接到容器里的mysql的
+我们可以先给大家演示下，最后再把环境变量安装上去，用最简单的方式来安装  
+docker run -d -p 3306:3306 --name mysql01 mysql
+
+此时我们是连接不上去的， 我们用Navicat for mysql客户端连接下
+连接不上去的原因是我们没有在mysql上加用户和一些配置
+我们不知道用户名密码 我们可以用docker logs mysql01 
+会输出root的默认密码
+我们现在就需要干的事情就是登录进去 把root的密码改了 这个时候我们需要接触到另外一条命令
+docker exec  这条命令是可以用来 我们可以进入容器里面去运行 容器他其实 相当于 它也是有一个运行环境， 虽然它没有操作系统内核 但它也是隔离情况下 有一个系统环境在运行，所以我们可以在里面去执行，这种情况下 docker exec 它有一些参数
+  docker exec -it mysql01 bash   接下来我们可以通过控制台进去容器里面去  
+   接下来我们可以用mysql的命令
+   mysql -uroot -p 输入默认密码 连接mysql
+   mysql连接成功
+   修改密码命令  默认让你修改密码
+   SET PASSWORD FOR 'root'@'localhost' = PASSWORD('pwd123456')
+   输入 ; 这样就执行成功了
+   执行成功之后，我们再来 操作mysql 命令
+   use mysql
+   select user，host from user  查询user表
+显示了我们的root用户 只能通过localhost来登录
+所以这是我们为什么不能通过host来连接mysql的原因
+这个时候我们 最简单的方式 把root的 host给改掉 改成0.0.0.4 允许任何ip来登录，但是这样做不太安全，所以一般超级用户我们放开它，我们在启用一个自己的用户
+新建用户
+mysql> CREATE USER 'jack'@'localhost' IDENTIFIED BY 'pwd123456';
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'jack'@'localhost' WITH GRANT OPTION;
+mysql> CREATE USER 'jack'@'%' IDENTIFIED BY 'pwd123456';
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'jack'@'%'
+    ->     WITH GRANT OPTION;
+
+创建用户之后，我们再来看一下
+select  user,host from user
+ 也可以用navicat for mysql 去连接下
+
+ 还有一个问题 我们的字符集  我们后面会有ef core 来创建表，默认创建数据库的时候 没有默认的字符集，我们中文会出现乱码情况 我们需要把mysql的默认设置改一下 改成utf-8字符集
+
+ show variables like '%char%'
+ ;
+
+ 看到 连接的字符集为latinl
+ 所以我们需要把 system server client 字符集改掉
+ 这个时候我们需要退出mysql
+ exit; 命令 此时我们当前还在容器里
+  给它新建一个mysql.ini的配置
+  cd /etc
+  mysql 默认使用my.cnf 的配置文件
+   cat my.cnf
+   我们用vi来编辑下  默认是没有vi 需要安装
+   yum install vim
+   q! 退出vim  不做任何保存
+
+   vim my.cnf
+
+
+   修改MYSQL 默认字符集：
+添加到my.cnf 
+
+[mysqld]
+character-set-server=utf8 
+[client]
+default-character-set=utf8 
+[mysql]
+default-character-set=utf8
+
+esc
+:wq  保存并退出
+然后可以在查看下  
+cat my.cnf
+
+我们可以用容器重启的方式，重启mysql  但是如果我们配置一旦出现错误，导致容器起不来的话，我们就进不了容器内，
+所以安全点做法，容器内重启mysql  goole下
+此时出现个错误，就是mysql配置出错，导致mysql启动不了， 此时也没办法修复， 运行 docker exec 失败，因为mysql没有启动
+有问题
+ 
+这种配置文件 在后期做资料卷挂载的时候，会把配置文件挂载到外部， 我们通过host可以访问的地方，否则我们我们在容器内出错，就没有办法挽回了
+
+下一节通过环境变量的方式修改字符集
+
+
+
+
+
