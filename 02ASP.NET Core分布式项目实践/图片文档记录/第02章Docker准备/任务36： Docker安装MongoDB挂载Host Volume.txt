@@ -1,0 +1,25 @@
+我们接着把mongodb也用资料卷的方式来 启动
+ 准备工作  创建外部映射文件和文件夹
+ cd /docker
+ ls
+ mkdir mongo
+ ls
+ cd mongo/
+ mkdir config
+ mkdir db
+ ls
+  docker run -d -p 27017:27017 --name mongo01 -v /docker/mongo/config:/data/configdb -v /docker/mongo/db:/data/db  mongo
+  
+  docket inspect my-mongo01
+  可以找到mount的一些参数
+  /data/db
+  /data/configdb
+
+  创建成功之后，可以看下db文件夹
+  ls 
+  cd db/
+  ls
+  db 文件夹下有很多文件
+
+   资料卷讲完之后，我们下节课开始讲打包，打包完成之后开始讲网络
+   打包的话 首先会用mysql打一层，在这个基础之上 把mysql和net core api打在一个镜像里面，这样的话我们是不需要用网络就可以实现单机的  相当于一个单机上我装了mysql 又装了net core sdk他两个一起跑，后面我们再掌握网络之后，开成两个容器一个是mysql的一个是net core api的额相当于 我们两台服务器来跑 当然api可以访问跑数据库的那一台
