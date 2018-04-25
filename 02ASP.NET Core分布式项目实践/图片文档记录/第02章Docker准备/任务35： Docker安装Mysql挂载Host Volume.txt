@@ -1,0 +1,103 @@
+docker 资料卷
+首先来看下资料卷的概念问题
+首先是有一台host host上有一个docker engine，上面运行着一个或者多个容器， 首先在host上面它自己会有一块磁盘，不管你是虚拟机还是物理机，它都会有一个对应的磁盘空间，我们叫他 比如说是文件系统，每一个容器呢，，它也有自己的一个文件系统，当然它是 类似于结构的东西，我们会在host的文件系统内，划出一块区域，对应到   大家看到docker容器里面它的文件系统 比如说一个linux系统 各个结构全都存在，这个情况下呢 我们的资料卷意思就是  容器内的文件系统某一块和host内的文件系统的某一块映射起来 
+拿mysql容器来举例 我们的配置文件和我们的数据这块的存储呢 可以放到host的文件系统的某一块区域，那我们就可以在外部实现访问
+ 接下来我们就给大家演示下在docker容器当中挂载资料卷
+  我们用linux来试一下
+  首先要找到一台环境 就是一台host linux系统
+  yum install docker
+  docket版本低 更新下
+  卸载旧版本，安装最新版本
+  启动docker
+  systemctl start docker
+  有两种方式加载资料卷
+  mount主要用于集群 volume是老的一种方式之前只可以用于单机 在17.06之后mount也可以用于单机版 所以渐渐的要把volume给淘汰了
+mount语法更简洁些， volume把参数都写到一块了
+
+mysql的命令 在这里大家可以看到
+
+新建一个host中文件系统区域
+
+ls /
+mkdir docker
+cd docker/
+mkdir mysql
+cd mysql/
+mkdir config
+mkdir data
+cd config/  
+vi my.cnf
+配置文件内容
+[mysqld]
+user=mysql  用它来安装我们的mysql
+esc
+:wq
+这个配置文件必须存在，因为不存在是没有办法完成映射的 完成volume资料卷的挂载
+在db下是用来存放数据库data的
+准备工作做好了以后， 用valume方式运行下容器
+docker run -d -p 3306:3306 --restart always --name db-mysql -v =/docker/mysql/config/my.cnf:/etc/my.cnf -v=/docker/mysql/data:/var/lib/mysql mysql/mysql-server
+ 
+ 因为官方地址有点慢，修改daemon
+ cd /etc/docker
+ ls
+ vi daemon.json
+
+ systemctl restart docker
+
+ 然后在执行 volume 命令
+ 如果没有mysql镜像，就下载
+ 下载完成后，就安装
+ 然后看下资料卷起到什么作用
+  我们在上一次说到 我们容器它是临时性，就是说这个容器安装好之后 不要了就销毁，销毁掉之后这个容器内所有的数据都没有了，所以容器他不太适合需要有持久化数据包括我们写api的时候，如果里面存有一些本地的变量或者是数据的话，在容器销毁的时候就没有了
+    
+启动成功后，
+我们用docker logs mysql01来监控下mysql 
+找一下默认密码
+docker exec -it mysql01 bash  进入mysql01 执行bash
+  mysql -uroot -p
+  输入默认密码
+  此时进入了mysql01里面
+  我们要重置密码 否则我们连use mysql;这个数据库都用不了
+  SET PASSWORD FOR 'root'@'localhost' = PASSWORD('password123');
+  修改成功之后
+  use mysql  mysql是个数据库
+  select user,host from user
+  ；
+   此时root依旧只可以在localhost上登录
+   我们还可以来看下字符集
+   show variables like '%char%'
+   此时要修改字符集为utf-8
+   此时我们就不需要在容器内修改了
+   我们回到host内
+   cd docker/mysql/data
+   data文件夹下多了很多文件
+   我们可以到config文件夹下去看my.cnfg文件  
+   修改my.cnf
+   添加
+   [mysqld]
+character-set-server=utf8 
+[client]
+default-character-set=utf8 
+[mysql]
+default-character-set=utf8
+
+也就是通过修改外部的配置文件，修改字符集
+
+此时重启mysql01容器
+docker restart mysql01
+重启之后，在进去容器内
+docker exec -it mysql01 bash
+mysql -uroot -p
+ 我们还可以来看下字符集
+show variables like '%char%'
+通过外部的配置文件，修改字符集在mysql01容器上生效了
+现在把容器删除掉，当然我们也可以吧挂载的数据也删除了，但这样挂载就没有意义了
+此时就删除容器本身
+docker rm mysql01
+docker ps -a 此时没有任何的容器在运行
+此时如果再次运行容器，以原来的配置和数据 方式启动的话 
+此时原来的配置和数据都存在
+
+资料卷挂载的意义   
+加载卷还可以位于host之外的地方比说 一些云上的存储系统  更加安全
+

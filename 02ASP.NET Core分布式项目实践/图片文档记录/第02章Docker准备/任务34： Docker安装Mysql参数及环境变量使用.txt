@@ -1,10 +1,15 @@
+问题1： 有问题 要去解决，关键是解决到底 弄透彻。
+
 通过环境变量的方式修改字符集
 上节配置的用户名 密码 字符集都是在容器安装好之后，再进去到 通过 docker exec进入容器内，去单独修改的， 有隐藏问题
 本节给大家介绍在容器安装的时候 两种类型的配置参数
 一种是直接在 镜像后面加配置
 docker run -d -p 3306:3306 --name mysql01 mysql --character-set-server=utf8 --collation-server=utf8mb4_general_ci
 第二种是环境变量
-docker run -d -p 3306:3306 -e MQSQL_USER="jesse" -e MYSQL_PASSWORD="pwd123456" -e MYSQL_ROOT_HOST="root123456" --name  mysql01 mysql --character-set-server=utf8 --collation-server=utf8mb4_general_ci
+docker run -d -p 3306:3306 -e MYSQL_USER="jesse" -e MYSQL_PASSWORD="pwd123456" -e MYSQL_ROOT_PASSWORD="root123456" --name  mysql01 mysql --character-set-server=utf8 --collation-server=utf8_general_ci
+
+
+docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD="root123456" --name  mysql01 mysql --character-set-server=utf8 --collation-server=utf8_general_ci
 
 
 但是环境变量MYSQL_ROOT_HOST只能给root用，不能给其他新建用户使用

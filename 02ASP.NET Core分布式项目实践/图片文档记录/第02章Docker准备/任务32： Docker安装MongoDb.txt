@@ -12,7 +12,7 @@ docker images
 docket logs mymongo
 docker rm mymongo
 
-docker run -d -p 27016：27017 --name mymongo mongo  没有使用网络的配置，资料卷 挂载
+docker run -d -p 27017：27017 --name mymongo mongo  没有使用网络的配置，资料卷 挂载
 
 netstat -aon  本地被使用的端口
 netstat -aon|findstr "27016"
