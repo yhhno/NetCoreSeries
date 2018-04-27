@@ -1,0 +1,154 @@
+问题1： 看到docker命令就没兴趣，不想弄，本来就不熟悉，加上心理抵触，就放弃了
+问题2： 新东西，必须手写，笔记，这样才记得清楚
+问题3： 新建控制台程序出错，如何排除问题呢？
+问题4： 遇到问题后，纠结一番之后，情绪低落，不想继续干下去
+问题5： 要么是被其它兴趣点给挡住了关注，要么是一看 难度真大，要么是被其他琐事给分了神，占用了时间。
+ 怎么破？
+
+继续学习docker镜像打包
+主要涉及两个点
+1.docker build命令
+2.Dockerfile 
+我们镜像制作中间一些步骤和参数 指令都是由dockerfile来完成的，所以
+所以我们要掌握这两个东西 
+我们先看docker build
+主要是学会打包，和理解打包的过程
+
+首先来看下dockerfile必须建立在一个文件夹的根目录下
+我们现在来做一个net core console程序，然后把它打包
+新建一个Dockerfile
+装一个Docker的插件，它会给你推荐一些语法
+from 是每一个dockerfile里都要用的， 也就是你的镜像是基于那个镜像 基础之上再进行构建的，这就是我们稍后给大家理清的一个 层次的概念，当然你可以 from scratch 基于一个空白的镜像 不基于任何一个镜像的镜像 那么你就可以从头到尾来构建
+当然我们这里会用到microsoft下面的几个镜像
+microsoft/dotnet
+microsoft/dotnet:sdk
+microsoft/dotnet:<version>-runtime
+microsoft/dotnet:<version>-runtime-deps
+
+
+microsoft/dotnet
+组织名称/景象名称：tags tag包括一些版本
+
+microsoft/dotnet:sdk
+sdk就是说包括了运行时，同时包括。net sdk，也就是说用这个镜像安装，它会包括我们的 sdk 也就是包括dotnet 命令 ，
+当然sdk和runtime是分开的
+开发和测环境用 sdk， 基本上可以不用vscode和vs2017 可以用记事本来写C#代码，来buid和测试都可以
+microsoft/dotnet:<version>-runtime
+ runtime主要是一个运行时，不包括sdk 因为sdk装下来很大， 包括你去上传下载pull push呀都会更轻量和快速一些，包括你用来快速集群部署，200m和2g差别还是蛮大的
+ 基本上在生产环境使用
+microsoft/dotnet:<version>-runtime-deps
+ 他打包的时候会把当前的runtime给它包含在里面，在部署的那台机器有没runtime或者runtime什么版本 都这个镜像是没有关系的，
+ runtime是采用共享runtime，所有部署上去的运行程序都会采用机器上的runtime，这也就是为什么之前大家会遇到在开发环境开发了一套代码，发布到服务器上后，发现版本不对
+ 一般生产环境推荐runtime 打包的时候比较小
+
+
+ 我们先用sdk实验一下
+ 先写个控制台程序
+ 在docker的情况下，它相当于一个进程 运行完之后呢 容器就会自动退出，我们加console.readline（）也是没有用的
+ 一会它执行完就会退出，这个容器其实就是瞬间开启，瞬间结束
+ 后面再给大家推荐另外一种办法，不会让容器退出
+ 接下来就是 补充dockerfile
+
+ from  microsoft/dotnet
+ copy/add   add的方式就是说， 它可以添加网络上的一个文件，你可以添加一个网络上的压缩包之类的 copy主要是使用本地的
+ 我们在这里新建一个文件夹  workdir  这个地方就是说指定一个工作目录，如果有的话，它会使用，没有的话，它会去创建
+ WORKDIR /app
+ 接下来我们就是用copy把我们本地的代码全部copy到app目录下面    source dest 一个是源 当前目录下 这个当前目录下 是有一个上下文概念的  就是我们在 docker build 的时候户传入一个 path参数 它其实就会传给它一个目录，这个目录你如果传当前文件夹 ，那么当前文件夹就会被认为是一个上下文，你也可以传另外一个文件夹 那另外一个文件夹就会成为上下文，在copy命令中用.来代替，
+ copy . /app 意思就是把当前上下文内的所有文件都copy到app目录下，这个app就是说是 在运行的容器里面 copy过去完了之后 我们就完了
+ 这里执行run命令  或者cmd命令，它是一个命令 我们用dotnet 因为我们在这个地方已经有dotnet整个sdk并且我们也有代码 跟我们在vscode里的终端操作一样 
+ CMD ["dotnet","run"] run的是diwailepu的环境
+
+ FROM microsoft/dotnet
+WORKDIR /app
+COPY . /app
+CMD ["dotnet","run"]
+这就是一个最简单的dockerfile ，指定一个目录，把我们的代码copy过去，然后执行dotnet run命令
+
+我们有了docketfile之后，我们就可以来进行打包
+docker build -t jessetalk/console:dev .
+docker images 打包完成后，查看下
+运行下 docker run --name console-dev jessetalk/console:dev  用这个镜像运行这个容器
+我们发现运行结束就退出了
+用logs查看下  docker logs jessetalk/console
+
+我们发现这个镜像有1.75G太大了，我们换一种方式 用runtime 不用sdk
+
+ FROM microsoft/dotnet
+WORKDIR /app
+COPY . /app
+CMD ["dotnet","run"]
+
+用sdk 我们要加一个参数 叫做build-env  指定一个stage 用了它之后呢
+我们首先指定一个code的目录
+然后我们接下来就进行copy 把当前目录下的文件都copy到 code目录下，然后运行一个 dotnet restore 命令 我们现在不要copy所有文件，只拷贝 *.csproj /code 就是把项目文件copy过去 拷过去之后 运行dotnet restore，再去copy所有的文件 copy . /code
+
+拷过去之后呢 我们所有的代码都在code目录下，然后我们可以用我们dotnet publish命令
+dotnet publish是dotnet本身已经有的命令
+
+在vscode中演示下 dotnet publish 命令
+dotnet publish -c Release -o out 它会在当前文件夹生成一个out的文件夹，并且把要发布的东西，全部放在里面
+
+RUN dotnet publish -c Release -o out 发布在code文件夹下的out文件夹里面
+发布完之后呢，我们的发布文件已经到了out文件夹下了  我们接下来就是要指定另外一个镜像文件 就是runtime的镜像 FROM microsoft/dotnet:runtime  因为现在我们没有指定版本 默认是最新版本 
+有了镜像之后，我们要做什么呢
+执行一个工作目录app
+执行copy 指定一个stage 从这stage的那个目录copy  copy到app目录下
+copy --from=build-env /code/out /app
+接下来用entrypoint 给它一个入口
+entrypoint ["dotnet","console.dll"]
+这个是我们在做优化的images打包的过程  
+
+FROM micrsoft/dotnet:sdk as build-env
+WORKDIR /code
+COPY *.csproj /code
+RUN dotnet restore
+
+COPY . /code
+RUN dotnet publish -c Release -o out
+FROM microsoft/dotnet:runtime
+WORKDIR /app
+COPY --from=build-dev /code/out /app
+ENTRYPOINT ["dotnet","console.dll"]
+
+代码执行完，会退出
+ class Program
+    {
+        static void Main(string[] args)
+        {
+            //Console.WriteLine("Hello World From Docker!");
+            //Console.ReadLine();
+
+
+            Console.WriteLine("Hello World From Docker!");
+
+            Thread.Sleep(Timeout.Infinite);//县城一直sleep下去  防止docker退出
+        }
+    }
+
+打包镜像
+docker build -t jessetalk/console:prod .  生产环境
+打包过程也就是输出如何获取呢
+查看镜像
+docker images
+
+运行看下，在终端
+dotnet run --name console-prod jessetalk/console:prod
+这个时候我们就可以看到它没有退出
+
+运行容器，以打包好的镜像
+dotnet run --name console-prod jessetalk/console:prod
+
+
+进入容器
+docker exec -it 容器id bash
+cd /
+ls
+有个app目录  当然不会有code目录，cod的是中间目录
+cd app/
+ls
+有发布出来的四个文件
+
+
+本节我们打了两个包，一个dev一个prod，主要用到dotnet sdk和runtime，镜像，用到的命令from copy run  entrypoint workdir当前工作目录，
+env和expose没有 暴露端口没有
+我们会在aspnetcore 下节课打包
