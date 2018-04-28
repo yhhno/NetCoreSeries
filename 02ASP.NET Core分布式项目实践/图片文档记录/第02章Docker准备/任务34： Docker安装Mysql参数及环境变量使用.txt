@@ -12,7 +12,7 @@ docker run -d -p 3306:3306 -e MYSQL_USER="jesse" -e MYSQL_PASSWORD="pwd123456" -
 docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD="root123456" --name  mysql01 mysql --character-set-server=utf8 --collation-server=utf8_general_ci
 
 最新版本
-docker run -d -p 3306:3306 -e MYSQL_USER="jesse" -e MYSQL_PASSWORD="pwd123456" -e MYSQL_ROOT_PASSWORD="root123456" -e "MYSQL_RANDOM_ROOT_PASSWORD=true" --name  mysql01 mysql/mysql-server:5.7 --character-set-server=utf8 --collation-server=utf8_general_ci
+docker run -d -p 3306:3306 -e MYSQL_USER="jesse" -e MYSQL_PASSWORD="pwd123456" -e MYSQL_ROOT_PASSWORD="root123456"  --name  mysql01 mysql/mysql-server:5.7 --character-set-server=utf8 --collation-server=utf8_general_ci
 
 但是环境变量MYSQL_ROOT_HOST只能给root用，不能给其他新建用户使用
 

@@ -48,7 +48,9 @@ namespace User.API
             }
 
             app.UseMvc();
-            InitUserDatabase(app);//可以传递app
+
+            //有bug 有逻辑错误
+            InitUserDatabase(app);//可以传递app 
         }
 
         public void InitUserDatabase(IApplicationBuilder app)

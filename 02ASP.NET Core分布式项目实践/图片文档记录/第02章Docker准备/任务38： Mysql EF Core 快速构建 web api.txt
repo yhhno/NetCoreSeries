@@ -87,7 +87,7 @@ Add-Migration init
 userContext.Database.Migrate();
 
 此前创建的mysql01 jesse用户没有添加创建数据库权限，所以要修改
-docker run -d -p 3306:3306 -e MYSQL_USER="jesse" -e MYSQL_PASSWORD="pwd123456" -e MYSQL_ROOT_PASSWORD="root123456" -e "MYSQL_RANDOM_ROOT_PASSWORD=true" --name  mysql01 mysql/mysql-server:5.7 --character-set-server=utf8 --collation-server=utf8_general_ci
+docker run -d -p 3306:3306 -e MYSQL_USER="jesse" -e MYSQL_PASSWORD="pwd123456" -e MYSQL_ROOT_PASSWORD="root123456"  --name  mysql01 mysql/mysql-server:5.7 --character-set-server=utf8 --collation-server=utf8_general_ci
 
 docker logs mysql01
 获取默认密码

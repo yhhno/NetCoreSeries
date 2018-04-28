@@ -1,0 +1,80 @@
+上节课做了EFcore webapi 去连了容器内的mysql   读了数据 
+本节课把mysql和 webapi给连起来
+这个地方就是两个容器互联
+我们有一个host 上面有一个webapi的容器 今天要做的事情是不是单容器，是多个容器，host上还有一个mysql的容器  webapi默认跑的是5000的端口，  我们把webapi打了镜像之后，可以让它跑在80端口，host上为8081端口，而mysql都是3306端口
+容器互联有两种方式 
+link 被docker判定为过期的  后面主要用的network方式
+我们首先用的方式是 link
+首先我们需要做的事情是webapi给制作成一个镜像
+
+
+没有mysql容器 ，不用慌，之前的代码copy过来就好了，简单 命令搞完了还要搞权限
+docker exec -it mysql01 bash
+mysql -uroot -p
+
+GRANT ALL PRIVILEGES ON *.* to 'jesse'@'%'
+WITH GRANT OPTION;
+
+先把webapi 给打包了
+新建一个Dockerfile文件，添加DockerFile 包
+用到两个镜像
+microsoft/aspnetcore-build  用来build 就是发布
+microsoft/aspnetcore  runtime运行时
+先build ，然后把代码发到运行时上去
+
+dockerfile内容为
+FROM microsoft/aspnetcore-build as build-env
+WORKDIR /code
+COPY *.csproj ./
+RUN dotnet restore
+COPY . ./
+RUN dotnet publish -c Release -o out
+
+FROM microsoft/aspnetcore
+WORKDIR /app
+COPY --from=build-env /code/out ./
+EXPOSE 80
+#RUN dotnet User.API.dll
+ENTRYPOINT ["dotnet","User.API.dll"]
+
+build之后没有出现image怎么回事，
+因为我们的dockerfile写错了，  我们写了run 此时应该是Entrypoint 是它的一个入口，告诉他们入口   是容器运行的时候再执行它，而不是在这里直接就运行了
+SO,初始数据库操作不用注销，因为打包是不运行呀
+
+接下来
+    public static IWebHost BuildWebHost(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>()
+            .UseUrls("http://+:80")
+                .Build();
+
+
+等下会起一个网络 server不在是localhost 改成db 
+在生产上用db 开发用localhost
+
+我们来打一下镜像
+cd D:\src\NetCoreDemo\NetCore集合\02ASP.NET Core分布式项目实践\02Docker\dockerbuild\User.API
+docker build -t jesse/aspnetcore:prod .
+
+共有11步 在dockerfile进行build的时候每一条命令 有一个层出来 就是docker镜像  这个层级概念 后面更细的去了解这个概念
+
+db是个潜在的bug
+这个时候它打镜像的时候，使用了run，所以就会运行，数据库初始化，但此时数据库连接字符串是db  此时是没有的
+
+
+运行镜像
+docker run -d -p 8002:80 --name aspnetcore --link mysql01:db jesse/aspnetcore:prod
+link 出现了，db出现了  db是别称
+
+进入容器
+docker exec -it aspnetcore bash 
+ping db
+
+docker inspect mysql01 看下mysql的ip地址  是否与db一样
+一样的话，说明webapi的镜像，可以访问mysql的镜像了
+
+浏览器中访问localhost:8002/api/values
+此时访问的就是运行在容器里面的代码，
+相当于一套环境里有两个容器在运行 
+这是我们通过link的方式建立的容器互联
+下节我们继续用network方式来连接
