@@ -113,7 +113,7 @@ namespace MvcCookieAuthSampleAddUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(InputConsetViewModel viewModel)
         {
-
+            return View();
         }
     }
 }

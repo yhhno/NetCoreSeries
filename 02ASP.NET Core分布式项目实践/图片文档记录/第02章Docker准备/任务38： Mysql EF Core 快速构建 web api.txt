@@ -1,0 +1,136 @@
+问题0： 心态积极主动的话， 就可以解决很大一部分问题，  反正就增加一座山。
+问题1： EF不熟悉 边学边用边理解
+问题2：设计和做事情一样，做前又准备，做时心中有数， 出错了，处理问题头脑清晰
+
+
+这节我们来做一个aspnetcore api 然后把它打包成一个docker镜像
+新建一个webapi User.API
+添加EFcore  当然我们是用EF来连接我们之前的mysql容器
+添加efcore nuget包， mysql.data.entityframeworkcore 或者microsoft.entityframeworkcore
+我们添加mysql.data.entityframeworkcore
+接下来我们快速添加model和DbContext
+新建一个data文件夹和Models文件夹
+在models文件夹内添加 user类
+ public class User
+    {
+        public int Id { get; set; }
+        public string  Name { get; set; }
+        public string Company { get; set; }
+        public string Title { get; set; }
+    }
+
+边学边用边理解
+
+在data文件夹新建UserContext类 继承自EF中的DbContext
+这时候他需要传递一个	 这个是ef core的使用方式  添加一个构造函数传递一个参数 参数 为DbContextOptions 它是一个泛型 需要把我们的UserContext给传过去 options   options传递给base 当然这个构造函数不需要做什么
+
+//为什么要这么写呢  EF要求这么写， 看看EF的base方法 源码就可以了  就知道背后做了啥？ 也可以猜想下做了什么? 前因后果，来龙去脉
+        public UserContext(DbContextOptions<UserContext> options):base(options)
+        {
+
+        }
+
+ 接下来写 DbSet  由于定义个model和EF中的User冲突了， 所以修改下 User 为AppUser
+
+ public DbSet<AppUser> Users { get; set; }//干啥用
+
+ 当然我们不要AppUser在数据库表中也叫AppUser  怎么办呢？重写OnModelCreating方法
+ protected override void OnModelCreating(ModelBuilder modelBuilder)//重写方法，扩展点，
+        {
+            modelBuilder.Entity<AppUser>()
+                .ToTable("Users")
+                .HasKey(u => u.Id);
+
+
+            base.OnModelCreating(modelBuilder);
+        }
+
+完成之后我们给它加一个配置  连接字符串
+
+  "ConnectionString": {
+    "MysqlUser": "server=127.0.0.1;port=3306;database=beta_user;userid=jesse;password=pwd123456"
+  }
+
+接下来就是在startup中去注册EF
+
+ //配置Ef          services.AddDbContext<UserContext>(options =>
+            {
+                options.UseMySQL(Configuration.GetConnectionString("MysqlUser"));
+            });
+这样完成EF的配置
+
+我们可以建一个Init的方法 我们在最开始启动的时候 app.UseMvc之后 添加一个InitUserDatabase方法 参数为IApplicationBuilder
+
+
+app.UseMvc();
+InitUserDatabase(app);//可以传递app
+
+
+其实就是创建一个默认用户， 我们需要serviceprovider创建一个scope， 我们需要在这里用的是一个独立的一个 叫范围 或者区域  使用dbcontext使用完之后，我们就把它释放掉，所以它这里会有一个单独的scope
+ public void InitUserDatabase(IApplicationBuilder app)
+        {
+            using (var scope=app.ApplicationServices.CreateScope())//由service container 创建 scope
+            {
+                var userContext = scope.ServiceProvider.GetRequiredService<UserContext>();//获取实例
+                if(userContext.Users.Any())//如果没有用户，就是第一次启动 创建默认用户
+                {
+                    userContext.Users.Add(new Models.AppUser { Name = "jesse" });
+                    userContext.SaveChanges();
+                }
+            }
+        }
+
+添加一个migration
+Add-Migration init
+出现错误，可以单步调试，
+其实它在做migration时候，其实会跑一遍代码
+userContext.Database.Migrate();
+
+此前创建的mysql01 jesse用户没有添加创建数据库权限，所以要修改
+docker run -d -p 3306:3306 -e MYSQL_USER="jesse" -e MYSQL_PASSWORD="pwd123456" -e MYSQL_ROOT_PASSWORD="root123456" -e "MYSQL_RANDOM_ROOT_PASSWORD=true" --name  mysql01 mysql/mysql-server:5.7 --character-set-server=utf8 --collation-server=utf8_general_ci
+
+docker logs mysql01
+获取默认密码
+[Entrypoint] GENERATED ROOT PASSWORD: !ilYKVYjOwZ4S7Uq-Ig]Idc@D#
+进入容器
+docker exec -it mysql01 bash
+mysql -ujesse -p
+use mysql
+权限不足
+改用root登录 随机密码
+登录成功后 
+修改密码
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'root123456'
+改由root登录
+select user,host from user
+此时jesse没有权限
+我们给jesse添加权限
+GRANT ALL PRIVILEGES ON *.* TO 'jesse'@'%' WITH GRANT OPTION
+
+然后使用jesse登录下第三方客户端
+此时有权限创建数据库
+
+
+Add-Migration init 
+出错的话，有时是代码问题，直接报错， 但是有时不报错，这是什么问题呢？ 退了重试几次 也许就好了 有时和vs2017 的iis启动和命令行启动有关  s
+so所以多试试
+
+
+接下来把我们的数据库内容输出下
+准备工作
+ private UserContext _userContext;//私有变量
+        public ValuesController(UserContext userContext)//依赖注入 实例
+        {
+            _userContext = userContext;
+        }
+
+输出
+ [HttpGet]
+        public async Task<IActionResult>  Get()
+        {
+            return Json(await _userContext.Users.SingleOrDefaultAsync(u => u.Name == "jesse"));//如果不存在，返回null
+        } 
+
+
+此时api已经完成，下节我们会把api部署的容器当中，刚开始他没有mysql 下节会加上mysql   会针对这个User.Api打一个镜像一个部署
+此时是 api访问容器内的mysql

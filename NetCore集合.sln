@@ -276,6 +276,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dockerbuild", "dockerbuild"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "02ASP.NET Core分布式项目实践\02Docker\dockerbuild\ConsoleApp\ConsoleApp.csproj", "{53ABBDC3-464C-41B5-A307-9202AA753CC7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.API", "02ASP.NET Core分布式项目实践\02Docker\dockerbuild\User.API\User.API.csproj", "{A2B2FFA3-03F2-4EFD-AA55-76F2AAA68081}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -354,6 +356,10 @@ Global
 		{53ABBDC3-464C-41B5-A307-9202AA753CC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53ABBDC3-464C-41B5-A307-9202AA753CC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53ABBDC3-464C-41B5-A307-9202AA753CC7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2B2FFA3-03F2-4EFD-AA55-76F2AAA68081}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2B2FFA3-03F2-4EFD-AA55-76F2AAA68081}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2B2FFA3-03F2-4EFD-AA55-76F2AAA68081}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2B2FFA3-03F2-4EFD-AA55-76F2AAA68081}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -405,6 +411,7 @@ Global
 		{33F6E98A-41ED-48A6-B6A0-4F8E448007AF} = {72D16933-C8D9-4CB9-8FAA-572679170112}
 		{88678EAB-2873-4424-B588-0579D49FE5F6} = {33F6E98A-41ED-48A6-B6A0-4F8E448007AF}
 		{53ABBDC3-464C-41B5-A307-9202AA753CC7} = {88678EAB-2873-4424-B588-0579D49FE5F6}
+		{A2B2FFA3-03F2-4EFD-AA55-76F2AAA68081} = {88678EAB-2873-4424-B588-0579D49FE5F6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8A31F480-001A-4E05-B2EE-5DCE2F5B36A8}

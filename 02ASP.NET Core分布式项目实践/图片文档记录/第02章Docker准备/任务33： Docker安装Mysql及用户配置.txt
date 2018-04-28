@@ -32,7 +32,7 @@ docker exec  ÕâÌõÃüÁîÊÇ¿ÉÒÔÓÃÀ´ ÎÒÃÇ¿ÉÒÔ½øÈëÈÝÆ÷ÀïÃæÈ¥ÔËÐÐ ÈÝÆ÷ËûÆäÊµ Ïàµ±ÓÚ ËüÒ
 ÏÔÊ¾ÁËÎÒÃÇµÄrootÓÃ»§ Ö»ÄÜÍ¨¹ýlocalhostÀ´µÇÂ¼
 ËùÒÔÕâÊÇÎÒÃÇÎªÊ²Ã´²»ÄÜÍ¨¹ýhostÀ´Á¬½ÓmysqlµÄÔ­Òò
 Õâ¸öÊ±ºòÎÒÃÇ ×î¼òµ¥µÄ·½Ê½ °ÑrootµÄ host¸ø¸Äµô ¸Ä³É0.0.0.4 ÔÊÐíÈÎºÎipÀ´µÇÂ¼£¬µ«ÊÇÕâÑù×ö²»Ì«°²È«£¬ËùÒÔÒ»°ã³¬¼¶ÓÃ»§ÎÒÃÇ·Å¿ªËü£¬ÎÒÃÇÔÚÆôÓÃÒ»¸ö×Ô¼ºµÄÓÃ»§
-ÐÂ½¨ÓÃ»§
+ÐÂ½¨ÓÃ»§ ²¢ÐÞ¸ÄÈ¨ÏÞ
 mysql> CREATE USER 'jack'@'localhost' IDENTIFIED BY 'pwd123456';
 mysql> GRANT ALL PRIVILEGES ON *.* TO 'jack'@'localhost' WITH GRANT OPTION;
 mysql> CREATE USER 'jack'@'%' IDENTIFIED BY 'pwd123456';
