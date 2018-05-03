@@ -1,0 +1,85 @@
+﻿这节课我们接着来讲容器互联，上一节课我们讲了link方式，我们通过把mysql 用db link到 连接到web上，在web上就可以访问mysql的数据库，但是mysql却访问不了web，因为只是单向link，这种方式已经不被docker推荐，这种方式已经被淘汰
+docker官方推荐network方式
+network有两种
+bridge 桥接  单台机器上用的是bridge
+overlay 而在集群情况下用的是overlay
+
+我们也可以在docker官方文档上找到 关于network container文章
+https://docs.docker-cn.com/engine/tutorials/networkingcontainers/#launch-a-container-on-the-default-network
+ 
+默认是用bridge
+我们自己比如说有个container web也好，mysql也好，它是有分配的一个地址172.17.0.2 它的网关是172.17.0.1，大家可以通过 docker inspect mysql01， 通过一个桥接呢 也就是大家在哪个上面看到的 docker可以访问，这个docker网络 大家可以在网络适配器 可以找到 dockernat，
+我们在默认创建的时候，默认会有一个bridge，同时我们可以再创建一个bridge，我们比如说  此时在看文档
+我们可以自己画一个 有一个host  有一个web容器 默认给的地址是172.17.0.7  然后还有一个db的容器 给的地址是172.17.0.6，此时两个容器不通过link 方式是访问不到的，现在我们需要新建一个network
+docker network create -d bridge mybridge
+这样就创建好了，我们呢可以通过 docker network ls 命令来查看
+我们可以把我们的db 连到mybridge
+但首先要把link给移除掉
+ docker ps -a
+ 首先把web给停掉 docker stop aspnetcore 
+ 删除   docker rm aspnetcore
+ 然后创建一个web容器,并添加到网络mybridge 
+ docker run -d -p 8001:80 --net mybridge --name aspnetcore jesse/aspnetcore:prod
+ 我们来看一下 web容器使用的network
+ docker inspect aspnetcore
+ 注意到它的ip地址已经变了  172.18.0.2 网关为172.18.0.1
+ 此时在一个网络的情况下 web容器是和其他容器是隔离的，此时是web容器是没有办法去访问mysql容器
+ 如果此时我们访问web localhost:8001 会报错，但是我们没有把错误显示出来
+ 我们也可以看log，查看错误信息
+ docker logs aspnetcore
+ 此时，我们把mysql01添加到mybirdge中
+ docker network connect mybridge mysql01
+ 把mysql01连接上mybridge之后，我们看下mysql01的网络
+ docker inspect mysql01
+ 默认有一个bridge 地址为172.17.0.6 网关为172.17.0.1
+ 还有一个mybridge 地址为172.18.0.3 网关为172.18.0.1
+  因为我们没有安内斯特，此时web 还能访问吗 
+  虽然我们在这个地方 连个容器在同一网段下，但是我们是没有dns的
+  我们看下web内部
+  docker exec -it aspnetcore bash
+  ping 172.18.0.3
+  可以ping通
+   这个时候我们就需要用ip地址来访问我们的mysql01，
+   但是我们没有把我们的配置文件放到资料卷中，因为我们没有办法去修改配置
+   有一种方法通过 docker rename mysql01 db
+   进入到web中 ping db
+   docker exec -it aspnetcore bash
+   ping db
+   ping的通，就可以访问了
+   这是一种方式  就是我们原先连接字符串中 server用容器的名字来访问
+   另外一种方式就是进入aspnetcore 中修改appsetting.json
+   查看appsettings.json
+
+   root@b7e16be0fdd3:/app# cat appsettings.json
+﻿{
+  "Logging": {
+    "IncludeScopes": false,
+    "Debug": {
+      "LogLevel": {
+        "Default": "Warning"
+      }
+    },
+    "Console": {
+      "LogLevel": {
+        "Default": "Warning"
+      }
+    }
+  },
+
+  "ConnectionStrings": {
+    "MysqlUser": "server=db;port=3306;database=beta_user;userid=jesse;password=pwd123456" 有啥不深刻的？
+  }
+}
+
+   修改需要用到vim
+
+   此时产生了3种方式去修改配置
+   1.把mysql容器名称修改为db  有啥不深刻的额
+   2.web容器中去修改appsettings.json yum install vim 有啥不深刻的？ 类似linux环境， 发布后的配置，当然可以修改，不会引起编译
+   3.最正确的方式，把配置文件放到资料卷中，在外部就可以直接改配置
+   在centos挂载资料卷是没有问题的，在windows中是会有一些权限的问题
+
+
+想想这节讲了啥？
+network 是啥？ 如何互联？
+如果自学会遇到啥问题呢？ 很可能是稀里糊涂的，不清晰，没概念，遇到不理解的名词就卡壳了

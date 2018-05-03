@@ -56,6 +56,99 @@ SO,初始数据库操作不用注销，因为打包是不运行呀
 cd D:\src\NetCoreDemo\NetCore集合\02ASP.NET Core分布式项目实践\02Docker\dockerbuild\User.API
 docker build -t jesse/aspnetcore:prod .
 
+
+D:\src\NetCoreDemo\NetCore集合\02ASP.NET Core分布式项目实践\02Docker\dockerbuild\User.API>docker build -t jesse/aspnetcore:prod .
+Sending build context to Docker daemon  1.191MB
+Step 1/11 : FROM microsoft/aspnetcore-build as build-env
+latest: Pulling from microsoft/aspnetcore-build
+c73ab1c6897b: Pull complete
+1ab373b3deae: Pull complete
+b542772b4177: Pull complete
+57c8de432dbe: Pull complete
+2dcfad73ac06: Pull complete
+cd5eebddacdc: Pull complete
+cac0928816fb: Pull complete
+c26ab2e846ff: Pull complete
+a0656e0b1778: Pull complete
+4bb101761ae8: Pull complete
+Digest: sha256:a6f0bcf6d50b9e82a3abb07e14e4bcc47f98f60d4c75016e5a37910913a943bc
+Status: Downloaded newer image for microsoft/aspnetcore-build:latest
+ ---> 07a8942b8afb
+Step 2/11 : WORKDIR /code
+Removing intermediate container 420fac7edc63
+ ---> 880e412b74e9
+Step 3/11 : COPY *.csproj ./
+ ---> 02280fe69f71
+Step 4/11 : RUN dotnet restore
+ ---> Running in 1d7dfef5728d
+  Restoring packages for /code/User.API.csproj...
+  Restoring packages for /code/User.API.csproj...
+  Restore completed in 969.53 ms for /code/User.API.csproj.
+  Installing Microsoft.Extensions.Logging.Abstractions 2.0.0.
+  Installing Microsoft.Extensions.Caching.Abstractions 2.0.0.
+  Installing Microsoft.Extensions.Options 2.0.0.
+  Installing Microsoft.Extensions.Logging 2.0.0.
+  Installing Microsoft.Extensions.Caching.Memory 2.0.0.
+  Installing System.Security.Cryptography.ProtectedData 4.4.0.
+  Installing Microsoft.EntityFrameworkCore 2.0.1.
+  Installing Microsoft.Extensions.Configuration.Abstractions 2.0.0.
+  Installing System.Configuration.ConfigurationManager 4.4.0.
+  Installing System.Security.Permissions 4.4.0.
+  Installing Google.Protobuf 3.5.1.
+  Installing Microsoft.EntityFrameworkCore.Relational 2.0.1.
+  Installing MySql.Data 8.0.11.
+  Installing MySql.Data.EntityFrameworkCore 8.0.11.
+  Installing Microsoft.AspNetCore.All 2.0.6.
+  Generating MSBuild file /code/obj/User.API.csproj.nuget.g.props.
+  Generating MSBuild file /code/obj/User.API.csproj.nuget.g.targets.
+  Restore completed in 9.3 sec for /code/User.API.csproj.
+Removing intermediate container 1d7dfef5728d
+ ---> e94ca9e88d64
+Step 5/11 : COPY . ./
+ ---> 74b913740413
+Step 6/11 : RUN dotnet publish -c Release -o out
+ ---> Running in f6a67bd5f7d4
+Microsoft (R) Build Engine version 15.6.84.34536 for .NET Core
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  Restoring packages for /code/User.API.csproj...
+  Restore completed in 89.93 ms for /code/User.API.csproj.
+  Generating MSBuild file /code/obj/User.API.csproj.nuget.g.props.
+  Generating MSBuild file /code/obj/User.API.csproj.nuget.g.targets.
+  Restore completed in 2.42 sec for /code/User.API.csproj.
+  User.API -> /code/bin/Release/netcoreapp2.0/User.API.dll
+  User.API -> /code/out/
+Removing intermediate container f6a67bd5f7d4
+ ---> 73f7929090f9
+Step 7/11 : FROM microsoft/aspnetcore
+latest: Pulling from microsoft/aspnetcore
+c73ab1c6897b: Already exists
+a2cd40faad8a: Pull complete
+39f0dbd18e5c: Pull complete
+99871c3b130a: Pull complete
+dba781b02c4e: Pull complete
+Digest: sha256:fbd70bd0ac16905640e43cdc2d93cd5ee3321e1ed66f7b7dd61a2d4055066b4b
+Status: Downloaded newer image for microsoft/aspnetcore:latest
+ ---> c4ca78cf9dca
+Step 8/11 : WORKDIR /app
+Removing intermediate container 4bd08f1fce84
+ ---> b72aaf9a3584
+Step 9/11 : COPY --from=build-env /code/out ./
+ ---> bf0f4e42af5a
+Step 10/11 : EXPOSE 80
+ ---> Running in fefecadbd5b9
+Removing intermediate container fefecadbd5b9
+ ---> e61cde664542
+Step 11/11 : ENTRYPOINT ["dotnet","User.API.dll"]
+ ---> Running in ab923aaee534
+Removing intermediate container ab923aaee534
+ ---> 9fc872ae490a
+Successfully built 9fc872ae490a
+Successfully tagged jesse/aspnetcore:prod
+SECURITY WARNING: You are building a Docker image from Windows against a non-Windows Docker host. All files and directories added to build context will have '-rwxr-xr-x' permissions. It is recommended to double check and reset permissions for sensitive files and directories.
+
+
+
 共有11步 在dockerfile进行build的时候每一条命令 有一个层出来 就是docker镜像  这个层级概念 后面更细的去了解这个概念
 
 db是个潜在的bug
