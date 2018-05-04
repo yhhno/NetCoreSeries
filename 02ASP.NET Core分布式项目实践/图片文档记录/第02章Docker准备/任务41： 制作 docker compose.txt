@@ -1,0 +1,72 @@
+上节课通过network和link的方式 网络互连，将我们web容器和mysql容器连接了起来，那我们同时呢 有两个镜像一个是mysql 一个是webapi，同时运行两个容器，在这种情况下， 之前最早是单台host多个容器 我们是手动一个一个部署的（缺点），今天要讲一个compose 这个东西就是快速将多个容器 构建多个镜像时 使用它就会方便很多
+要了解compose的话，首先要了解yaml的语法，因为docker compose的配置文件是用yaml来写的
+一个一个麻烦，好痛苦呀，想想如何批量呢？没有痛苦
+没有乐死不疲 动不动就想放弃，
+没有恐惧
+
+yaml语法 文章
+http://www.ruanyifeng.com/blog/2016/07/yaml.html
+此时涉及到学习语法了？ 语法是啥呢？ 表示一件事一个动作的格式
+
+这里会给大家快速过一遍，这个不是我们的重点，因为它是一种很简单的语法，大家只需要稍微练习下就可以了额，
+它的理念就是 类似于json
+ 一个docker compose 首先新建一个文件 docker-compose.yml  这就是一个docker compose 文件
+ 基本的语法规则
+ 大小写敏感
+使用缩进表示层级关系
+缩进时不允许使用Tab键，只允许使用空格。
+缩进的空格数目不重要，只要相同层级的元素左侧对齐即可
+有些key如version 是已经在docker compose定义好的 
+有哪些呢？可以到docker入门实践中去查找
+https://yeasy.gitbooks.io/docker_practice/content/compose/compose_file.html
+我们会给大家简单练习和介绍一些常用的命令，主要是为了让我们可以把netcore 多个容器通过compose 给run起来，大家还是要看这上面的一些内容 去进行补充和深入的了解 ，这个地方上也不是说非常的深入，但是可以有更全面的认识
+大家可以把这个文档当做参考的工具书和手册
+首先在yaml语法里最顶层 冒号之后，空一格 如version: '3'  字符串 单引号 可以不打单引号，但为了规范都打上单引号
+version: '3' 顶层
+ 接下来主要讲下基本结构
+ 缩进 什么情况下缩进呢 不同的层级要缩进  同一个层级可以用任意多个空格缩进，但同意层级要对齐
+ 多个services时，就要考虑层级，我们按照自己的习惯，用两个空格来代表层级 同一个层级用相同个空格来缩进就可以了，第一个services 是db，第二个services是web
+ 在db里，再两个空格
+  语法了解后，  自己学了没概念？ 是不是理解不了？ 看了后不能运用？这是啥问题？
+
+接下来需要了解docker compose 除了有docker compose文件之后，还需要一个docker compose命令
+https://yeasy.gitbooks.io/docker_practice/content/compose/commands.html
+有了描述，肯定还有执行 也就是命令
+可以使用build 通过docker compose来build镜像出来 还有exec
+因为我们现在还不讲docker swarm 分布式集群 所以还不会用到scale 主要是来控制容器的个数
+我们会用到的是up，它会尝试自动完成包括构建镜像，创建 服务等一系列操作 
+当我们把docker compose文件写好以后，就可以用up命令启动容器
+
+首先我们要把docker compose文件写完，刚开始我们可以参考手册，或者最简单的办法找一个别人写的
+google 搜索 docker compose mysql aspnetcore
+ 
+ 它包括两个services，有一个db 一个web web中会有一个build的上下文   我们会在什么地方启动，就是当前项目的目录下 
+ build: .  相当于docker build里面传了一个参数，就是你当前上下文
+ 我们会在当前项目目录下，运行docker-compose up 这个时候它首先构建web 的时候会用.来标识当前上下文 ，因为我们这里的web是有一个dockerfile文件的，它还是会用dockerfile来构建，当然这里我们是做了一个组合，容器名称，端口映射 当然端口映射多个也是没有问题的，depends_on  启动的顺序，web依赖于 db要先启动 web就比较简单了
+ 接下来来看数据库db的配置 跟我们单独用docker run 有点像， 因为我们没有为db写一个dockerfile， ports 这里不映射也没有关系 因为在docker compose 一个compose所有的sevices自动放到同一个网络当中的，所以db和web两个服务是可以相互访问的，  那我们做ports是为了在host中，也就是通过navicat来访问数据库，  environment是和我们在docker run的时候是一样的，指定root密码和添加一个新用户，volumes 挂载资料卷 为什么要挂载资料卷 前面是host中的文件夹目录，后面映射的是容器内的一个文件夹，是相互映射的，为什么要映射起来呢 大家还记得我们之前的mysql用这种方式启动添加的用户是没有权限的，我们在host中的目录中的所有sql文件都会被执行 在容器mysql启动的时候都回去运行，容器内映射的目录内的所有文件也会在容器启动时，全部是执行， host中的目录中的文件也就是给添加的用户jesse添加权限
+
+ version: '3'
+services:
+  db:
+    image: mysql/mysql-server:5.7
+    container_name: 'db'
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
+    restart: always
+    ports:
+      - '3306:3306' 数组
+    environment:
+      - MYSQL_ROOT_PASSWORD=root123456 数组
+      - MYSQL_USER=jesse
+      - MYSQL_PASSWORD=pwd123456
+    volumes:
+      - /d/docker/beta/mysql-init:/docker-entrypoint-initdb.d 挂载卷在host上
+  web:
+    build: .
+    container_name: 'aspnetcore'
+    ports:
+      - '8003:80'
+    depends_on:
+      - db
+
+	  我们可以在当前目录下用docker-comp0se build 它会生成两个镜像
+
