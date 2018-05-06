@@ -18,20 +18,41 @@ namespace User.API.Data
             _logger = logger;
         }
 
-        public static async Task SeedAsync(IApplicationBuilder applicationBuilder,ILoggerFactory loggerFactory)
+        public static async Task SeedAsync(IApplicationBuilder applicationBuilder,ILoggerFactory loggerFactory,int? retry=0)
         {
-            using (var scope=applicationBuilder.ApplicationServices.CreateScope())
+            //添加重试机制
+            var retryForAvaiability = retry.Value;
+            //应该放到try{ }的范围内，在catch之后会再一次调用SeedAsync方法生成新的scope，前面的scope应该被释放掉。
+            try
             {
-                var context = (UserContext)scope.ServiceProvider.GetService(typeof(UserContext));
-                var logger = (ILogger<UserContextSeed>)scope.ServiceProvider.GetServices(typeof(ILogger<UserContextSeed>));
-                logger.LogDebug("Begin UserContextSeed SeedAsync");
-                context.Database.Migrate();
-                if (!context.Users.Any())
+                using (var scope = applicationBuilder.ApplicationServices.CreateScope())
                 {
-                    context.Users.Add(new Models.AppUser { Name = "jesse" });
-                    context.SaveChanges();
+                    var context = (UserContext)scope.ServiceProvider.GetService(typeof(UserContext));
+                    var logger = (ILogger<UserContextSeed>)scope.ServiceProvider.GetServices(typeof(ILogger<UserContextSeed>));
+                    logger.LogDebug("Begin UserContextSeed SeedAsync");
+                    context.Database.Migrate();
+                    if (!context.Users.Any())
+                    {
+                        context.Users.Add(new Models.AppUser { Name = "jesse" });
+                        context.SaveChanges();
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+               
+                if (retryForAvaiability<10)
+                {
+                    retryForAvaiability++;
+                    var logger = loggerFactory.CreateLogger(typeof(UserContextSeed));
+                    logger.LogError(ex.Message);
+
+                    await SeedAsync(applicationBuilder, loggerFactory, retryForAvaiability);//重试
+                }
+               
+            }
+
+           
         }
 
     }

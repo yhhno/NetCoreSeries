@@ -1,0 +1,58 @@
+问题： 事前事后 捋一遍脉络。事前捋不清，学的不透彻，得不到本质,就不能很好运用,也就没别人厉害, 体现不了自己,一点一点就拉开差距了,更可怕的是养成了习惯,默默的变成了潜意识啦,事后捋不清，找不到问题，方向都有可能错了
+其实人和人的差距就是从开始这样一点一点地拉开了,后来的话就包括心理心态越来越好和方式越来越好,对心态和方式越来越差,心态崩了就死了一大半了.
+
+有两个容器要启动，一个是web，一个是db，虽然我们在web配置时，指定依赖db启动，但是这只是说明db先启动，然后web启动，而不是等待db启动成功后，web再启动 并不是串行效果
+web可能启动的快，db启动的慢，由于web启动要访问db，而db没有启动好，就会报错，web启动不成功，虽然可以事后手动启动web
+
+思考角度问题，访问失败了，就完事了，就去找db问题了，互联是双方的，双方都可以做措施。  过程不够清晰，只是简单的过了下流程，并从简单的流程找到了问题，就完事了。  根本就没有回过头再捋一遍， 事前事后都有问题。
+
+
+
+解决方法是； 重试机制，直到它重试完成 一次访问db不成功，就多次嘛。
+  public static async Task SeedAsync(IApplicationBuilder applicationBuilder,ILoggerFactory loggerFactory,int? retry=0)
+        {
+            //添加重试机制
+            var retryForAvaiability = retry.Value;
+            //应该放到try{ }的范围内，在catch之后会再一次调用SeedAsync方法生成新的scope，前面的scope应该被释放掉。
+            try
+            {
+                using (var scope = applicationBuilder.ApplicationServices.CreateScope())
+                {
+                    var context = (UserContext)scope.ServiceProvider.GetService(typeof(UserContext));
+                    var logger = (ILogger<UserContextSeed>)scope.ServiceProvider.GetServices(typeof(ILogger<UserContextSeed>));
+                    logger.LogDebug("Begin UserContextSeed SeedAsync");
+                    context.Database.Migrate();
+                    if (!context.Users.Any())
+                    {
+                        context.Users.Add(new Models.AppUser { Name = "jesse" });
+                        context.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+               
+                if (retryForAvaiability<10)
+                {
+                    retryForAvaiability++;
+                    var logger = loggerFactory.CreateLogger(typeof(UserContextSeed));
+                    logger.LogError(ex.Message);
+
+                    await SeedAsync(applicationBuilder, loggerFactory, retryForAvaiability);//重试
+                }
+               
+            }
+
+           
+        }
+
+
+
+然后我们docker-compose down 或者restart  去看下日志
+来模拟下情况，测试重试机制
+
+核心问题就是 web启动快,db启动慢,
+重试机制 解决了，快慢问题
+
+找了问题，就好去做对应的对策，
+没找到问题，咋下手呢？ 只能头疼医头，脚疼医脚。
