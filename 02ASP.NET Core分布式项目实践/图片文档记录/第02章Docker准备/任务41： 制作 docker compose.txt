@@ -4,6 +4,9 @@
 没有乐死不疲 动不动就想放弃，
 没有恐惧
 
+
+本节就是学写配置， 配置写好了，在运行命令
+
 yaml语法 文章
 http://www.ruanyifeng.com/blog/2016/07/yaml.html
 此时涉及到学习语法了？ 语法是啥呢？ 表示一件事一个动作的格式
@@ -37,6 +40,8 @@ https://yeasy.gitbooks.io/docker_practice/content/compose/commands.html
 我们会用到的是up，它会尝试自动完成包括构建镜像，创建 服务等一系列操作 
 当我们把docker compose文件写好以后，就可以用up命令启动容器
 
+本节就是学写配置， 配置写好了，在运行命令 就是这么清晰
+
 首先我们要把docker compose文件写完，刚开始我们可以参考手册，或者最简单的办法找一个别人写的
 google 搜索 docker compose mysql aspnetcore
  
@@ -68,5 +73,96 @@ services:
     depends_on:
       - db
 
-	  我们可以在当前目录下用docker-comp0se build 它会生成两个镜像
+	  我们可以在当前目录下用docker-compose build 它会生成两个镜像
 
+	  ERROR: In file '.\docker-compose.yml', service '锘縱ersion' must be a mapping not a string.
+	  有错误，认真看错误，可以提示错误方向
+	  竟然是要用回车 应该是换行问题 结束行标志
+
+D:\src\NetCoreDemo\NetCore集合\02ASP.NET Core分布式项目实践\02Docker\dockerbuild\User.API>docker-compose build  也只是打包web镜像
+db uses an image, skipping
+Building web
+Step 1/11 : FROM microsoft/aspnetcore-build as build-env
+ ---> 07a8942b8afb
+Step 2/11 : WORKDIR /code
+ ---> Using cache
+ ---> c97d7d737f3b
+Step 3/11 : COPY *.csproj ./
+ ---> e8ef5f172d84
+Step 4/11 : RUN dotnet restore
+ ---> Running in cb1738d6890a
+  Restoring packages for /code/User.API.csproj...
+  Restoring packages for /code/User.API.csproj...
+  Restore completed in 2.74 sec for /code/User.API.csproj.
+  Installing Microsoft.Extensions.Logging.Abstractions 2.0.0.
+  Installing Microsoft.Extensions.Options 2.0.0.
+  Installing Microsoft.Extensions.Caching.Abstractions 2.0.0.
+  Installing System.Security.Cryptography.ProtectedData 4.4.0.
+  Installing Microsoft.Extensions.Logging 2.0.0.
+  Installing Microsoft.Extensions.Caching.Memory 2.0.0.
+  Installing System.Configuration.ConfigurationManager 4.4.0.
+  Installing Google.Protobuf 3.5.1.
+  Installing System.Security.Permissions 4.4.0.
+  Installing Microsoft.EntityFrameworkCore 2.0.1.
+  Installing Microsoft.Extensions.Configuration.Abstractions 2.0.0.
+  Installing MySql.Data 8.0.11.
+  Installing Microsoft.EntityFrameworkCore.Relational 2.0.1.
+  Installing MySql.Data.EntityFrameworkCore 8.0.11.
+  Installing Microsoft.AspNetCore.All 2.0.6.
+  Generating MSBuild file /code/obj/User.API.csproj.nuget.g.props.
+  Generating MSBuild file /code/obj/User.API.csproj.nuget.g.targets.
+  Restore completed in 52.18 sec for /code/User.API.csproj.
+Removing intermediate container cb1738d6890a
+ ---> 4d4d28d10374
+Step 5/11 : COPY . ./
+ ---> 559034ed606d
+Step 6/11 : RUN dotnet publish -c Release -o out
+ ---> Running in f9eb63dc7302
+Microsoft (R) Build Engine version 15.6.84.34536 for .NET Core
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  Restoring packages for /code/User.API.csproj...
+  Restore completed in 34.12 ms for /code/User.API.csproj.
+  Generating MSBuild file /code/obj/User.API.csproj.nuget.g.props.
+  Generating MSBuild file /code/obj/User.API.csproj.nuget.g.targets.
+  Restore completed in 2.07 sec for /code/User.API.csproj.
+  User.API -> /code/bin/Release/netcoreapp2.0/User.API.dll
+  User.API -> /code/out/
+Removing intermediate container f9eb63dc7302
+ ---> f5ecf4278684
+Step 7/11 : FROM microsoft/aspnetcore
+ ---> c4ca78cf9dca
+Step 8/11 : WORKDIR /app
+ ---> Using cache
+ ---> 797934756aa2
+Step 9/11 : COPY --from=build-env /code/out ./
+ ---> ae2901532d30
+Step 10/11 : EXPOSE 80
+ ---> Running in 9667e74ddd45
+Removing intermediate container 9667e74ddd45
+ ---> b0e274778d72
+Step 11/11 : ENTRYPOINT ["dotnet","User.API.dll"]
+ ---> Running in 973cdeb4f621
+Removing intermediate container 973cdeb4f621
+ ---> f086134c8fe2
+Successfully built f086134c8fe2
+Successfully tagged userapi_web:latest
+
+
+
+
+D:\src\NetCoreDemo\NetCore集合\02ASP.NET Core分布式项目实践\02Docker\dockerbuild\User.API>docker images
+REPOSITORY                   TAG                 IMAGE ID            CREATED             SIZE
+userapi_web                  latest              f086134c8fe2        2 minutes ago       327MB  新生成的两个镜像  这个是web镜像
+<none>                       <none>              f5ecf4278684        2 minutes ago       1.99GB  新生成的两个镜像 这个是中间镜像  sdk
+jesse/aspnetcore             prod                7d34181d3330        6 days ago          327MB
+<none>                       <none>              bfae606fea4e        6 days ago          1.99GB
+mongo                        latest              a0f922b3f0a1        2 weeks ago         366MB
+mysql/mysql-server           5.7                 3cc9613ef3ba        2 weeks ago         244MB
+microsoft/aspnetcore-build   latest              07a8942b8afb        2 weeks ago         1.97GB
+microsoft/aspnetcore         latest              c4ca78cf9dca        2 weeks ago         325MB
+redis                        latest              c5355f8853e4        5 weeks ago         107MB
+rabbitmq                     latest              b17bd9d70e8b        7 weeks ago         127MB
+docker4w/nsenter-dockerd     latest              cae870735e91        6 months ago        187kB
+
+不能有遗漏， 全过程 从理论到实践， 到运用

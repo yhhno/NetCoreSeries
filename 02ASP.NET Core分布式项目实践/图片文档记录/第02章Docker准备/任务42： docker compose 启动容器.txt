@@ -1,0 +1,349 @@
+当你以积极的心态，清晰的步骤去做事时， 有啥做不好呢？
+准备前思考： 它就是一个工具，一个操作，熟悉就好，没什么复杂的，搞得多神秘，多高科技呢.
+需要怎么做呢: 
+心态， 精神充沛，休息的好， 不就是是个工具使用? 小意思，一个小时搞定它，不受其他干扰，潜意识的自信，满满的冲劲，十足的期待，必须搞定。
+方式； 它是怎样一个事，什么类型，难易，用处。如何入手？ 如何掌握深刻？ 代入感， 什么性质？ 解决了什么问题？  怎么有效率完成？ 并深刻去理解并运用呢？ 达到最好效果？它的来龙去脉，前因后果，优缺点是啥？ 有什么启示？ 有什么借鉴，有什么改进呢？
+过程:落实每一步，来龙去脉，前因后果
+
+这都是期望，或者都是抽象的， 具体呢？ 实践呢？ 是否实践后养成习惯呢？成为意识流呢/
+学习真的是核心竞争力， 如何又快又好地去学习，并运用呢？  摸清它清晰的脉络，形成自己清晰的脉络
+
+有问题怎么办？ 带着问题继续， windows环境资料卷有问题
+就忍受错误，没其他办法，fuck， 我不用资料卷好不。
+
+
+上节用docker compose构建了两个镜像之后（只是构建了镜像 ，还没有运行容器呢，相当于执行了dockerfile文件，说明啥问题？脉络不清晰），这节我们用compose ，我么先看下数据库 
+此时运行下docker ps  没有容器运行
+docker-compose down  停止并移除容器，并移除网络
+此时再用docker-compose up 它会创建一个网络，然后这个网络会把 接下来创建的容器加进去  根据的容器一个是mysql官方镜像，一个是我们根据dockerfile自己打包的镜像
+
+docker-compose up 一键启动两个容器， 容器不存在就先创建后启动
+docker-compose down 一键停止并移除两个容器，
+本来我们给mysql设置了root密码，但是通过docker logs 发现 给了默认初始密码，说明我们给root赋值有问题，与期望不符，这里有错误
+
+
+调用docker-compose up
+web有错误，但db初始化成功
+D:\src\NetCoreDemo\NetCore集合\02ASP.NET Core分布式项目实践\02Docker\dockerbuild\User.API>docker-compose up
+Removing db
+b047485faca4_db is up-to-date
+Creating aspnetcore ... done
+Attaching to b047485faca4_db, aspnetcore
+b047485faca4_db | [Entrypoint] MySQL Docker Image 5.7.22-1.1.5
+b047485faca4_db | [Entrypoint] Initializing database
+b047485faca4_db | [Entrypoint] Database initialized
+b047485faca4_db | Warning: Unable to load '/usr/share/zoneinfo/iso3166.tab' as time zone. Skipping it.
+b047485faca4_db | Warning: Unable to load '/usr/share/zoneinfo/leapseconds' as time zone. Skipping it.
+b047485faca4_db | Warning: Unable to load '/usr/share/zoneinfo/tzdata.zi' as time zone. Skipping it.
+b047485faca4_db | Warning: Unable to load '/usr/share/zoneinfo/zone.tab' as time zone. Skipping it.
+b047485faca4_db | Warning: Unable to load '/usr/share/zoneinfo/zone1970.tab' as time zone. Skipping it.
+b047485faca4_db |
+b047485faca4_db | [Entrypoint] ignoring /docker-entrypoint-initdb.d/*
+b047485faca4_db |
+b047485faca4_db | [Entrypoint] Server shut down
+b047485faca4_db |
+b047485faca4_db | [Entrypoint] MySQL init process done. Ready for start up.
+b047485faca4_db |
+b047485faca4_db | [Entrypoint] Starting MySQL 5.7.22-1.1.5
+aspnetcore | warn: Microsoft.AspNetCore.DataProtection.KeyManagement.XmlKeyManager[35]
+aspnetcore |       No XML encryptor configured. Key {755e8ec4-f3fd-4c0e-bf6c-7b537b4aa6f7} may be persisted to storage in unencrypted form.
+aspnetcore | Application startup exception: MySql.Data.MySqlClient.MySqlException (0x80004005): Authentication to host 'db' for user 'jesse' using method 'mysql_native_password' failed with message: Access denied for user 'jesse'@'%' to database 'mysql' ---> MySql.Data.MySqlClient.MySqlException (0x80004005): Access denied for user 'jesse'@'%' to database 'mysql'
+aspnetcore |    at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
+aspnetcore |    at MySql.Data.MySqlClient.Authentication.MySqlAuthenticationPlugin.ReadPacket()
+aspnetcore |    at MySql.Data.MySqlClient.Authentication.MySqlAuthenticationPlugin.AuthenticationFailed(Exception ex)
+aspnetcore |    at MySql.Data.MySqlClient.Authentication.MySqlAuthenticationPlugin.ReadPacket()
+aspnetcore |    at MySql.Data.MySqlClient.Authentication.MySqlAuthenticationPlugin.Authenticate(Boolean reset)
+aspnetcore |    at MySql.Data.MySqlClient.NativeDriver.Open()
+aspnetcore |    at MySql.Data.MySqlClient.Driver.Open()
+aspnetcore |    at MySql.Data.MySqlClient.Driver.Create(MySqlConnectionStringBuilder settings)
+aspnetcore |    at MySql.Data.MySqlClient.MySqlPool.CreateNewPooledConnection()
+aspnetcore |    at MySql.Data.MySqlClient.MySqlPool.GetPooledConnection()
+aspnetcore |    at MySql.Data.MySqlClient.MySqlPool.TryToGetDriver()
+aspnetcore |    at MySql.Data.MySqlClient.MySqlPool.GetConnection()
+aspnetcore |    at MySql.Data.MySqlClient.MySqlConnection.Open()
+aspnetcore |    at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open(Boolean errorsExpected)
+aspnetcore |    at Microsoft.EntityFrameworkCore.Migrations.Internal.MigrationCommandExecutor.ExecuteNonQuery(IEnumerable`1 migrationCommands, IRelationalConnection connection)
+aspnetcore |    at MySql.Data.EntityFrameworkCore.MySQLDatabaseCreator.Create()
+aspnetcore |    at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.Migrate(String targetMigration)
+aspnetcore |    at Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.Migrate(DatabaseFacade databaseFacade)
+aspnetcore |    at User.API.Startup.InitUserDatabase(IApplicationBuilder app) in /code/Startup.cs:line 62
+aspnetcore | --- End of stack trace from previous location where exception was thrown ---
+aspnetcore |    at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+aspnetcore |    at Microsoft.AspNetCore.Hosting.ConventionBasedStartup.Configure(IApplicationBuilder app)
+aspnetcore |    at Microsoft.AspNetCore.Hosting.Internal.AutoRequestServicesStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder builder)
+aspnetcore |    at Microsoft.AspNetCore.Hosting.Internal.WebHost.BuildApplication()
+aspnetcore |
+aspnetcore | Unhandled Exception: MySql.Data.MySqlClient.MySqlException: Authentication to host 'db' for user 'jesse' using method 'mysql_native_password' failed with message: Access denied for user 'jesse'@'%' to database 'mysql' ---> MySql.Data.MySqlClient.MySqlException: Access denied for user 'jesse'@'%' to database 'mysql'
+aspnetcore |    at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
+aspnetcore |    at MySql.Data.MySqlClient.Authentication.MySqlAuthenticationPlugin.ReadPacket()
+aspnetcore |    --- End of inner exception stack trace ---
+aspnetcore |    at MySql.Data.MySqlClient.Authentication.MySqlAuthenticationPlugin.AuthenticationFailed(Exception ex)
+aspnetcore |    at MySql.Data.MySqlClient.Authentication.MySqlAuthenticationPlugin.ReadPacket()
+aspnetcore |    at MySql.Data.MySqlClient.Authentication.MySqlAuthenticationPlugin.Authenticate(Boolean reset)
+aspnetcore |    at MySql.Data.MySqlClient.NativeDriver.Open()
+aspnetcore |    at MySql.Data.MySqlClient.Driver.Open()
+aspnetcore |    at MySql.Data.MySqlClient.Driver.Create(MySqlConnectionStringBuilder settings)
+aspnetcore |    at MySql.Data.MySqlClient.MySqlPool.CreateNewPooledConnection()
+aspnetcore |    at MySql.Data.MySqlClient.MySqlPool.GetPooledConnection()
+aspnetcore |    at MySql.Data.MySqlClient.MySqlPool.TryToGetDriver()
+aspnetcore |    at MySql.Data.MySqlClient.MySqlPool.GetConnection()
+aspnetcore |    at MySql.Data.MySqlClient.MySqlConnection.Open()
+aspnetcore |    at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open(Boolean errorsExpected)
+aspnetcore |    at Microsoft.EntityFrameworkCore.Migrations.Internal.MigrationCommandExecutor.ExecuteNonQuery(IEnumerable`1 migrationCommands, IRelationalConnection connection)
+aspnetcore |    at MySql.Data.EntityFrameworkCore.MySQLDatabaseCreator.Create()
+aspnetcore |    at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.Migrate(String targetMigration)
+aspnetcore |    at Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.Migrate(DatabaseFacade databaseFacade)
+aspnetcore |    at User.API.Startup.InitUserDatabase(IApplicationBuilder app) in /code/Startup.cs:line 62
+aspnetcore | --- End of stack trace from previous location where exception was thrown ---
+aspnetcore |    at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+aspnetcore |    at Microsoft.AspNetCore.Hosting.ConventionBasedStartup.Configure(IApplicationBuilder app)
+aspnetcore |    at Microsoft.AspNetCore.Hosting.Internal.AutoRequestServicesStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder builder)
+aspnetcore |    at Microsoft.AspNetCore.Hosting.Internal.WebHost.BuildApplication()
+aspnetcore |    at Microsoft.AspNetCore.Hosting.WebHostBuilder.Build()
+aspnetcore |    at User.API.Program.Main(String[] args) in /code/Program.cs:line 17
+aspnetcore | crit: Microsoft.AspNetCore.Hosting.Internal.WebHost[6]
+aspnetcore |       Application startup exception
+aspnetcore | MySql.Data.MySqlClient.MySqlException (0x80004005): Authentication to host 'db' for user 'jesse' using method 'mysql_native_password' failed with message: Access denied for user 'jesse'@'%' to database 'mysql' ---> MySql.Data.MySqlClient.MySqlException (0x80004005): Access denied for user 'jesse'@'%' to database 'mysql'
+aspnetcore |    at MySql.Data.MySqlClient.MySqlStream.ReadPacket()
+aspnetcore |    at MySql.Data.MySqlClient.Authentication.MySqlAuthenticationPlugin.ReadPacket()
+aspnetcore |    at MySql.Data.MySqlClient.Authentication.MySqlAuthenticationPlugin.AuthenticationFailed(Exception ex)
+aspnetcore |    at MySql.Data.MySqlClient.Authentication.MySqlAuthenticationPlugin.ReadPacket()
+aspnetcore |    at MySql.Data.MySqlClient.Authentication.MySqlAuthenticationPlugin.Authenticate(Boolean reset)
+aspnetcore |    at MySql.Data.MySqlClient.NativeDriver.Open()
+aspnetcore |    at MySql.Data.MySqlClient.Driver.Open()
+aspnetcore |    at MySql.Data.MySqlClient.Driver.Create(MySqlConnectionStringBuilder settings)
+aspnetcore |    at MySql.Data.MySqlClient.MySqlPool.CreateNewPooledConnection()
+aspnetcore |    at MySql.Data.MySqlClient.MySqlPool.GetPooledConnection()
+aspnetcore |    at MySql.Data.MySqlClient.MySqlPool.TryToGetDriver()
+aspnetcore |    at MySql.Data.MySqlClient.MySqlPool.GetConnection()
+aspnetcore |    at MySql.Data.MySqlClient.MySqlConnection.Open()
+aspnetcore |    at Microsoft.EntityFrameworkCore.Storage.RelationalConnection.Open(Boolean errorsExpected)
+aspnetcore |    at Microsoft.EntityFrameworkCore.Migrations.Internal.MigrationCommandExecutor.ExecuteNonQuery(IEnumerable`1 migrationCommands, IRelationalConnection connection)
+aspnetcore |    at MySql.Data.EntityFrameworkCore.MySQLDatabaseCreator.Create()
+aspnetcore |    at Microsoft.EntityFrameworkCore.Migrations.Internal.Migrator.Migrate(String targetMigration)
+aspnetcore |    at Microsoft.EntityFrameworkCore.RelationalDatabaseFacadeExtensions.Migrate(DatabaseFacade databaseFacade)
+aspnetcore |    at User.API.Startup.InitUserDatabase(IApplicationBuilder app) in /code/Startup.cs:line 62
+aspnetcore | --- End of stack trace from previous location where exception was thrown ---
+aspnetcore |    at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+aspnetcore |    at Microsoft.AspNetCore.Hosting.ConventionBasedStartup.Configure(IApplicationBuilder app)
+aspnetcore |    at Microsoft.AspNetCore.Hosting.Internal.AutoRequestServicesStartupFilter.<>c__DisplayClass0_0.<Configure>b__0(IApplicationBuilder builder)
+aspnetcore |    at Microsoft.AspNetCore.Hosting.Internal.WebHost.BuildApplication()
+aspnetcore exited with code 139
+
+因为docker 资料卷在window上有问题，所以docker-compose 配置文件中没有填加资料卷配置
+so 新建的用户jesse是没有权限的 需要手工添加
+
+
+D:\src\NetCoreDemo\NetCore集合\02ASP.NET Core分布式项目实践\02Docker\dockerbuild\User.API>docker ps -a
+CONTAINER ID        IMAGE                    COMMAND                  CREATED             STATUS                       PORTS                               NAMES
+3416c666f745        userapi_web              "dotnet User.API.dll"    3 minutes ago       Exited (139) 3 minutes ago                                       aspnetcore
+b047485faca4        mysql/mysql-server:5.7   "/entrypoint.sh mysq…"   5 minutes ago       Exited (0) 51 seconds ago                                        b047485faca4_db
+b7e16be0fdd3        jesse/aspnetcore:prod    "dotnet User.API.dll"    3 days ago          Exited (255) 2 days ago      0.0.0.0:8001->80/tcp                aspnetcoreold
+cbfa0cde30b8        mysql/mysql-server:5.7   "/entrypoint.sh --ch…"   8 days ago          Exited (255) 2 days ago      0.0.0.0:3306->3306/tcp, 33060/tcp   dbold
+
+D:\src\NetCoreDemo\NetCore集合\02ASP.NET Core分布式项目实践\02Docker\dockerbuild\User.API>docker start b047485faca4_db
+b047485faca4_db
+
+D:\src\NetCoreDemo\NetCore集合\02ASP.NET Core分布式项目实践\02Docker\dockerbuild\User.API>docker exec -it b047485faca4_db bash
+bash-4.2# mysql -uroot -p
+Enter password:
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 3
+Server version: 5.7.22 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2018, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> GRANT ALL PRIVILEGES ON *.* to 'jesse'@'%'
+    -> WITH GRANT OPTION;
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> use mysql
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> select user,host from user
+    -> ;
++---------------+-----------+
+| user          | host      |
++---------------+-----------+
+| jesse         | %         |
+| healthchecker | localhost |
+| mysql.session | localhost |
+| mysql.sys     | localhost |
+| root          | localhost |
++---------------+-----------+
+5 rows in set (0.00 sec)
+
+mysql>  show variables like '%char%'
+    -> ;
++--------------------------+----------------------------+
+| Variable_name            | Value                      |
++--------------------------+----------------------------+
+| character_set_client     | latin1                     |
+| character_set_connection | latin1                     |
+| character_set_database   | utf8                       |
+| character_set_filesystem | binary                     |
+| character_set_results    | latin1                     |
+| character_set_server     | utf8                       |
+| character_set_system     | utf8                       |
+| character_sets_dir       | /usr/share/mysql/charsets/ |
++--------------------------+----------------------------+
+8 rows in set (0.00 sec)
+
+mysql>
+
+
+docker stop b047485faca4_db  把mysql容器停止
+
+原本这些操作是在资料卷中的目录下的init.sql文件中去初始化，也就是给jeese添加权限
+
+此时数据初始化完成，
+我们用navicat for mysql 连容器内的mysql
+连接成功的话，说明环境变量配置成功
+
+
+重新输入命令docker-compose up  完美运行
+
+
+D:\src\NetCoreDemo\NetCore集合\02ASP.NET Core分布式项目实践\02Docker\dockerbuild\User.API>docker-compose up
+b047485faca4_db is up-to-date
+Starting aspnetcore ... done
+Attaching to b047485faca4_db, aspnetcore
+b047485faca4_db | [Entrypoint] MySQL Docker Image 5.7.22-1.1.5
+b047485faca4_db | [Entrypoint] Initializing database
+b047485faca4_db | [Entrypoint] Database initialized
+b047485faca4_db | Warning: Unable to load '/usr/share/zoneinfo/iso3166.tab' as time zone. Skipping it.
+b047485faca4_db | Warning: Unable to load '/usr/share/zoneinfo/leapseconds' as time zone. Skipping it.
+b047485faca4_db | Warning: Unable to load '/usr/share/zoneinfo/tzdata.zi' as time zone. Skipping it.
+b047485faca4_db | Warning: Unable to load '/usr/share/zoneinfo/zone.tab' as time zone. Skipping it.
+b047485faca4_db | Warning: Unable to load '/usr/share/zoneinfo/zone1970.tab' as time zone. Skipping it.
+b047485faca4_db |
+b047485faca4_db | [Entrypoint] ignoring /docker-entrypoint-initdb.d/*
+b047485faca4_db |
+b047485faca4_db | [Entrypoint] Server shut down
+b047485faca4_db |
+b047485faca4_db | [Entrypoint] MySQL init process done. Ready for start up.
+b047485faca4_db |
+b047485faca4_db | [Entrypoint] Starting MySQL 5.7.22-1.1.5
+b047485faca4_db | [Entrypoint] MySQL Docker Image 5.7.22-1.1.5
+b047485faca4_db | [Entrypoint] Starting MySQL 5.7.22-1.1.5
+b047485faca4_db | [Entrypoint] MySQL Docker Image 5.7.22-1.1.5
+b047485faca4_db | [Entrypoint] Starting MySQL 5.7.22-1.1.5
+aspnetcore | Hosting environment: Production
+aspnetcore | Content root path: /app
+aspnetcore | Now listening on: http://[::]:80
+aspnetcore | Application started. Press Ctrl+C to shut down.
+
+
+
+我们check下network
+C:\Users\DowmUp>docker network ls
+NETWORK ID          NAME                DRIVER              SCOPE
+304733349b69        bridge              bridge              local
+da0c2ed0de02        host                host                local
+b4a2f9bdf3bd        mybridge            bridge              local
+c85043c5c7b8        none                null                local
+f292276c023a        userapi_default     bridge              local  //docker-compose up 命令为我们创建网络
+
+
+
+我们可以用docker inspect 这个网络，查看下网络情况 userapi_default
+
+C:\Users\DowmUp>docker inspect userapi_default
+[
+    {
+        "Name": "userapi_default",
+        "Id": "f292276c023a52ae6e02852ab75ba52e0fff55eced0513f6aade2b195f5a8bb1",
+        "Created": "2018-05-05T09:23:12.0687972Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.19.0.0/16",
+                    "Gateway": "172.19.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": true,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "3416c666f745db595a9f8f07c8407d8277eccf1003f1d0585d747e650d704f0f": {
+                "Name": "aspnetcore",
+                "EndpointID": "58a71415c02c5dcc16ff4fd93ef100e75511411731a8d5bd95535682c578873e",
+                "MacAddress": "02:42:ac:13:00:03",
+                "IPv4Address": "172.19.0.3/16",
+                "IPv6Address": ""
+            },
+            "b047485faca4c9faff62a4e4b509511a96f2b3eb493c77d6691f80a87b4b0ea7": {
+                "Name": "b047485faca4_db",
+                "EndpointID": "b00a05e3e98e9ad73318c059d6c6fea7c2aae7206ae7f35d63a99b3ddea9e837",
+                "MacAddress": "02:42:ac:13:00:02",
+                "IPv4Address": "172.19.0.2/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {},
+        "Labels": {
+            "com.docker.compose.network": "default",
+            "com.docker.compose.project": "userapi"
+        }
+    }
+]
+
+C:\Users\DowmUp>
+
+可以看到 有个Containers  里面有两个容器 aspnetcore  b047485faca4_db
+
+
+powershell 中目录不能有空格
+PS D:\src\NetCoreDemo\NetCore集合> cd "D:\src\NetCoreDemo\NetCore集合\02ASP.NET Core分布式项目实践\02Docker\dockerbuild\
+User.API"
+
+
+appsettings.json 文件中修改  显示debug信息
+{
+  "Logging": {
+    "IncludeScopes": false,
+    "Debug": {
+      "LogLevel": {
+        "Default": "Debug"
+      }
+    },
+    "Console": {
+      "LogLevel": {
+        "Default": "Debug" //输出debug信息
+      }
+    }
+  },
+
+  "ConnectionStrings": {
+    "MysqlUser": "server=db;port=3306;database=beta_user;userid=jesse;password=pwd123456"
+  }
+}
+
+
+
+此时我们通过docker-compose 一键启动两个容器 其中还新建了个网络供两个容器互联
+
+预期时，db先启动 然后web再启动。 因为web启动要访问数据库（这算不算是一个显性依赖），如果db访问不了的话， web容器就启动不了，
+
+后面可以通过延迟或者说把这个数据库在生产环境上脚本 生成一个script  把这个script放到资料卷目录下，启动的时候可以执行，有问题
+但是web在启动的时候检查是否是第一次启动，这个逻辑没有错，不可以去除。
+
+docker-compose restart

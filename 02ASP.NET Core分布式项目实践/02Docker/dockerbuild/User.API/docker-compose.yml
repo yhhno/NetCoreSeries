@@ -1,4 +1,5 @@
-锘縱ersion: '3'
+version: '3'
+
 services:
   db:
     image: mysql/mysql-server:5.7
@@ -8,11 +9,14 @@ services:
     ports:
       - '3306:3306'
     environment:
-      - MYSQL_ROOT_PASSWORD=root123456
-      - MYSQL_USER=jesse
-      - MYSQL_PASSWORD=pwd123456
-    volumes:
-      - /d/docker/beta/mysql-init:/docker-entrypoint-initdb.d
+      MYSQL_ROOT_PASSWORD: root123456
+      MYSQL_USER: jesse
+      MYSQL_PASSWORD: pwd123456
+    #volumes:
+     # - /d/docker/beta/mysql-init:/docker-entrypoint-initdb.d
+
+      #结束行 enter bug  windows环境有权限问题
+
   web:
     build: .
     container_name: 'aspnetcore'

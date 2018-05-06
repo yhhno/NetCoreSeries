@@ -40,7 +40,7 @@ namespace User.API
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -49,8 +49,10 @@ namespace User.API
 
             app.UseMvc();
 
-            //有bug 有逻辑错误
-            InitUserDatabase(app);//可以传递app 
+            ////有bug 有逻辑错误
+            //InitUserDatabase(app);//可以传递app 
+
+            UserContextSeed.SeedAsync(app, loggerFactory).Wait();
         }
 
         public void InitUserDatabase(IApplicationBuilder app)
