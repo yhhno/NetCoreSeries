@@ -1,0 +1,59 @@
+问题1： 之前学习不系统，缺了很多，也有很多理解有问题，以此状态去看高级名词，就好比没有钱去吃饭吃不到嘛，不具备条件呀
+
+
+这节给大家讲gitlab，因为我们要安装gitlib，有了它之后，我们可以借助它 来管理我们的代码，并且用它的持续集成来把我们docker的build，以及我们的开发测试环境 生产环境发布整条流水线 给它自动化 这就是gitlab ci给我们带来的功能  同时gitlib本身是一个代码托管工具，当然它功能比较强大 
+相对于tfs和svn来说，特别是SVN 他有几大明显的特点
+免费 开源
+功能强大   持续集成 很多功能
+分布式  没有网络的话，可以本地提交，然后有网络的话在同步，不想svn没有网络就不能提交了本地保存了大量的未提交的代码，这样管理 回撤 都不方便
+这就有个问题了  啥是分布式呢？
+git flow
+git ci
+
+本地的环境，用docker创建的
+安装后第一次访问就是设置密码  root的密码
+我们可以新建个项目，然后把代码放上来  然后在每次提交的时候，他都会有记录 ，你可以在界面上看到你每次代码的更新，方便我们做code review代码审查也是非常方便的
+
+ git 它本身在你本地 你安装了git之后 本地是会有库，本地会有一个代码的管理，也就是说你在本地没有网络的情况下，你咋本地也可以做提交，做commint，然后提交之后呢，最后你可以把你本地的commit 连上网络之后 再push到远程上去，这就是说我们不会像svn那样，没有网络就不能提交的，这个时候你本地会保存大量的未提交的代码，对于管理 包括回撤都不太方便 这是它一个比较特别的功能，包括它的分支 tags 它的分支也是非常廉价的，不会像我们之前 那种成本比较高的分支
+
+Gitlib flow 它会把我们所有的 从创建项目 代码初始化 到我们的开发，因为我们在多人协作时候 4 5个人开发的时候 你去拉代码，然后进行开发 再合并 合并之后再发到测试环境以及发到生产环境 这会有一个流程，这个流程呢 其实是属于开发流程的一种 ，它呢通过gitlibflow 把我们的开发流程 跟我们的代码管理以及上线发布生产 这三个流程给结合到一起，所以对于开发团队，多人协作来讲 使用gitlibflow 会更加规范我们的整个开发过程
+
+然后Gitlib ci 我们要利用它和docker 把我们的代码 发布到测试环境以及发布到生产环境 以及中间run一些自动化测试，整个流程全部给它自动化起来
+
+所以gitlib 用起来，我们会在开发效率上提高很多，我们用gitlab不仅仅是只是用它做代码托管，我们看到它更多的好处，可以帮助我们去规范和更好地管理我们的开发流程，以及呢加上 gitlab ci 它可以做到很多自动化，可以进一步提高我们的效率 就是不仅规范，也能提高我们的效率 
+
+
+我们今天本地会在本地安装gitlab
+我们window环境，资料卷问题还是没有解决
+我们在gitlab官网上是可以找到安装命令 google  gitlab on docker
+https://docs.gitlab.com/omnibus/docker/
+官方提供命令 是必须要我们用资料卷的 在centos上没有问题的 一个语句就可以跑通了
+只是在windows上会有一些问题，由于我们资料卷的问题还没有解决， gitlab会把 三个配置文件 包括代码文件 日志文件 配置文件 用资料卷的方式加载进来，因为它代码文件全部都是放在资料卷中，如果你没有做资料卷 一旦你的容器挂了，起不来 里面所有的数据可能就会丢失了，而且你不能方便做代码文件 配置文件的备份 所以比较危险，生产环境肯定建议一定要用资料卷
+
+ docker run --detach --hostname localhost --publish 443:443 --publish 80:80 --publish 22:22 --name gitlab --restart always \
+    --volume /srv/gitlab/config:/etc/gitlab \
+    --volume /srv/gitlab/logs:/var/log/gitlab \
+    --volume /srv/gitlab/data:/var/opt/gitlab \
+    gitlab/gitlab-ce:latest
+
+
+	docker run --detach --hostname localhost --publish 443:443 --publish 80:80 --publish 22:22 --name gitlab --restart always gitlab/gitlab-ce
+
+本地是window环境，此时折中方案，把资料卷命令去了，去掉资料卷，window上可以跑通
+
+hostname参数 是gitlab image镜像参数 它是说我们访问gitlab一个域名映射  当然这个在后期是可以改的 在gitlab有个配置文件可以去改，
+ publish 443 https端口
+ publish 22 是用 ssh来连接的 就是客户端会通过ssh来pull 和push代码
+  
+  Gitlab镜像非常大 它运行的时候 单台容器里建了非常多的东西 包括 数据库等等很多，所以比较大
+ 
+
+ docker run --detach --hostname localhost --publish 444:444 --publish 8090:8090 --publish 22:22 --name gitlab --restart always gitlab/gitlab-ce
+
+ docker logs --follow gitlab 会一直显示我们的日志
+ 我们可以看到它安装过程是 非常的长的 里面会初始化很多东西 在它初始化完成以前呢 我们去访问 这个localhost:8090 它会访问不到，直到它全部执行完成  我们才能够访问
+
+ 执行成功了，我们设置一个初始密码
+
+
+ windows问题真多， 还是linux环境好， 问题少，
