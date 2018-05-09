@@ -1,0 +1,34 @@
+大家好，这节课继续给大家gitlab的CI，CI的意思就是持续集成，这个会比较好玩点，大家都去尝试下，
+gitlab CI简单来讲，是有几个核心的部分组成，其中第一个 比较重要的一块就是即使gitlab server，它里面会包含所有的一些 管理我们一些状态 触发的一些机制都是由gitlab server来实现的
+下面我们就会跑好几runner，runner呢，一台机器上可以跑多台runner，也可以跑一个，都可以， 这runner相当于说 它是一个类似于 有一个 像发布订阅的东西，它可以去触发，当你做到什么事情的时候去触发这个runner，由gitlab push到runner 然后这个runner就会被执行， 这个runner是需要我们写代码的， 我们可以用shell来写，然后呢它里面同时也支持docker，docker的发布 ssh，kubemetes等，还有其他的 大家可以在gitlab官网上可以找到，我们今天呢 
+gitlab server 我们已经有了，我们今天要做的就是在windwos上 装一个runner，这个runner呢会在我们代码触发到 比如说我们提交 接受到代码 触发过去之后 先部署一个测试环境，把我们测试环境呢给部署起来，当然这个runner 就是说  你比如说现在我们把本地当做一个，因为我们用一台机器来做演示，或者后面可以用另外一个机器来做演示
+这个gitlab server 代码push过去之后，有个runner  这个runner就会在本地部署一个这样的一套测试环境，runner会直接把代码发布到这个测试环境上，用docker-compose来吧整个测试环境跑起来，我们就可以直接在上面去测试我们最新的代码 ，当然就是说我们现在还没有涉及到另外一个东西，叫docker image repository，现在我们用的是dockerhub，但是后面呢我们会自己搭一个仓库 这也是我们在生产环境中真实使用docker 所必须接触到的，当然你可以使用腾讯或者阿里云的仓库也可以，当然你也可以自己搭一个，搭一个仓库的话，这个runner把这个镜像build，build之后push到仓库里，，然后 同时这个runner会在测试环境上从仓库pull镜像，拉到测试环境去执行，所以其实呢最终的方案，是这个样子的，
+我们会有一个私有的repository，不管是自己部署的，还是腾讯云或者阿里云，总之我们代码提交过去之后，我们总要把代码编译成镜像，然后保存起来，如果你直接用代码build，之后就去发布，但是你这个镜像没有保存的话，比如说一个版本出了错误，你后面要回滚，回到之前的版本，就相对来说比较麻烦一点
+我们来看下docker runner部分 我们要把docker runner 安装到本地，注册到gitlab CI，所以他其实分为两步，第一步是安装第二步是注册
+我们首先来安装window版的runner，在gitliab官网上，
+https://docs.gitlab.com/runner/
+首先在c盘新建个文件夹Gitlib_Runner
+现在64位文件到Gitlib_Runner文件夹下  x84 amd64
+修改名字为gitlab-runner.exe
+用管理员身份运行下 cmd 
+注册runner
+gitlab-runner.exe register
+http://localhost:8090
+输入token   在gitlab runner 页面中找到
+输入description   local-win
+输入tags 
+false   是否锁定当前项目
+选择执行者   docker-ssh它会登录到dockerhost上去， 我们现在用的是本地所以我们选shell，因为我们是直接运行docker，不会登录到dockerhost上去
+输入 shell
+此时注册成功，在gitlab网站上，在runners列表上可以找到注册的runner
+此时我们的runner就可以工作了
+下节可以我们再来讲怎么让runner工作， 去部署docker image
+
+
+
+我来试试docker中运行  runner
+docker run -d --name gitlab-runner --restart always gitlab/gitlab-runner
+docker exec -it gitlab-runner gitlab-runner register
+
+输入 gitlab-runner install
+输入 gitlab-runner start
