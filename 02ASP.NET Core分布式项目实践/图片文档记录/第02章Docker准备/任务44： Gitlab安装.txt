@@ -48,7 +48,8 @@ hostname参数 是gitlab image镜像参数 它是说我们访问gitlab一个域名映射  当然这个在
   Gitlab镜像非常大 它运行的时候 单台容器里建了非常多的东西 包括 数据库等等很多，所以比较大
  
 
- docker run --detach --hostname localhost --publish 444:444 --publish 8090:8090 --publish 22:22 --name gitlab --restart always gitlab/gitlab-ce
+ docker run --detach --hostname localhost --publish 444:443 --publish 8090:80 --publish 22:22 --name gitlab --restart always gitlab/gitlab-ce
+
 
  docker logs --follow gitlab 会一直显示我们的日志
  我们可以看到它安装过程是 非常的长的 里面会初始化很多东西 在它初始化完成以前呢 我们去访问 这个localhost:8090 它会访问不到，直到它全部执行完成  我们才能够访问
