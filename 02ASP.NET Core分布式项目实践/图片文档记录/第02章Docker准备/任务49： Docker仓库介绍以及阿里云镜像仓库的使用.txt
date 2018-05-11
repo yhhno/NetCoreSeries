@@ -1,0 +1,45 @@
+ 心态： 我给大家示范下部署https
+
+这节课我们来讲下repository 也就是最开始讲docker 三个概念中的容器 镜像 仓库中的仓库
+仓库这个东西呢 我们在前面做gitlab-ci的时候，大家如果还有印象的话，我们是直接通过docker-compose up一下，或者 build一下，在我们之前写的docker-compose配置文件，我们把mysql和user.api打包成了一个compose，我们可以用up同时启动两个容器，也可以用docker-compose build 来build这两个容器，这种情况下，在测试环境可以很方便的去使用，因为它同时会帮我创建两个容器，并且没有一些持久化动作，因为用完就销毁了，但是在生产的环境，情况下呢 我们就不能这么来使用，至少我们的数据库不可能随时在我们每一次push代码的时候，就去给我们再创建一次数据库，即使我们有volumes，volumes可以把数据库的数据放到volume中，。我们在生产的情况下，更多的情况下 是在做持续集成或自动部署的时候，更多的是 这个样子，每一次把代码提交到gitlab之后，runner它不是去直接把代码 build成镜像，run起来，而是build成镜像之后呢， 把它push到 image repository上去， 就是我们所谓的仓库，放到这个仓库里，再由测试环境从仓库pull 再run起来，到后期如果是说 测试环境通过之后，也可以同时直接用仓库里面的image再发布到我们的生产环境中，，比如说生产环境也是有个runner，它会监听，我们在之前讲gitflow，
+我们如果gitlab-ci要和gitflow结合起来，大概是这样， 比如说当我们从 应该来讲从我们本地合并或者 我们feature分支合并到我们dev分支的时候，它会触发runner，然后去build一个image ，发布到我们测试环境，我们测试环境最后把它合并到release分支之后， 他就会再触发一个runner，这个runner就会负责从 他也不需要编译了 它会直接呢 这个runner 负责从image repository拉一个镜像过来，然后发布到我们的生产环境上， 如果生产环境要这样使用的话，它会有这个生产的runner，而这两个runner他们触发的动作呢，一个通过   从feature分支合并到dev分支可能会这个样子，
+那另外一种呢 我们还有一个release分支，
+
+第一种流程 我们没有dev分支， 直接合并到master上就发布了，因为我们可能把本地当了一个测试环境，
+第二种流程 两个人来开发的时候，我们会有一个dev分支， 本地分支 合并到dev分支之后，就触发了测试环境的runner，也就是说测试环境的runner监听的是dev分支，然后测试runner build image，push到镜像仓库，运行测试，，  要发布的时候 dev分支合并到master分支，也就是说生产环境的runner监听的是master分支， 当代码合并到master上之后呢， 生产上的runner直接从image repository 拉取镜像，把镜像部署到生产环境上就可以了
+那第三套流程呢、 生产还是监听master分支，测试监听dev分支，大方向不变的。
+
+
+关于仓库的概念其实就比较简单了 更多是如何使用仓库
+我们今天给大家演示下 通过阿里云 阿里云为我们提供了一个仓库 阿里云提供的仓库和hub.docker.com 提供的仓库是有点不一样的， dockerhub里面放了很多的镜像，阿里云的仓库，只放了一个镜像
+
+阿里云。
+首先要创建一个镜像仓库，我们要把本地的镜像推送到创建的仓库里
+阿里也帮我们做了一些持续集成的东西，你可以通过和你的gitlab绑定，来做一个自动的发布和部署 
+代码源 选本地仓库，如果选私有gitlab，和本地的gitlab绑定直接做持续集成 大家可以自己尝试下，当做一个作业，因为我们在本地试过了额，在阿里云上你可以尝试下
+仓库创建成功之后，我们有了一个仓库地址。点击管理，会有一份操作指南，如何登陆 拉取 推送等等
+问题： 看到镜像指南 为啥有点晕呢？ 晕了就不知所措了 那心态就有很大影响了，那就恶性循环了，
+本地shell
+ docker login --username=5160618449@qq.com registry.cn-shanghai.aliyuncs.com
+ docker pull registry.cn-shanghai.aliyuncs.com/downup/helloapi:[镜像版本号]
+
+   $ sudo docker login --username=5160618449@qq.com registry.cn-shanghai.aliyuncs.com
+  $ sudo docker tag [ImageId] registry.cn-shanghai.aliyuncs.com/downup/helloapi:[镜像版本号]
+  $ sudo docker push registry.cn-shanghai.aliyuncs.com/downup/helloapi:[镜像版本号]
+
+  登陆成功之后呢？ 给本地的镜像打一个tag 打了tag之后呢，你就可以把它推到仓库
+  tag就是版本号
+
+  本地准备工作做好了
+  直接push
+
+  push完成后，就可以在阿里云仓库看到 镜像信息
+
+ note： tag如果没有添加版本号的话 默认是 latest
+
+
+ 当然另外一个测试环境 也可以和生产华华环境一样，直接从image repository 拉取，image 进行部署
+
+ 心态： 我给大家示范下部署https
+
+ 下节课尝试本地部署 repository，本地部署完之后，因为本地没有办法做真实的操作，在我们真实的环境当中肯定是部署到公网，而在公网当中 包括用户名和密码认证 登录 因为他必须涉及到https 没有https没有办法使用我们的用户名和密码这种认证方式， 所以我们会公网上部署这个仓库，以及把https构建好， 证书我们会使用腾讯云的 然后来试下公网推送
