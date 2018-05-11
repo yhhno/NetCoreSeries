@@ -29,6 +29,7 @@ false   是否锁定当前项目
 我来试试docker中运行  runner
 docker run -d --name gitlab-runner --restart always gitlab/gitlab-runner
 docker exec -it gitlab-runner gitlab-runner register
+失败
 
 输入 gitlab-runner install
 输入 gitlab-runner start

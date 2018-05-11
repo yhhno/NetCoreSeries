@@ -25,7 +25,13 @@ namespace User.API.Controllers
         [HttpGet]
         public async Task<IActionResult>  Get()
         {
-            return Json(await _userContext.Users.SingleOrDefaultAsync(u => u.Name == "jesse"));//如果不存在，返回null
+
+            //返回一个匿名对象
+            return Json(new
+            {
+                message = "welcome to gitlab ci build",
+                user = await _userContext.Users.SingleOrDefaultAsync(u => u.Name == "jesse")
+            });//如果不存在，返回null
         } 
 
 

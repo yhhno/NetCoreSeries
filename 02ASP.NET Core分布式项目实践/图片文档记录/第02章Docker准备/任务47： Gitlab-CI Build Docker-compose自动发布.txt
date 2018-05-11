@@ -1,0 +1,219 @@
+问题1：学习过程中，其实除了那些拦路的点，进展都很顺利的，如果解决这些点呢？都是些什么样的点？
+
+
+
+我们上节课给大家介绍了 gitlab runner的安装和注册
+这节课我们就来开始运行我们的runner，这个runner的运行 给大家先简单的看一下，在gitlab中提交一个项目之后，就可以在再gitlab中的CI/CD中 可以看到当前运行过的 每一次你提交 它根据你的commit    这个地方都可以看到，比如说 我们这一次update gitlab-ci.yml文件 之后，这个commit做了配置文件的改动， 然后触发了 我们的这个pipeline，这个pipeline你就可以点击去看， 看它所有运行的结果，当前duration运行的了多少时间，当然你可以retry，因为我们这个停止了
+
+
+gitlib-runner 这个文件夹一会，所有的运行环境 runner的运行环境会在这个文件夹，所以它会把代码拉到这个这个文件夹下 builds文件夹下有个文件夹 这个就是gitlab runner跑的一个地方，它会把所有的代码其实全都会下载下来，下载下来在这个环境去执行，所以他的代码会放到下面的文件夹中
+  
+  下载的exe放到gitlib-runner这个文件夹下，注册的时候以这个文件夹注册，运行的时候，就会以这个文件夹作为运行环境
+
+
+  我们之前的课，讲了用docker-compose来运行user-api项目，
+  我们先一键移除之前课的容器，docker-compose down
+  D:\src\NetCoreDemo\NetCore集合\02ASP.NET Core分布式项目实践\02Docker\dockerbuild\User.API>docker-compose down
+Stopping b047485faca4_db ... done
+Removing aspnetcore      ... done
+Removing b047485faca4_db ... done
+Removing network userapi_default
+
+我们现在要先上传一个项目到githlab上
+首先我们在gitlab上额  projects 新建个项目
+
+首先要注册个用户，注册完后给自己一个ssh key，因为你没有这个ssh key，你本地git 客户端就没有办法去访问gitlab，本地需要有一个git客户端，客户端通过ssh key跟我们gitlab联系起来，gitlab 上有如何生成一个ssh key，此时我们本地已经有了，因为只要你使用过git的话，，一般情况下 ，本地都会有  我们在user文件夹下  C:\Users\DowmUp\.ssh文件夹下 id_rsa.pub文件，用记事本打开  里面存在我们的公钥，这个公钥就可以用来添加 ssh key。 添加完之后，你的客户端就可以和gitlab进行代码的读和取  上传之类的
+有了这个ssh key之后。我们来新建一个项目beta
+在本地的项目中，如果项目初始化之后会有一个.git的文件夹
+我们添加一下代码到gitlab中
+首先到项目根目录下，把git init下 做初始化
+git init 
+然后添加远程仓库，也就是gitlab上
+git remote add origin git@localhost:root/Beta.git
+添加进来之后，我们就可以进行使用 git add . 把所有文件都添加进来
+vs打开的时候，可能有点冲突，关掉vs重试
+添加成功之后呢 添加commit
+git commit -m "init"
+添加commit之后呢 git push到gitlab
+git push -u origin master  push到master分支上去
+push过去之后呢，就可以在gitlab中的beta项目下，看到我们所有的文件了
+
+D:\src\NetCoreDemo\projects\User.API>dir
+ Volume in drive D is 本地磁盘
+ Volume Serial Number is 5069-21F7
+
+ Directory of D:\src\NetCoreDemo\projects\User.API
+
+05/10/2018  06:12 PM    <DIR>          .
+05/10/2018  06:12 PM    <DIR>          ..
+05/10/2018  06:15 PM    <DIR>          User.API
+               0 File(s)              0 bytes
+               3 Dir(s)   5,682,122,752 bytes free
+
+D:\src\NetCoreDemo\projects\User.API>git init
+Initialized empty Git repository in D:/src/NetCoreDemo/projects/User.API/.git/
+
+D:\src\NetCoreDemo\projects\User.API>git remote add origin git@localhost:root/Beta.git
+
+D:\src\NetCoreDemo\projects\User.API>git add .
+error: open("User.API/.vs/User.API/v15/Server/sqlite3/db.lock"): Permission denied
+error: unable to index file User.API/.vs/User.API/v15/Server/sqlite3/db.lock
+fatal: adding files failed
+
+D:\src\NetCoreDemo\projects\User.API>git add .
+error: open("User.API/.vs/User.API/v15/Server/sqlite3/db.lock"): Permission denied
+error: unable to index file User.API/.vs/User.API/v15/Server/sqlite3/db.lock
+fatal: adding files failed
+
+D:\src\NetCoreDemo\projects\User.API>git add .
+
+D:\src\NetCoreDemo\projects\User.API> git commit -u "init"
+error: pathspec 'init' did not match any file(s) known to git.
+
+D:\src\NetCoreDemo\projects\User.API>git commit -m "init"
+[master (root-commit) 77cff84] init
+ 42 files changed, 19598 insertions(+)
+ create mode 100644 User.API/.vs/User.API/DesignTimeBuild/.dtbcache
+ create mode 100644 User.API/.vs/User.API/v15/.suo
+ create mode 100644 User.API/.vs/User.API/v15/Server/sqlite3/db.lock
+ create mode 100644 User.API/.vs/User.API/v15/Server/sqlite3/storage.ide
+ create mode 100644 User.API/.vs/User.API/v15/Server/sqlite3/storage.ide-shm
+ create mode 100644 User.API/.vs/User.API/v15/Server/sqlite3/storage.ide-wal
+ create mode 100644 User.API/Controllers/ValuesController.cs
+ create mode 100644 User.API/Data/UserContext.cs
+ create mode 100644 User.API/Data/UserContextSeed.cs
+ create mode 100644 User.API/Dockerfile
+ create mode 100644 User.API/Migrations/20180428093251_init.Designer.cs
+ create mode 100644 User.API/Migrations/20180428093251_init.cs
+ create mode 100644 User.API/Migrations/UserContextModelSnapshot.cs
+ create mode 100644 User.API/Models/AppUser.cs
+ create mode 100644 User.API/Program.cs
+ create mode 100644 User.API/Properties/launchSettings.json
+ create mode 100644 User.API/Startup.cs
+ create mode 100644 User.API/User.API.csproj
+ create mode 100644 User.API/User.API.csproj.user
+ create mode 100644 User.API/User.API.sln
+ create mode 100644 User.API/User.API/.vs/User.API/v15/.suo
+ create mode 100644 User.API/User.API/User.API.sln
+ create mode 100644 User.API/appsettings.Development.json
+ create mode 100644 User.API/appsettings.json
+ create mode 100644 User.API/bin/Debug/netcoreapp2.0/User.API.deps.json
+ create mode 100644 User.API/bin/Debug/netcoreapp2.0/User.API.dll
+ create mode 100644 User.API/bin/Debug/netcoreapp2.0/User.API.pdb
+ create mode 100644 User.API/bin/Debug/netcoreapp2.0/User.API.runtimeconfig.dev.json
+ create mode 100644 User.API/bin/Debug/netcoreapp2.0/User.API.runtimeconfig.json
+ create mode 100644 User.API/docker-compose.yml
+ create mode 100644 User.API/obj/Debug/netcoreapp2.0/User.API.AssemblyInfo.cs
+ create mode 100644 User.API/obj/Debug/netcoreapp2.0/User.API.AssemblyInfoInputs.cache
+ create mode 100644 User.API/obj/Debug/netcoreapp2.0/User.API.csproj.CoreCompileInputs.cache
+ create mode 100644 User.API/obj/Debug/netcoreapp2.0/User.API.csproj.FileListAbsolute.txt
+ create mode 100644 User.API/obj/Debug/netcoreapp2.0/User.API.csprojAssemblyReference.cache
+ create mode 100644 User.API/obj/Debug/netcoreapp2.0/User.API.csprojResolveAssemblyReference.cache
+ create mode 100644 User.API/obj/Debug/netcoreapp2.0/User.API.dll
+ create mode 100644 User.API/obj/Debug/netcoreapp2.0/User.API.pdb
+ create mode 100644 User.API/obj/User.API.csproj.nuget.cache
+ create mode 100644 User.API/obj/User.API.csproj.nuget.g.props
+ create mode 100644 User.API/obj/User.API.csproj.nuget.g.targets
+ create mode 100644 User.API/obj/project.assets.json
+
+D:\src\NetCoreDemo\projects\User.API>git push -u origin master
+The authenticity of host 'localhost (::1)' can't be established.
+ECDSA key fingerprint is SHA256:XL3GPuVJdlT9BwACRYLbEUrgXd5P28f2ueqcmbcFcLo.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'localhost' (ECDSA) to the list of known hosts.
+Counting objects: 64, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (48/48), done.
+Writing objects: 100% (64/64), 954.30 KiB | 1.49 MiB/s, done.
+Total 64 (delta 5), reused 0 (delta 0)
+To localhost:root/Beta.git
+ * [new branch]      master -> master
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+
+D:\src\NetCoreDemo\projects\User.API>
+
+
+我们看到runner 已经开始运行了 点进去看下 出现了很多错误
+它为什么能够运行呢 写了一个gitlab的 yaml的配置文件，配置文件放在git的根目录下，而不是放在项目的根目录下，它是必须放在git的根目录下
+所以我们可以用vs code来编写， vs2017只能显示项目根目录
+在git根目录下 添加 .gitlab-ci.yml 配置文件
+rtest:
+  script:
+    - cd User.API
+    - docker-compose up
+
+最顶层是个名字， 然后script 来执行下面的两条 script
+大家看到执行目录肯定是git的根目录下，只有这样才能获取到.gitlab-ci.yml 配置文件，所以我们必须要用cd命令，跳转到项目根目录下，然后在项目根目录下，执行docker-compose up， window环境的命令，这个runner script share 根据你当前runner所在的环境来执行的 所以我们可以运行cd命令 到user.api目录， 然后执行docker-compose up
+添加配置文件到gitlab上
+
+D:\src\NetCoreDemo\projects\User.API>git add .
+
+D:\src\NetCoreDemo\projects\User.API>git commit -m "Initial commit2"
+[master a53608b] Initial commit2
+ 1 file changed, 4 insertions(+)
+ create mode 100644 .gitlab-ci.yml
+
+D:\src\NetCoreDemo\projects\User.API>git push -u origin master
+Counting objects: 3, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 387 bytes | 129.00 KiB/s, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To localhost:root/Beta.git
+   591f703..a53608b  master -> master
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+
+D:\src\NetCoreDemo\projects\User.API>
+
+此时如果本地的runner已经安装，并start，等配置文件push到gitlab上去，gitlab就会触发，把代码push到本地的runner，runner就运行测试环境去跑代码
+但是我们项目代码有个问题，mysql的的启动，没有用资料卷，需要手工添加，所以是个潜在的bug
+本地配置好db，更新
+又遇到个问题，logger获取有问题 修改，再更新
+
+有默认的选用端口，如果修改其他端口，可能有潜在的bug
+
+我们可以在本地查看下时候运行成功？ docker ps
+
+有个地方要注意下 因为它一直是在运行的 因为什么？ 因为我们的命令没有返回，因为我们运行docker-compose 之后，相当于一个前台线程，它就把当前的  这个一直没有结束掉这个shell命令，所以大家看到一直是running，一直在持续，，相当于如果我们把它停止掉， 我们要手动停止 但是停止不是完成，所以我们要docker-compose up -d，也就是之前讲的detach模式，，运行这个命令之后呢。 执行完里面返回， 返回container名称，
+
+我们可以在beta项目下，看到执行历史记录， 包括commit，现在看不到中间显示的错误日志，只能看到成功或失败，但是我们可以retry， 
+我们还需要找下docker-compose命令 我们要强制他重新去生成image  --force-recreate 但是我们不能添加，因为mysql 数据库有问题 需要手工修复
+
+我们只要在本地把修改的代码通过git push到gitlab上去，就会触发pipeline，runner就会运行，我们在客户端会看到代码会被clone到runner的文件夹下，会以当前代码，执行docker-compose up， 成功后返回container名称，整个过程全自动，我们在Gitlab上看到 passed状态， 以前要手工做的，全部自动化
+我们本地看下，会创建image 和container 并运行容器，好像现在还没有销毁
+ 怎么验证下 我们刚刚做的一切呢 修改下
+    // GET api/values
+        [HttpGet]
+        public async Task<IActionResult>  Get()
+        {
+            //返回一个匿名对象
+            return Json(new {
+                message="welcome to gitlab ci build",
+                user= await _userContext.Users.SingleOrDefaultAsync(u => u.Name == "jesse")
+            });//如果不存在，返回null
+        }
+此时我们做了修改，编译，并提交代码到gitlab上去
+
+D:\src\NetCoreDemo\projects\User.API>git add .
+
+D:\src\NetCoreDemo\projects\User.API>git commit -m "update valuescontroller"
+[master 46d3718] update valuescontroller
+ 2 files changed, 5 insertions(+), 1 deletion(-)
+
+D:\src\NetCoreDemo\projects\User.API>git push -u origin master
+Counting objects: 9, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (7/7), done.
+Writing objects: 100% (9/9), 1.17 KiB | 200.00 KiB/s, done.
+Total 9 (delta 4), reused 0 (delta 0)
+To localhost:root/Beta.git
+   287628f..46d3718  master -> master
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+
+D:\src\NetCoreDemo\projects\User.API>
+
+因为我们的.gitlab-ci.yml 没有强制rebuild image，此时还是用之前的image，所以没有显示最新的内容
+
+我们可以去gitlab上去看 job的状态，点击进去看看，最后会出现job success，可以看到 build image已经docker-compose等操作都是全自动，我们不需要管， 此时之前的web的网址依然可以访问，直到我们的build完成，替换原来的，
+
+这就是我们gitlab的一个过程，怎么写.gitlab-ci.yml这配置文件，我们下节课来讲

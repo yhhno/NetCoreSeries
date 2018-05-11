@@ -28,7 +28,8 @@ namespace User.API.Data
                 using (var scope = applicationBuilder.ApplicationServices.CreateScope())
                 {
                     var context = (UserContext)scope.ServiceProvider.GetService(typeof(UserContext));
-                    var logger = (ILogger<UserContextSeed>)scope.ServiceProvider.GetServices(typeof(ILogger<UserContextSeed>));
+                    //var logger = (ILogger<UserContextSeed>)scope.ServiceProvider.GetServices(typeof(ILogger<UserContextSeed>));
+                    var logger = loggerFactory.CreateLogger(typeof(UserContextSeed));
                     logger.LogDebug("Begin UserContextSeed SeedAsync");
                     context.Database.Migrate();
                     if (!context.Users.Any())

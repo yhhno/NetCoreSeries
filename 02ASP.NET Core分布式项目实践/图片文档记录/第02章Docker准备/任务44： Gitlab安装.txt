@@ -1,4 +1,5 @@
 问题1： 之前学习不系统，缺了很多，也有很多理解有问题，以此状态去看高级名词，就好比没有钱去吃饭吃不到嘛，不具备条件呀
+问题2：  Gitlab镜像非常大 它运行的时候 单台容器里建了非常多的东西 包括 数据库等等很多，所以比较大   so要想到 启动的时候  gitlab启动要花很长时间  有什么问题呢？   过程一步一步的走，别忽视，
 
 
 这节给大家讲gitlab，因为我们要安装gitlib，有了它之后，我们可以借助它 来管理我们的代码，并且用它的持续集成来把我们docker的build，以及我们的开发测试环境 生产环境发布整条流水线 给它自动化 这就是gitlab ci给我们带来的功能  同时gitlib本身是一个代码托管工具，当然它功能比较强大 
@@ -45,7 +46,7 @@ hostname参数 是gitlab image镜像参数 它是说我们访问gitlab一个域名映射  当然这个在
  publish 443 https端口
  publish 22 是用 ssh来连接的 就是客户端会通过ssh来pull 和push代码
   
-  Gitlab镜像非常大 它运行的时候 单台容器里建了非常多的东西 包括 数据库等等很多，所以比较大
+  Gitlab镜像非常大 它运行的时候 单台容器里建了非常多的东西 包括 数据库等等很多，所以比较大   so要想到 启动的时候  gitlab启动要花很长时间  有什么问题呢？
  
 
  docker run --detach --hostname localhost --publish 444:443 --publish 8090:80 --publish 22:22 --name gitlab --restart always gitlab/gitlab-ce
@@ -58,3 +59,6 @@ hostname参数 是gitlab image镜像参数 它是说我们访问gitlab一个域名映射  当然这个在
 
 
  windows问题真多， 还是linux环境好， 问题少，
+
+
+ gitlab启动要花很长时间
