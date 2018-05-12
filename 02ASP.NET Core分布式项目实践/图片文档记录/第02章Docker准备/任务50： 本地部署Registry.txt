@@ -1,0 +1,52 @@
+问题1： 卧槽 处处都可以是镜像了。  这说明什么问题？
+问题2： 把本地镜像删除 docker rmi localhost:5000/helloapi:local  本地还有个helloapi 这说明啥问题？
+
+这节课我们接着上节课在本地部署repository ，
+ 本地构建其实非常简单， docker为我们提供一个镜像，我们用这个镜像来run一下，就基本上运行起来了，
+ 所以我们在官方docker文档下有个Deploy a registry server 也就是我们的镜像仓库
+ https://docs.docker.com/registry/deploying/
+ 它上面有个命令其实非常简单 ，我只要找到最上面的一个命令
+ Run a local registry
+ docker run -d -p 5000:5000 --restart=always --name registry registry
+
+ 然后在浏览器中 输入 http://localhost:5000/v2  我们现在镜像信息是没有的
+  有了仓库之后呢 本地是没有登录机制的，所以不需要登录， 我们可以直接push镜像到仓库
+ 我们给本地的镜像helloapi 打个tag
+ docker tag helloapi localhost:5000:local
+ 然后输入 docker images
+ 我们发现多了一个镜像 locahost:5000/helloapi 的镜像 tag 为local
+ 接下来就是把这个镜像 push 到本地仓库
+ docker push localhost:5000/helloapi:local
+ 本地push相对来说，会快点，因为是从本地磁盘的一个地方 拷贝到另外一个地方
+ 等push完之后，把本地的镜像删除，然后从本地仓库pull 镜像到本地
+ 本地完全是一个开放的地方 本节课还没有涉及到ui ，大家看到在 http://localhost:5000/v2 什么也看不到，这个时候我们需要借助一个ui管理，它可以看到我们本地 来帮助我们管理这些镜像，
+ 等他push完
+把本地镜像删除 docker rmi localhost:5000/helloapi:local  本地还有个helloapi 这说明啥问题？
+  我们从本地仓库，拉取镜像
+  docker pull localhost:/helloapi:local
+  再看下
+  docker images 本地有了从仓库拉取的镜像
+
+   这就是本地的仓库，我们现在看起来 可能比较隐形
+   我们现在看下有什么办法 我们可以有一个可视化的ui。方便我们来看到镜像的信息，跟我们的hub.docker.com一样
+
+Google docker  web ui portus_web
+关于可视化ui 镜像的管理 一些开源的工具  portus 这个比较知名 也稳定 功能也比较强大，   但现在先不用，大家课后可以尝试下
+
+我们来用一个简单的 docker-registry-frontend  它非常简洁
+docker run -d --name registry-web --link registry:registry -e ENV_DOCKER_REGISTRY_HOST=registry -e ENV_DOCKER_REGISTRY_PORT=5000 -p 8060:80 konradkleine/docker-registry-frontend:v2
+
+这个镜像还真不小 层次比较多，用了很多层东西，
+我们等他运行成功后，就可以用一个ui的界面来管理镜像
+同时我们浏览器中输入 http://localhost:5000/v2/_catalog  也可以看到本地的repositories,出现下面信息
+{"repositories":["helloapi"]}
+
+helloapi 我们的一个镜像，在一个仓库里面，跟这个镜像相关的所有镜像 又有很多个版本，都会放到这个仓库里面，而我们现在做的repositories它里面就会包含很多个这样的仓库  
+
+konradkleine/docker-registry-frontend运行成功后，
+在浏览器中输入 http://localhost:8060
+出现页面
+
+如果错误了 docker logs 因为konradkleine/docker-registry-frontend也是个镜像嘛、
+卧槽 处处都可以是镜像了。  这说明什么问题？
+
