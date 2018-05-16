@@ -1,0 +1,88 @@
+本地仓库在本地使用没有任何问题，不需要安全机制，一旦放到公网上之后，就需要安全机制了，需要用户名和密码之后， 包括管理仓库的界面也不是谁都可以访问的，我们也需要用户名和密码时，此时docker-registry-frontend这个东西就不能满足我们的需要了， 所以我们在这节课 来构建一个公网的环境，我们要搭建一个https的 registry，同时需要有  
+我们上节课给大家介绍的portus 也是一个开源的registry 管理的ui，它就可以很好的支持https和认证的一些信息，包括一些audit，   
+给大家留个作业，大家课下去部署下portus
+
+我们这节课，我们先会在公网的环境下 在阿里云上有台服务器，在这个服务器上  我们把registry安装到这个服务器上，同时我们给它一个域名访问地址，帮上了https证书，用的是博客的服务器，反正它只有一核一G配置，
+
+首先ping www.jessetalk.cn
+用ssh连上 ssh root@ip地址
+docker ps
+有个registry  当然和我们本地是不一样的，
+安装命令
+带https证书 （请注意我们host上放证书的文件夹叫cert, not certs) 
+docker run -d \
+  --restart=always \
+  --name registry \
+  -v `pwd`/cert:/certs \ 资料卷 把我们的证书放到这里面
+  -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
+  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/1_hub.jessetalk.cn_bundle.crt \
+  -e REGISTRY_HTTP_TLS_KEY=/certs/2_hub.jessetalk.cn.key \
+  -p 443:443 \
+  registry:2
+
+  cd /cert
+  ls
+  1_hub.jessetalk.cn_bundle.crt 2_hub.jessetalk.cn.key
+  有两个证书，这个证书就是用来绑定 tls和https的证书
+  这就是我们很简单的部署情况
+  它就会将我们的registry容器 run在443端口上，那443端口run起来之后呢， 我们需要有一个https的访问  我们域名是 https://hub.jessetalk.cn/v2/_catalog 
+  这个命令比之前的命令多出来两个点，第一个是我们如何去找到这个证书， 这个证书呢 我是在腾讯云上 申请的一个免费的 
+  https://cloud/tencent.com  当然如果你是自签名的 在本地去做测试的话，你可做一个自签名的证书，部署在本地 也没有问题，    
+  在腾讯云上，他提供了一个 ssl证书管理 在这个模块中你可以去申请一个证书， 我这边申请了一个hub.jessetalk.cn ，这个域名就指向了我们刚刚登陆的服务器的ip地址， 由于我们直接绑定https，它对应到了就是443端口，所以我们也不需要配置 nginx，直接把域名绑定到这个指定的地址和端口，它就是通过我们https  访问的时候直接指向443端口， 这个地方其实已经好了 这是第一步
+  第二步 我们需要加上安全机制，在docker rigisry文档中也有讲到，使我们最基本的认证，
+   https://docs.docker.com/registry/deploying/
+   它下面也有一些方式，首先它第一个是 我们要如何生成用户民和密码，用户名和密码  它会利用registry的entrypoint来生成我们的用户名和密码，
+   创建密码文件
+   mkdir auth 新建文件夹
+docker run \
+  --entrypoint htpasswd \
+  registry:2 -Bbn testuser testpassword > auth/htpasswd 资料卷位置。
+
+  cd /auth
+  ls
+  htpasswd
+ 就是把用户名和密码放到auth/htpasswd，并进行了加密 我们可以打开这个文件看下，
+ vi htpasswd
+ testuser：加密后的乱码
+
+ 所以完整的命令 也就是加上用户名和密码
+ docker run -d \
+  --restart=always \
+  --name registry \
+  -v `pwd`/auth:/auth \
+  -e "REGISTRY_AUTH=htpasswd" \
+  -e "REGISTRY_AUTH_HTPASSWD_REALM=Registry Realm" \
+  -e "REGISTRY_AUTH_HTPASSWD_PATH=/auth/htpasswd" \
+  -v `pwd`/cert:/certs \
+  -e REGISTRY_HTTP_ADDR=0.0.0.0:443 \
+  -e REGISTRY_HTTP_TLS_CERTIFICATE=/certs/1_hub.jessetalk.cn_bundle.crt \
+  -e REGISTRY_HTTP_TLS_KEY=/certs/2_hub.jessetalk.cn.key \
+  -p 443:443 \
+  registry:2
+
+  我们来尝试下，能否把本地的镜像push到刚刚搭建好的公网的registry
+  首先在没有登录的情况下
+  docker tag redis hub.jessetalk.cn/redis:test
+  docker images 确认下
+  docker push hub.jessetalk.cn/redis:test
+  大家会看到出现 no basic auth credentials
+  这个时候你是push不上去的，以为我们还没有登录
+  此时我们来登录下
+  docker login --username=testuser hub.jessetalk.cn
+  输入密码
+  login succeeded
+  登录后再尝试推一下，
+    docker push hub.jessetalk.cn/redis:test
+	成功
+
+访问 https://hub.jessetalk.cn/v2/_catalog  当然访问这个网址，也要用户名和密码
+仓库里已经有镜像redis了
+我们已经把本地的镜像推到公网上的仓库里。
+
+
+此时我们还需要构建一个管理公网仓库中镜像的ui 
+之前使用的ui就比较弱，因为它不太支持 用户名和密码 来做登录和访问，所以此时需要用到 portus 它会支持认证这块信息
+自己把portus和registry结合到一起，用docker-compose 一键运行起来，
+
+下节课我们再把之前的gitlab流程改造下， 因为我们之前的是runner 获取代码后，就直接运行docker-compose up  镜像没有push到仓库
+代码推送到dev分支后，我们是需要构建镜像并且push到镜像仓库， 从dev分支推到master分支时  再发布到生产环境上去，这可以看做一个相对比较完整的开发和测试上线的流程

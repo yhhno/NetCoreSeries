@@ -12,7 +12,7 @@
  然后在浏览器中 输入 http://localhost:5000/v2  我们现在镜像信息是没有的
   有了仓库之后呢 本地是没有登录机制的，所以不需要登录， 我们可以直接push镜像到仓库
  我们给本地的镜像helloapi 打个tag
- docker tag helloapi localhost:5000:local
+ docker tag helloapi localhost:5000/helloapi:local
  然后输入 docker images
  我们发现多了一个镜像 locahost:5000/helloapi 的镜像 tag 为local
  接下来就是把这个镜像 push 到本地仓库
@@ -26,6 +26,38 @@
   docker pull localhost:/helloapi:local
   再看下
   docker images 本地有了从仓库拉取的镜像
+
+
+
+
+  C:\Users\DowmUp> docker run -d -p 5000:5000 --restart=always --name registry registry
+Unable to find image 'registry:latest' locally
+latest: Pulling from library/registry
+81033e7c1d6a: Pull complete
+b235084c2315: Pull complete
+c692f3a6894b: Pull complete
+ba2177f3a70e: Pull complete
+a8d793620947: Pull complete
+Digest: sha256:672d519d7fd7bbc7a448d17956ebeefe225d5eb27509d8dc5ce67ecb4a0bce54
+Status: Downloaded newer image for registry:latest
+f277f74c5fe4d220fd224d2da6f18c53ac17ca122ae670a1658dbea0c734d7a8
+
+C:\Users\DowmUp>docker tag registry localhost:5000/registry:local
+
+C:\Users\DowmUp>docker push localhost:5000/registry:local
+The push refers to repository [localhost:5000/registry]
+9113493eaae1: Pushed
+621c2399d41a: Pushed
+59e80739ed3f: Pushed
+febf19f93653: Pushed
+e53f74215d12: Pushed
+local: digest: sha256:feb40d14cd33e646b9985e2d6754ed66616fedb840226c4d917ef53d616dcd6c size: 1364
+
+C:\Users\DowmUp>
+
+
+
+
 
    这就是本地的仓库，我们现在看起来 可能比较隐形
    我们现在看下有什么办法 我们可以有一个可视化的ui。方便我们来看到镜像的信息，跟我们的hub.docker.com一样
@@ -50,3 +82,12 @@ konradkleine/docker-registry-frontend运行成功后，
 如果错误了 docker logs 因为konradkleine/docker-registry-frontend也是个镜像嘛、
 卧槽 处处都可以是镜像了。  这说明什么问题？
 
+
+有命令文档 一步一步参考上
+
+
+出了问题：管理容器仓库的容器，访问不到本地仓库
+localhost访问不到的问题， 漏掉了网络的问题， 之前的命令中 指定的容器仓库方式是localhost，但此时的localhost在这个容器konradkleine/docker-registry-frontend指的是本地容器地址，而不是本地容器仓库地址，此时的localhost 不是host中的localhost，
+在命令中 使用--link， 让两个容器互联，而不是让容器映射到host上的地址，互联
+
+本地仓库在本地使用没有任何问题，不需要安全机制，一旦放到公网上之后，就需要安全机制了，需要用户名和密码之后，
