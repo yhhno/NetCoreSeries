@@ -1,13 +1,22 @@
+问题：学习能力是第一核心竞争力？ 去哪里学习呢？ 怎么去学习呢？向谁学习呢？ =》向真正的高手，真正的高手叙述起来，深入浅出，循序渐进，环环相扣，去哪里找呢？ 高手集中的地方？ 哪里集中呢？ 大公司？ 或者个人博客？ 大公司的社区=》这其中存在个怎么找到的问题？=》资料找到了， 如何落实呢？=》它是如何表达的呢？ 
+问题2：不是入学，而是去复习，去教，有兴趣的，积极的，清晰的，有收获的，有思考的。有识别能力，有描述能力 
+问题3： 清晰 怎么才叫清晰 要识别出来，描述出来呀
+问题4： 不要慌，一步一步分析，慌了就不理智了，陷入不知所措的漩涡里，出不来了
+问题5：遇到障碍，坚持下去
+
+
 我们接着来实现consent的确认逻辑
-conset页面添加两个按钮 同意 拒绝
+conset页面添加两个按钮 同意 拒绝 不管怎么说，我们都会把请求 post到 consentcontroller的方法中处理，
 同意的话 我们会将returnurl直接跳走，跳到客户端
 如果不同意，最后也会跳到客户端，客户端做个处理
 现在view中，把按钮加上去
-我们首先要把viewmodel给完善下，因为我们 这个视图只是可以输出它的内容，还有接受的一些信息呢  
+我们首先要把viewmodel给完善下，因为我们 这个ConsentViewModel视图只是可以输出它的内容，还有接受的一些信息呢  
+
 我们能接受的有
 一个是按钮 是和否
-而你勾选的checkbox 最后都会以ScopeConsented形式 返回，它是一个string形式的
-我们在viewmodels里新建一个InputConsentViewModel 用来接收我们勾选的信息
+而你勾选的checkbox 最后都会以ScopeConsented形式 返回，它是一个string形式的 value是我们选中的scopes名称
+
+我们在viewmodels里新建一个InputConsentViewModel 用来接收我们勾选的信息， 也就是在index的post方法 接受的参数，转化的类
 public class InputConsetViewModel
     {
         public string  Button { get; set; }//接收 授权 或者取消
@@ -15,6 +24,182 @@ public class InputConsetViewModel
         public bool RemeberConsent { get; set; }
 		public string ReturnUrl{get;set;}
     }
+这个returnurl是怎么过来的，因为我们是从accountcontroller传到了consentcontroller，consentcontroller 他们之间是通过get方式来传的，传完之后 我们在我们的 consent的index中直接拿到returnurl，我们需要把returnurl这个参数绑定到consentviewmodel这个视图上，这个returnurl最终要通过post发回来
+     [HttpGet]
+        public async  Task<IActionResult> Index(string returnUrl) 传入
+        {
+            //逻辑清晰，就生成model
+            var model = await BuildConsentViewModel(returnUrl);//专人做专事
+
+           if(model==null)
+            {
+
+            }
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(InputConsetViewModel viewModel) returnul参数接受回来
+        {
+            return View();
+        }
+而returnurl如何在post方式中传过来呢？
+    <input type="hidden" asp-for="ReturnUrl" />
+此时要注意 consentviewmodel是没有returnurl这个参数，我们要加上
+   public class ConsentViewModel
+    {
+        public string ClientId { get; set; }
+        public string ClientName { get; set; }
+        public string ClientLogoUrl { get; set; }
+        public string ClientUrl { get; set; }
+        public bool AllowRememberConsent { get; set; }//是否记住
+
+        public IEnumerable<ScopeViewModel> IdentityScopes
+        { get; set; }//可供个人信息，供选择 
+
+        public IEnumerable<ScopeViewModel> ResourceScopes
+
+        { get; set; }//可供Api信息，供选择 
+
+        public string ReturnUrl { get; set; } 添加上returnurl
 
 
-补充index的post方法
+    }
+
+在构建consentviewmodel视图的过程中添加 returnurl
+        private async Task<ConsentViewModel> BuildConsentViewModel(string returnUrl)
+        {
+            //step1 获取一个request
+            //异步方法，必须要await调用， 不然返回值的属性，获取不到
+            var request = await _iIdentityServerInteractionService.GetAuthorizationContextAsync(returnUrl);//类库方法需要一个参数，从那里来呢
+            if (request == null)//逻辑严谨，时刻判断空值，防止bug
+                return null;
+            //step2 request获取到后，获取client 和resource
+            var client = await _clientStore.FindEnabledClientByIdAsync(request.ClientId);//异步方法，必须要await调用， 不然返回值的属性，获取不到，因为返回的是一个Task
+            //需要判断client是否为空
+
+
+            var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.ScopesRequested);//此Resource包括了IdentityResource和APIResource
+
+            var vm= CreateConsentViewModel(request, client, resources);//返回TResult类型就可以了。
+            vm.ReturnUrl = returnUrl;  添加returnurl
+            return vm;
+        }
+
+此时returnurl从get传到了post
+
+还有一步，当我点了是的时候，也就是按钮点了yes，那我们会跳到客户端， 如果点了否 那我们也会跳到客户端
+所以我们这里会有一个Redirect 一个url，
+我们通过一个上面地方去拿一个url呢，还是上次讲的IIdentityServerInteractionService，首先我们来处理下，这个地方思路非常简单，我们首先给它一个consentresponse，它是identityserver4.models中的一个类型，
+有了它之后呢？ 我们接下来看
+如果button等于no
+ if (viewModel.Button == "no")
+            {
+                consentResponse = ConsentResponse.Denied;
+            }
+
+如果button等于yes
+我们就会去拿scopes
+因为any不会帮我们去判断是不是null，如果是null的时候我们调用any它是会报错的
+也就是说当这个地方有值的时候 把consentresponse赋值
+
+        ConsentResponse consentResponse = null;
+            if (viewModel.Button == "no")
+            {
+                consentResponse = ConsentResponse.Denied;
+            }
+            else if (viewModel.Button == "yes")
+            {
+                if(viewModel.ScopesConsented!=null&& viewModel.ScopesConsented.Any())
+                {
+                    consentResponse = new ConsentResponse
+                    {
+                        RememberConsent = viewModel.RemeberConsent,
+                        ScopesConsented = viewModel.ScopesConsented,
+                    };
+                }
+            }
+
+
+不要慌，一步一步分析，慌了就不理智了，陷入不知所措的漩涡里，出不来了
+接下来我们就要去构造redirecturl的请求了
+如果consentresponse不为null
+与identityserver交互，告诉用户选择了哪些项。
+ if(consentResponse!=null)
+            {
+                var request =  await _iIdentityServerInteractionService.GetAuthorizationContextAsync(viewModel.ReturnUrl);
+                await _iIdentityServerInteractionService.GrantConsentAsync(request, consentResponse);//inform identityserver user's consent
+
+            }
+
+
+此时就可以跳转url
+redirect(viewModel.ReturnUrl);
+
+
+当然有种情况是consentresponse为null，就是上面的代码报错的情况下，为什么会报错呢 当用户一个都没有选，我们当前是默认必须勾选一个项 当用户一个都没有选的情况下，我们视图层面会报错，consentresponse就为null，
+此时还有一个else 分支 他没有拿到consentresponse ，此时还是要返回视图，依然要显示视图 我们先不写这个逻辑
+
+此时我们先完成了controller逻辑，
+先运行下 看看写完的结果
+
+
+我们先把视图写完
+
+
+优化下了viewmodel
+public class ConsentViewModel:InputConsetViewModel
+    {
+        public string ClientId { get; set; }
+        public string ClientName { get; set; }
+        public string ClientLogoUrl { get; set; }
+        public string ClientUrl { get; set; }
+     
+
+        public IEnumerable<ScopeViewModel> IdentityScopes
+        { get; set; }//可供个人信息，供选择 
+
+        public IEnumerable<ScopeViewModel> ResourceScopes
+
+        { get; set; }//可供Api信息，供选择 
+
+
+        //因为这两项在InputConsetViewModel中也出现了，我们可以使用继承来避免重复
+        //public bool AllowRememberConsent { get; set; }//是否记住
+        //public string ReturnUrl { get; set; }
+
+    }
+
+
+完善视图后，我们来运行看下
+运行服务端， 运行客户端
+在服务端的consent的 index的post方法 打个断点，观察下传过去的值
+
+
+修复下视图bug
+     <input type="checkbox"
+               name="ScopesConsented"
+               id="scopes_@Model.Name"
+               value="@Model.Name"
+               checked="@Model.Checked"
+               disabled="@Model.Required" />
+        @*disabled属性是为了openid的，因为openid是必选的，不允许改动，所以为disabled，但有一个问题，属性disabled为true的项，post时不会被传递，但openid必须要传递，不传的话，客户端会报错，因为它没有办法拿到身份，因为在客户端接受的是 oidc 它会根据oidc 去获取用户信息*@
+
+
+        @*//如果openid项被disabled的话，由这个隐藏域把值给传递过去*@
+        @if (Model.Required)
+        {
+            <input type="hidden" name="ScopesConsented" value="@Model.Name" />
+
+        }
+
+
+运行后，选了选项，点击同意，跳转到客户端，然后看下，客户端中显示用户的详情
+
+都是以claim形式返回回来的 用户所有的claims都是通过profile的形式返回回来，都是包含在profile里面
+
+现在是测试的profile 到现在为止，完整的流程已经走完了，后面我们会继续在这个基础上，修改bug，判断 修改测试数据库为真实的
+
+
+
+

@@ -60,7 +60,7 @@ namespace MvcCookieAuthSampleAddUI
                     AllowedScopes={
                         IdentityServerConstants.StandardScopes.Profile,
                         IdentityServerConstants.StandardScopes.Email,
-                        IdentityServerConstants.StandardScopes.OpenId,//每一个IdentityResource是一个scope
+                        IdentityServerConstants.StandardScopes.OpenId,//每一个IdentityResource是一个scope，必须需要的 因为在客户端接受的是 oidc 它会根据oidc 去获取用户信息
                     }// 允许访问的资源
                 }
             };
@@ -75,8 +75,10 @@ namespace MvcCookieAuthSampleAddUI
                    Username="jesse",
                    Password="123456",
                    Claims={
-                       new Claim ( JwtClaimTypes.Email,"QQ@qq.com"),//JwtClaimTypes.Email 说明啥
-                       new Claim( JwtClaimTypes.Role,"user")
+                       //new Claim ( JwtClaimTypes.Email,"QQ@qq.com"),//JwtClaimTypes.Email 说明啥
+                       //new Claim( JwtClaimTypes.Role,"user")
+                                              new Claim ("email","QQ@qq.com"),//JwtClaimTypes.Email 说明啥
+                       new Claim("role","user")
                    }
                }
             };

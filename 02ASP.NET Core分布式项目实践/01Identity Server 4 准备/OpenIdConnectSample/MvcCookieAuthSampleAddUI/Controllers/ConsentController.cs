@@ -57,7 +57,8 @@ namespace MvcCookieAuthSampleAddUI.Controllers
             vm.ClientName = client.ClientName;
             vm.ClientLogoUrl = client.LogoUri;
             vm.ClientUrl = client.ClientUri;
-            vm.AllowRememberConsent = client.AllowRememberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同理自动登录咋实现的呢？
+            //vm.AllowRememberConsent = client.AllowRememberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同理自动登录咋实现的呢？
+            vm.RemeberConsent = client.AllowRememberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同理自动登录咋实现的呢？
 
 
             vm.IdentityScopes = resources.IdentityResources.Select(i => CreateScopeViewModel(i));//遍历所有元素，对每一元素施加function，当然func可以操作 元素，也可以不操作元素，但遍历必须进行的
@@ -113,7 +114,35 @@ namespace MvcCookieAuthSampleAddUI.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(InputConsetViewModel viewModel)
         {
-            return View();
+            ConsentResponse consentResponse = null;
+            if (viewModel.Button == "no")
+            {
+                consentResponse = ConsentResponse.Denied;
+            }
+            else if (viewModel.Button == "yes")
+            {
+                if(viewModel.ScopesConsented!=null&& viewModel.ScopesConsented.Any())
+                {
+                    consentResponse = new ConsentResponse
+                    {
+                        RememberConsent = viewModel.RemeberConsent,
+                        ScopesConsented = viewModel.ScopesConsented,
+                    };
+                }
+            }
+
+
+
+            if(consentResponse!=null)
+            {
+                var request =  await _iIdentityServerInteractionService.GetAuthorizationContextAsync(viewModel.ReturnUrl);
+                await _iIdentityServerInteractionService.GrantConsentAsync(request, consentResponse);//inform identityserver user's consent
+
+
+               return  Redirect(viewModel.ReturnUrl);//少了return
+            }
+
+            return View();//这句代码说明当用户什么都没有选的时候，我们还会继续 return index的view，还需要丢一个model  get方法里的一样 
         }
     }
 }

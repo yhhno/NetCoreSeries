@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 
 namespace MvcCookieAuthSampleAddUI.ViewModels
 {
-    public class ConsentViewModel
+    public class ConsentViewModel:InputConsetViewModel
     {
         public string ClientId { get; set; }
         public string ClientName { get; set; }
         public string ClientLogoUrl { get; set; }
         public string ClientUrl { get; set; }
-        public bool AllowRememberConsent { get; set; }//是否记住
+     
 
         public IEnumerable<ScopeViewModel> IdentityScopes
         { get; set; }//可供个人信息，供选择 
@@ -20,7 +20,10 @@ namespace MvcCookieAuthSampleAddUI.ViewModels
 
         { get; set; }//可供Api信息，供选择 
 
-        public string ReturnUrl { get; set; }
+
+        //因为这两项在InputConsetViewModel中也出现了，我们可以使用继承来避免重复
+        //public bool AllowRememberConsent { get; set; }//是否记住
+        //public string ReturnUrl { get; set; }
 
     }
 }

@@ -180,7 +180,7 @@ http://localhost:5000/account/login?returnUrl=%2Fconnect%2Fauthorize%2Fcallback%
 
 
 输入用户名和密码，
-跳转到consent页面
+跳转到consent页面   如何跳到consent呢？  如何实现的呢？  猜测下如何实现的？ 中间件如何工作的？
 http://localhost:5000/consent?returnUrl=%2Fconnect%2Fauthorize%2Fcallback%3Fclient_id%3Dmvc%26redirect_uri%3Dhttp%253A%252F%252Flocalhost%253A5001%252Fsignin-oidc%26response_type%3Did_token%26scope%3Dopenid%2520profile%26response_mode%3Dform_post%26nonce%3D636596430927424287.ZTg2ZmJiYmEtM2U0Mi00MzhlLWE2YTctMjM4ZDViMDVlN2VlODBkNWI5MDgtMzEyNy00NDA5LTgzYzEtMmQ1MGJiMTRlMDNl%26state%3DCfDJ8BwfQbt0WphBpi6Gk0taZ9mooepfEtFU64CEl1f-5DOwaNIKiXb6RrLZZTTDV8gy2fqh_Pe2ZbHgi286fsms2SvwJwWmFAu4gAYB4fnbd9V1URluG71WDGky5lt4r4EWW5XFsv_0lsnRygrPv88WXzCqIL4ILI3qdWi8M6m45hORv-hkHe1UxbwZtoqteVmd_mgeoVJHEfVnRTCg7BH0RC1aBh5iJ_6bxU8ol8IJdAgwC72p-oNtil4CfoyS9XfTs-9x7QbmFxHHvadBgCMQ3l5QUGI4eFaGn-CUVCEzk4MIyraOaaZ7lKbw4dZFtjHLfQ%26x-client-SKU%3DID_NET%26x-client-ver%3D2.1.4.0
 同意后
 跳转到 http://localhost:5000/

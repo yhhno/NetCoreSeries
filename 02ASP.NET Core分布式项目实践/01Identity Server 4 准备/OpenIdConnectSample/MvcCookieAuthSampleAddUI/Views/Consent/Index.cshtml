@@ -23,25 +23,67 @@
     <div class="col-sm-8">
         <form asp-action="Index">
             <input type="hidden" asp-for="ReturnUrl" />
-                   @if (Model.IdentityScopes.Any())//严谨，如果有就循环遍历输出
+            @if (Model.IdentityScopes.Any())//严谨，如果有就循环遍历输出
             {
-                <ul class="list-group">
-                   @foreach (var scope in Model.IdentityScopes)
-                   {
-@Html.Partial("_ScopeListitem",scope)//说明啥呢？ 为啥传model实例
-                   }
-                </ul>
+                <div class="panel">
+                    <div class="panel-heading">
+                        <span class="glyphicon glyphicon-user"></span>
+                        用户信息
+                    </div>
+                    <ul class="list-group">
+                        @foreach (var scope in Model.IdentityScopes)
+                        {
+                            @Html.Partial("_ScopeListitem", scope)//说明啥呢？ 为啥传model实例
+                        }
+                    </ul>
+                </div>
+
             }
-             @if (Model.ResourceScopes.Any())
-             {
-                 @foreach (var scope in Model.ResourceScopes)
-                 {
-                     @Html.Partial("_ScopeListitem",scope)
-                 }
-             }
 
 
-             </form>
+            @if (Model.ResourceScopes.Any())
+            {
+
+
+                <div class="panel">
+                    <div class="panel-heading">
+                        <span class="glyphicon glyphicon-user"></span>
+                        用户信息
+                    </div>
+                    <ul class="list-group">
+
+                        @foreach (var scope in Model.ResourceScopes)
+                        {
+                            @Html.Partial("_ScopeListitem", scope)
+                        }
+                     
+                    </ul>
+                    </div>
+            }
+
+
+            <div>
+                <label>
+                    <input type="checkbox" asp-for="RemeberConsent" />
+                    <strong>记住我的选择</strong>
+                </label>
+            </div>
+
+
+                    <div>
+                        <button name="button" value="yes" class="btn btn-primary"  autofocus>同意</button>
+                        <button name="button" value="no" >取消</button>
+                        @if (!string.IsNullOrEmpty(Model.ClientUrl))
+                        {
+                            <a href="@Model.ClientUrl" class="pull-right btn btn-default">
+                                <span class="glyphicon glyphicon-info-sign"></span>
+                                <strong>@Model.ClientUrl</strong>
+                            </a>
+
+                        }
+                    </div>
+
+            </form>
     </div>
 </div>
 

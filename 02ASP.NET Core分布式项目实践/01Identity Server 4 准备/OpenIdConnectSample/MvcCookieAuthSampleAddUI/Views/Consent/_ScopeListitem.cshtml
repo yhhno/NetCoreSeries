@@ -3,14 +3,22 @@
  @*啥时候传model实例呢*@
 
 <li>
-    <label >
-    <input type="checkbox"
-           name="ScopesConsented"
-           id="scopes_@Model.Name"
-           value="@Model.Name"
-           checked="@Model.Checked"
-           disabled="@Model.Required"
-           />
+    <label>
+        <input type="checkbox"
+               name="ScopesConsented"
+               id="scopes_@Model.Name"
+               value="@Model.Name"
+               checked="@Model.Checked"
+               disabled="@Model.Required" />
+        @*disabled属性是为了openid的，因为openid是必选的，不允许改动，所以为disabled，但有一个问题，属性disabled为true的项，post时不会被传递，但openid必须要传递，不传的话，客户端会报错，因为它没有办法拿到身份，因为在客户端接受的是 oidc 它会根据oidc 去获取用户信息*@
+
+
+        @*//如果openid项被disabled的话，由这个隐藏域把值给传递过去*@
+        @if (Model.Required)
+        {
+            <input type="hidden" name="ScopesConsented" value="@Model.Name" />
+
+        }
         <strong>@Model.Name</strong>
         @if (Model.Emphasize)
         {
