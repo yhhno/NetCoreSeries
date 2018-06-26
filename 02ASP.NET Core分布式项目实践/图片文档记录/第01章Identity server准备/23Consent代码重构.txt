@@ -1,71 +1,516 @@
-1.课程介绍
-这是一个实战的课程
-通过asp.net core高级开发过程中所遇到的
-技术上的问题
-项目管理上的问题
-与产品经理包括整个项目运维的问题。  产品理解的角度
-都会涉及到。
-希望能给大家的职业生涯发展有所帮助
-
-课程目标及面向群体
-1.进一步理解asp.net core 授权认证框架，mvc管道   
-这两部分比较难，所以本课程会更深入的讲解和做一些实践开发，在我们的项目开发中也会用到
-2.掌握Oauth2,结合Identity Server4实现OAuth2和OpenID Connect Server  
-授权认证的开源实现，我们要理解Oauth2的四种流程，以及结合Identity Server4实现OAuth2和OpenID Connect Server  也就是我们要做一个单点登录
-3.掌握asp.net core 与Redis MongoDB RabitMQ mySql 配合使用
-我们会在整个项目过程中 接触到Redis MongoDB RabitMQ mySql这些技术在asp.net core中使用
-4.理解DDD，学会在项目中进行领域分析与建模，并使用CQRS进行项目开发
-我们会在这个项目中，引入DDD开发，ddd是面向领域驱动设计，所以我们也会在这个过程当中，一起来做领域分析与建模，并使用CQRS进行项目开发
-5.掌握Docker，并能够利用Docker+GitlabCI/CD 快速部署整套测试环境
-我们在测试环境，用docker和gitlab 来做测试环境的持续的发布和部署
-
-面向群体
+问题1. 外国的十分钟速成课为啥这么好呢？ 前因后果，脉络清晰，有画面感，生动形象，一路有逻辑，清晰的顺下来， 看起来好像是一两步搞定的，其实不是。
+问题2:任何一件事都是一步两步搞定的，
+问题3：现在的问题是没有融会贯通，活学活用，对事情的分析也不到位，有的是基础欠缺，有的是运用不好， 造成不知道如何下手，如何去做。
+问题4： 死记当时学的东西，没有理解，导致有点变动就举手无措了， 如：此时我们就不能用Redirect来跳转url了，所以此时我们需要有一个返回的model来封装下，
+问题5：为什么自己不能一步一步设计下来呢？ 欠缺啥？ 当时咋想的? 如何纠正呢？
 
 
+本节来优化下代码，因为 写的过程当中，写的比较快，所以就把这些东西都写到一个地方了， 也是刚开始逻辑比较顺畅，
+
+要点1:
+接下来 很多的一些不是action的东西，放到了controller里面，不太合适，
+
+所以我们会新建一个services的文件夹，新建个ConsentServices类，专门来处理consent方面的逻辑，所以我们会把这些不是action的方法全移到service里面去
+第一件事就是把私有变量移过去
+   private readonly IClientStore _clientStore;//实例在哪里赋值呢，构造函数里，
+        private readonly IResourceStore _resourceStore;
+        private readonly IIdentityServerInteractionService _iIdentityServerInteractionService;
+
+        //构造函数的参数，通过依赖注入传值，  就构造函数被调用时，由mvc调用依赖注入容器，获取实例传入
+        public ConsentController(
+            IClientStore clientStore,
+            IResourceStore resourceStore,
+            IIdentityServerInteractionService iIdentityServerInteractionService)
+        {
+            _clientStore = clientStore;
+            _resourceStore = resourceStore;
+            _iIdentityServerInteractionService = iIdentityServerInteractionService;
+        }
+
+移到consentservice类中，并优化构造器名称，并配置依赖注入
+
+public class ConsentService
+    {
+        private readonly IClientStore _clientStore;//实例在哪里赋值呢，构造函数里，
+        private readonly IResourceStore _resourceStore;
+        private readonly IIdentityServerInteractionService _iIdentityServerInteractionService;
+
+        //构造函数的参数，通过依赖注入传值，  就构造函数被调用时，由mvc调用依赖注入容器，获取实例传入
+          public ConsentService(//优化后，修改构造器名称，此时的依赖注入，要手工添加，类似控制器的依赖注入，mvc帮我们做了。   在startup中添加services.AddScoped<ConsentService>();
+            IClientStore clientStore,
+            IResourceStore resourceStore,
+            IIdentityServerInteractionService iIdentityServerInteractionService)
+        {
+            _clientStore = clientStore;
+            _resourceStore = resourceStore;
+            _iIdentityServerInteractionService = iIdentityServerInteractionService;
+        }
+    }
+
+此时私有变量就改造完成了。
+
+
+然后把私有的方法，同样的copy过去，
+
+      private async Task<ConsentViewModel> BuildConsentViewModel(string returnUrl)
+        {
+            //step1 获取一个request
+            //异步方法，必须要await调用， 不然返回值的属性，获取不到
+            var request = await _iIdentityServerInteractionService.GetAuthorizationContextAsync(returnUrl);//类库方法需要一个参数，从那里来呢
+            if (request == null)//逻辑严谨，时刻判断空值，防止bug
+                return null;
+            //step2 request获取到后，获取client 和resource
+            var client = await _clientStore.FindEnabledClientByIdAsync(request.ClientId);//异步方法，必须要await调用， 不然返回值的属性，获取不到，因为返回的是一个Task
+            //需要判断client是否为空
+
+
+            var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.ScopesRequested);//此Resource包括了IdentityResource和APIResource
+
+            var vm= CreateConsentViewModel(request, client, resources);//返回TResult类型就可以了。
+            vm.ReturnUrl = returnUrl;
+            return vm;
+        }
+
+        private ConsentViewModel CreateConsentViewModel(AuthorizationRequest request,Client client,Resources resources
+            )//Resources 与Resource的区别
+        {
+            var vm = new ConsentViewModel();
+            vm.ClientName = client.ClientName;
+            vm.ClientLogoUrl = client.LogoUri;
+            vm.ClientUrl = client.ClientUri;
+            //vm.AllowRememberConsent = client.AllowRememberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同理自动登录咋实现的呢？
+            vm.RemeberConsent = client.AllowRememberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同理自动登录咋实现的呢？
+
+
+            vm.IdentityScopes = resources.IdentityResources.Select(i => CreateScopeViewModel(i));//遍历所有元素，对每一元素施加function，当然func可以操作 元素，也可以不操作元素，但遍历必须进行的
+
+            vm.ResourceScopes = resources.ApiResources.SelectMany(i => i.Scopes).Select(x => CreateScopeViewModel(x));
+            //select list<list<T>>
+            //SelectMany  list < T >
+
+            return vm;
+        }
+
+        private ScopeViewModel CreateScopeViewModel(IdentityResource identityresource)//处理单个IdentityResouce
+        {
+            return new ScopeViewModel
+            {
+                Name = identityresource.Name,
+                DisplayName = identityresource.DisplayName,
+                Description = identityresource.Description,
+                Required = identityresource.Required,
+                Checked = identityresource.Required,
+                Emphasize = identityresource.Emphasize
+
+            };
+        }
+
+        private ScopeViewModel CreateScopeViewModel(Scope scope)//处理单个Scope
+        {
+            return new ScopeViewModel
+            {
+                Name = scope.Name,
+                DisplayName = scope.DisplayName,
+                Description = scope.Description,
+                Required = scope.Required,
+                Checked = scope.Required,
+                Emphasize = scope.Emphasize
+
+            };
+        }
+要点2
+所有的私有方法移过去之后，我们需要一个公共方法，BuildConsentViewModel是我们唯一的async方法，要修改BuildConsentViewModel 方法为公有的，因为要给外界调用
+我们把BuildConsentViewModel 放到最下面，
+个人习惯，会把公共方法放到一个类的最下面，私有方法放到公共方法的上面
+可以把私有方法，打上region标签， 私有方法是外界不必太关注的
+私有方法上面是我们的构造函数，构造函数上面是我们的私有变量，
+这样的一个摆放的位置
+
+ public class 类名
+ {
+	私有变量
+	构造函数
+	私有方法
+	公有方法
+ }
+
+完成ConsentService的移动
+ public class ConsentService
+    {
+        private readonly IClientStore _clientStore;//实例在哪里赋值呢，构造函数里，
+        private readonly IResourceStore _resourceStore;
+        private readonly IIdentityServerInteractionService _iIdentityServerInteractionService;
+
+        //构造函数的参数，通过依赖注入传值，  就构造函数被调用时，由mvc调用依赖注入容器，获取实例传入
+        public ConsentService(//优化后，修改构造器名称
+            IClientStore clientStore,
+            IResourceStore resourceStore,
+            IIdentityServerInteractionService iIdentityServerInteractionService)
+        {
+            _clientStore = clientStore;
+            _resourceStore = resourceStore;
+            _iIdentityServerInteractionService = iIdentityServerInteractionService;
+        }
 
 
 
 
-2最小可行化产品MVP
-我们来看下产品开发的过程。
-首先我们要知道一个软件是如何被生产出来的，然后再参与到生产当中
-我们会给大家讲两点
-1.产品MVP的概念
-2.两种软件开发模式 一个是瀑布（传统的），一个是敏捷
 
-产品MVP概念 最小可行化产品
-是一种避免开发出客户并不真正需要的产品的开发策略。
-不知道大家会不会有这样的经历，你们开发出来的产品，不是客户想要的，在早期开发中，我们可能还接触不到这一点，刚作为一个程序员，我们只是写写代码就可以了，等你越往高级的程度去过渡，你就要开始思考下，你所开发的东西，是否能真正满足用户的需求，这时候我们就要思考用户的需求到底是什么？我们需要开发的是什么样的一个东西，在一些失败的经验当中，有一些产品往往被设计的过渡复杂，以至于导致开发周期特别的长
-比如说一个产品 一个大的功能要经历一个月 两个月 甚至半年 一年的时间去开发的话，往往在开发完成之后，这个功能可能就跟用户想象的差得比较远，甚至技术与需求早就发生了变化，特别是在互联网公司，节奏要求更快，而且用户的想法也会变得很快
-
-
-所以产品mvp就是：
-快速地构建出符合产品预期功能的最小功能集合，我们只开发一部分功能 然后通过不断的迭代来改进这个产品。
-是让开发团队用最小的代价实现一个产品，同时去了解和验证这个产品有没有满足用户需求， 以此最大程度上了解和验证对用户问题的解决程度。
-
-对于mvp的理解
-开发一个汽车：
-错误的理解：
-先做一块的零件，在做一块的零件，最后拼成一辆车
-正确的理解：
-而是我们真正理解用户的需求是我们需要帮助他出行，当然我们不是要做一个滴滴打车软件，而是做一个工具，这个工具是实用性质的，最开始是滑板，同样可以让的出行变得方便，然后变成自行车，后面是摩托车，最后是变成四个轮子的车，最终我们的目的是让用户越来越爽，可以坐在这里很轻松，很快的到达某个地点，这个就是四个迭代的版本，每个版本都满足了用户的需求，只是在每个版本的基础之上，这个需求会让用户的满足程度更高，
-所以我们需要特别注意的一点就是 在最小化和可用之间找到一个平衡点，我们既不是要最大化的可用，把所有的功能都加进来，也不是说越少越好，开发越少的功能越好，在每一个版本推出的时候，我们至少要做出来一些对用户有用的东西，能够满足他需求的东西
-
-我们再看下完整的过程。也就是我们所说的迭代的过程，它本身在一开始最早的时候，我们是去做一个实验和构建，有一个想法，然后呢，我们在开发出来之后，其实是需要去测量，我们需要拿到用户的反馈，去进行一些学习和分析，因为往往，在最开始 一开始去做一件事情的时候，包括我们这一次做视频这样的一个产品，我们也并不是非常了解到底我们需要的是什么样的一个东西，如果我们只是按照自己脑子里的所想的去YY的话，可能做出来的东西，并没有那么好的去满足用户的需求，也就是说视频可能做得不是你最终想要的所有的东西，在我们测量的过程当中，发布一版之后，去拿到反馈之后，再去学习用户的一些想法和过程，不断的去改进我们的产品，在这个过程当中 我们是要以用户问题为中心，而不是以解决方案为中心  我们最终是去解决问题， 而不是我推出的就是这样的一个东西，这样的一个解决方案，然后呢  用户反馈的需求 进行改进,逐步改进我们产品的设计和实现,针对我们做得这个视频项目,大家也可以在群里去提意见和反馈,包括你想要的一些东西,我们这一次围绕整体的目标,去
-不断的把我们这个视频项目 内容做到更全更完善,以帮助大家实现从中高级开发人员进阶的过程,
-
-我们再回顾一下
-1.以用户问题为中心,而是以你要推出的东西为中心,因为我们真正要解决的是问题.
-2.不断的去迭代,去反馈,改进我们的产品
-3.每一个迭代的过程中,所推出来用户看到的东西,都是有用的,
-所以在这个过程中,我希望大家也能够给我积极的提供一些反馈和意见,然后这个视频项目内容的改善,也离不开你们的帮助,希望我们的这个视频可以帮助到未来所有想高级asp.net core开发人员过渡这一阶段的同伴
-
-以用户问题为中心，而不是以解决方案为中心 
-首先着眼于基本的客户需求，通过客户反馈，逐步修正产品设计和实现
-在各个迭代版本中,做出来的产品始终是可为客户所用的产品
+        #region Private Methods
+        private ConsentViewModel CreateConsentViewModel(AuthorizationRequest request, Client client, Resources resources
+       )//Resources 与Resource的区别
+        {
+            var vm = new ConsentViewModel();
+            vm.ClientName = client.ClientName;
+            vm.ClientLogoUrl = client.LogoUri;
+            vm.ClientUrl = client.ClientUri;
+            //vm.AllowRememberConsent = client.AllowRememberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同理自动登录咋实现的呢？
+            vm.RemeberConsent = client.AllowRememberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同理自动登录咋实现的呢？
 
 
+            vm.IdentityScopes = resources.IdentityResources.Select(i => CreateScopeViewModel(i));//遍历所有元素，对每一元素施加function，当然func可以操作 元素，也可以不操作元素，但遍历必须进行的
+
+            vm.ResourceScopes = resources.ApiResources.SelectMany(i => i.Scopes).Select(x => CreateScopeViewModel(x));
+            //select list<list<T>>
+            //SelectMany  list < T >
+
+            return vm;
+        }
+
+        private ScopeViewModel CreateScopeViewModel(IdentityResource identityresource)//处理单个IdentityResouce
+        {
+            return new ScopeViewModel
+            {
+                Name = identityresource.Name,
+                DisplayName = identityresource.DisplayName,
+                Description = identityresource.Description,
+                Required = identityresource.Required,
+                Checked = identityresource.Required,
+                Emphasize = identityresource.Emphasize
+
+            };
+        }
+
+        private ScopeViewModel CreateScopeViewModel(Scope scope)//处理单个Scope
+        {
+            return new ScopeViewModel
+            {
+                Name = scope.Name,
+                DisplayName = scope.DisplayName,
+                Description = scope.Description,
+                Required = scope.Required,
+                Checked = scope.Required,
+                Emphasize = scope.Emphasize
+
+            };
+        }
+        #endregion
 
 
 
-task3 两种软件开发模式 : 瀑布与敏捷
+        public async Task<ConsentViewModel> BuildConsentViewModel(string returnUrl)
+        {
+            //step1 获取一个request
+            //异步方法，必须要await调用， 不然返回值的属性，获取不到
+            var request = await _iIdentityServerInteractionService.GetAuthorizationContextAsync(returnUrl);//类库方法需要一个参数，从那里来呢
+            if (request == null)//逻辑严谨，时刻判断空值，防止bug
+                return null;
+            //step2 request获取到后，获取client 和resource
+            var client = await _clientStore.FindEnabledClientByIdAsync(request.ClientId);//异步方法，必须要await调用， 不然返回值的属性，获取不到，因为返回的是一个Task
+            //需要判断client是否为空
+
+
+            var resources = await _resourceStore.FindEnabledResourcesByScopeAsync(request.ScopesRequested);//此Resource包括了IdentityResource和APIResource
+
+            var vm = CreateConsentViewModel(request, client, resources);//返回TResult类型就可以了。
+            vm.ReturnUrl = returnUrl;
+            return vm;
+        }
+
+    }
+}
+
+
+
+然后需要在ConsentController中，把ConsentService引用进来
+private readonly ConsentService _consentService;
+        public ConsentController(ConsentService consentService)
+        {
+            _consentService = consentService;
+        }
+
+并修改action的BuildConsentViewModel方法的调用
+ [HttpGet]
+        public async  Task<IActionResult> Index(string returnUrl)
+        {
+            //逻辑清晰，就生成model
+            //var model = await BuildConsentViewModel(returnUrl);//专人做专事
+            var model = await _consentService.BuildConsentViewModel(returnUrl);//专人做专事
+
+            if (model==null)
+            {
+			//会加上错误处理，当一个都没选的情况下，或者说根据url没有获取到我们的model
+            }
+            return View(model);
+        }
+
+
+我们再把Consent的post逻辑也移走。放到ProcessConsent方法里。添加参数
+
+处理Redirect时。
+  if (consentResponse != null)
+            {
+                var request = await _iIdentityServerInteractionService.GetAuthorizationContextAsync(model.ReturnUrl);
+                await _iIdentityServerInteractionService.GrantConsentAsync(request, consentResponse);//inform identityserver user's consent
+
+
+                return Redirect(viewModel.ReturnUrl);//少了return
+            }
+
+要点3
+此时我们就不能用Redirect来跳转url了，所以此时我们需要有一个返回的model来封装下，如果简单的话，可以直接返回true或者false，但此处还有url要返回
+我们在viewmodel文件夹中新建一个  ProcessConsentResult类
+ public class ProcessConsentResult
+    {
+        public string RedirectUrl { get; set; }
+        public bool IsRedirect => RedirectUrl != null;//标识，当RedirectUrl不为null的时候，跳转
+    }
+
+完善ProcessConsent方法
+  public async Task<ProcessConsentResult> ProcessConsent(InputConsetViewModel model)
+        {
+            ConsentResponse consentResponse = null;
+            var result = new ProcessConsentResult();
+            if (model.Button == "no")
+            {
+                consentResponse = ConsentResponse.Denied;
+            }
+            else if (model.Button == "yes")
+            {
+                if (model.ScopesConsented != null && model.ScopesConsented.Any())
+                {
+                    consentResponse = new ConsentResponse
+                    {
+                        RememberConsent = model.RemeberConsent,
+                        ScopesConsented = model.ScopesConsented,
+                    };
+                }
+            }
+
+
+
+            if (consentResponse != null)
+            {
+                var request = await _iIdentityServerInteractionService.GetAuthorizationContextAsync(model.ReturnUrl);
+                await _iIdentityServerInteractionService.GrantConsentAsync(request, consentResponse);//inform identityserver user's consent
+
+
+                //return Redirect(viewModel.ReturnUrl);//少了return
+                result.RedirectUrl = model.ReturnUrl;
+            }
+
+            return result;
+        }
+
+
+然后接下来，完善ConsentController中的 index的post方法
+
+要点4
+当处理url不存在的时候，需要返回到view页面也就是index的get，  要调用view（），参数为model。 但此时的viewmodel是InputConsetViewModel类型，应该为ConsentViewModel类型，
+此时我们要传入ConsentViewModel类型的model，同时还需要什么样的信息，就是用户选中的项， @@@符合逻辑@@
+首先我们修改ProcessConsentResult
+ public class ProcessConsentResult
+    {
+        public string RedirectUrl { get; set; }
+        public bool IsRedirect => RedirectUrl != null;//标识，当RedirectUrl不为null的时候，跳转  有啥妙用呢？
+
+        public ConsentViewModel ViewModel { get; set; }
+    }
+
+在什么情况下 会返回这个viewmodel呢，在model.Button == "yes"且consentResponse==null的情况下，封装一个viewmodel
+ if (consentResponse != null)
+            {
+                var request = await _iIdentityServerInteractionService.GetAuthorizationContextAsync(model.ReturnUrl);
+                await _iIdentityServerInteractionService.GrantConsentAsync(request, consentResponse);//inform identityserver user's consent
+
+
+                //return Redirect(viewModel.ReturnUrl);//少了return
+                result.RedirectUrl = model.ReturnUrl;
+            }
+            else//consentResponse == null的情况下封装一个viewmodel
+            {
+                var consentViewModel = await BuildConsentViewModel(model.ReturnUrl);
+                result.ViewModel = consentViewModel;
+            }
+
+我们把BuildConsentViewModel的名字后价格Async，不然老是忘了 await
+
+此时完成了当post失败时，返回到index的get页面时，model的封装， 
+但是有个问题，虽然失败了，但是返回到index的get页面时，需要带上用户的选择项，所以要修改BuildConsentViewModelAsync的方法，
+如何带上用户的选择项呢，在哪里可以知道用户的选择项呢？InputConsetViewModel呀，所以BuildConsentViewModelAsync添加一个传入参数model，BuildConsentViewModelAsync(model.ReturnUrl, model);
+    public async Task<ConsentViewModel> BuildConsentViewModelAsync(string returnUrl,InputConsetViewModel model=null)//model默认为null，如果model有值，我们可以拿到哪些东西，可以拿到用户选中的东西
+
+如果model不为null，我们如何找到model中的值，并利用呢？
+我们需要找到某一项是否被选中了，并在对应的CreateScopeViewModel时传入bool值。
+ private ScopeViewModel CreateScopeViewModel(IdentityResource identityresource,bool check)//处理单个IdentityResouce
+        {
+            return new ScopeViewModel
+            {
+                Name = identityresource.Name,
+                DisplayName = identityresource.DisplayName,
+                Description = identityresource.Description,
+                Required = identityresource.Required,
+                Checked = check||identityresource.Required,//当你是必须或者选中任一情况下，都设置为true
+                Emphasize = identityresource.Emphasize
+
+            };
+        }
+
+        private ScopeViewModel CreateScopeViewModel(Scope scope,bool check)//处理单个Scope
+        {
+            return new ScopeViewModel
+            {
+                Name = scope.Name,
+                DisplayName = scope.DisplayName,
+                Description = scope.Description,
+                Required = scope.Required,
+                Checked = check||scope.Required,//当你是必须或者选中任一情况下，都设置为true
+                Emphasize = scope.Emphasize
+
+            };
+        }
+然后在调用CreateScopeViewModel的时候，传入bool值
+ private ConsentViewModel CreateConsentViewModel(AuthorizationRequest request, Client client, Resources resources,InputConsetViewModel model
+       )//Resources 与Resource的区别
+        {
+            //获取选中的项，如果为null的话，就初始化一个空的IEnumerable<string> 也可以new一个string 的list
+            var selectedScopes = model.ScopesConsented ?? Enumerable.Empty<string>();
+
+            var vm = new ConsentViewModel();
+            vm.ClientName = client.ClientName;
+            vm.ClientLogoUrl = client.LogoUri;
+            vm.ClientUrl = client.ClientUri;
+            //vm.AllowRememberConsent = client.AllowRememberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同理自动登录咋实现的呢？
+            //vm.RemeberConsent = client.AllowRememberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同理自动登录咋实现的呢？
+            vm.RemeberConsent = model.RemeberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同
+
+
+            vm.IdentityScopes = resources.IdentityResources.Select(i => CreateScopeViewModel(i,selectedScopes.Contains(i.Name)));//遍历所有元素，对每一元素施加function，当然func可以操作 元素，也可以不操作元素，但遍历必须进行的
+
+            vm.ResourceScopes = resources.ApiResources.SelectMany(i => i.Scopes).Select(x => CreateScopeViewModel(x,selectedScopes.Contains(x.Name)));
+            //select list<list<T>>
+            //SelectMany  list < T >
+
+            return vm;
+        }
+
+
+		要点5
+至此修改了BuildConsentViewModelAsync，包括第一次创建model和失败后第二次创建model
+
+
+当没有选中选项的时候，应该有一个提示，继续让我们选择，现在我们没有错误，也应该加一些错误提示，所以我们把验证这块也加上，
+所以完善下ProcessConsentResult类
+ public class ProcessConsentResult
+    {
+        public string RedirectUrl { get; set; }
+        public bool IsRedirect => RedirectUrl != null;//标识，当RedirectUrl不为null的时候，跳转  有啥妙用呢？
+
+        public string ValidationError { get; set; }
+
+        public ConsentViewModel ViewModel { get; set; }
+    }
+
+	调用ValidationError的地方。
+	  if (model.Button == "no")
+            {
+                consentResponse = ConsentResponse.Denied;
+            }
+            else if (model.Button == "yes")
+            {
+                if (model.ScopesConsented != null && model.ScopesConsented.Any())
+                {
+                    consentResponse = new ConsentResponse
+                    {
+                        RememberConsent = model.RemeberConsent,
+                        ScopesConsented = model.ScopesConsented,
+                    };
+                }
+                //如果一项都没有选的情况下，给你一些错误信息,当然我们这里不会出现这种情况，因为默认必选opid
+                result.ValidationError = "请至少选中一个权限";
+            }
+
+
+
+
+
+我们接下来处理下页面，页面要把这些错误提示返回回去。
+先修改index的post处理的 action
+ [HttpPost]
+        public async Task<IActionResult> Index(InputConsetViewModel viewModel)
+        {
+
+            //return View();//这句代码说明当用户什么都没有选的时候，我们还会继续 return index的view，还需要丢一个model  get方法里的一样 
+
+
+            //处理url
+            var result = await _consentService.ProcessConsent(viewModel); //await 有啥问题？
+            if(result.IsRedirect)//当url存在时，IsRedirect有啥妙用，
+            {
+                return Redirect(result.RedirectUrl);
+            }
+
+            //处理错误信息，传递到view中
+            if (!string.IsNullOrEmpty(result.ValidationError))
+            {
+                ModelState.AddModelError("", result.ValidationError);//key对应 对应的项
+            }
+
+            //处理url不存在,此时要返回view（model），但此时的viewmodel不是 get方法的model
+            return View(result.ViewModel);//我们的记录会保存下来，供下次使用
+        }
+
+接下来，在index的页面上，显示错误信息
+        <div class="alert alert-danger">
+                <strong>Error</strong>
+                @*如果有key的话，会显示在对应的key旁边，如果没有key，就显示在all上面*@
+                <div asp-validation-summary="All"></div>
+            </div>
+
+
+目前全部写完了，
+
+
+调试下， 出现错误，依赖注入和 也就是null值问题，也就是忽略了第一次进入index的get页面时，InputConsetViewModel为null的情况
+
+修改CreateConsentViewModel方法
+  private ConsentViewModel CreateConsentViewModel(AuthorizationRequest request, Client client, Resources resources,InputConsetViewModel model
+       )//Resources 与Resource的区别
+        {
+            //获取选中的项，如果为null的话，就初始化一个空的IEnumerable<string> 也可以new一个string 的list
+            var selectedScopes = model?.ScopesConsented ?? Enumerable.Empty<string>();
+            var RemeberConsent= model?.RemeberConsent??true; //model? 如果model有值的话，就执行model.RemeberConsent.  默认勾选此选项
+
+             var vm = new ConsentViewModel();
+            vm.ClientName = client.ClientName;
+            vm.ClientLogoUrl = client.LogoUri;
+            vm.ClientUrl = client.ClientUri;
+            //vm.AllowRememberConsent = client.AllowRememberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同理自动登录咋实现的呢？
+            //vm.RemeberConsent = client.AllowRememberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同理自动登录咋实现的呢？
+            vm.RemeberConsent = model.RemeberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同
+
+
+            vm.IdentityScopes = resources.IdentityResources.Select(i => CreateScopeViewModel(i,selectedScopes.Contains(i.Name)||model==null));//遍历所有元素，对每一元素施加function，当然func可以操作 元素，也可以不操作元素，但遍历必须进行的
+
+            vm.ResourceScopes = resources.ApiResources.SelectMany(i => i.Scopes).Select(x => CreateScopeViewModel(x,selectedScopes.Contains(x.Name)||model==null)); //第一次进入index的get页面时，InputConsetViewModel为null，此时默认全选所有选项
+            //select list<list<T>>
+            //SelectMany  list < T >
+
+            return vm;
+        }
+
+
+
+调试的时候，可以在chrome中，F12，删除html代码和删除标签的选项 也就是修改html了
+
+欠缺 授权取消的时候  mvc要处理这个情况 如何处理

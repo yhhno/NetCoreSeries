@@ -23,6 +23,14 @@
     <div class="col-sm-8">
         <form asp-action="Index">
             <input type="hidden" asp-for="ReturnUrl" />
+
+            <div class="alert alert-danger">
+                <strong>Error</strong>
+                @*如果有key的话，会显示在对应的key旁边，如果没有key，就显示在all上面*@
+                <div asp-validation-summary="All"></div>
+            </div>
+
+
             @if (Model.IdentityScopes.Any())//严谨，如果有就循环遍历输出
             {
                 <div class="panel">

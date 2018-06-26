@@ -19,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using IdentityServer4;//对应services.AddIdentityServer()
 using Microsoft.Extensions.Configuration;
+using MvcCookieAuthSampleAddUI.Services;
 
 namespace MvcCookieAuthSampleAddUI
 {
@@ -47,7 +48,7 @@ namespace MvcCookieAuthSampleAddUI
                 //添加identityResource
                 .AddInMemoryIdentityResources(Config.GetIdentityResources());
 
-            
+
 
             #region old
             ////配置EF
@@ -76,7 +77,7 @@ namespace MvcCookieAuthSampleAddUI
             //    });//配置
             #endregion
 
-
+            services.AddScoped<ConsentService>();
             services.AddMvc();
         }
 
