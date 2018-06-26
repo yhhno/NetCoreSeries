@@ -38,7 +38,7 @@ namespace MvcCookieAuthSampleAddUI.Services
         {
             //获取选中的项，如果为null的话，就初始化一个空的IEnumerable<string> 也可以new一个string 的list
             var selectedScopes = model?.ScopesConsented ?? Enumerable.Empty<string>();
-            var RemeberConsent= model?.RemeberConsent??true; //model? 如果model有值的话，就执行model.RemeberConsent.  默认勾选此选项
+            var remeberConsent= model?.RemeberConsent??true; //model? 如果model有值的话，就执行model.RemeberConsent.  默认勾选此选项
 
              var vm = new ConsentViewModel();
             vm.ClientName = client.ClientName;
@@ -46,7 +46,7 @@ namespace MvcCookieAuthSampleAddUI.Services
             vm.ClientUrl = client.ClientUri;
             //vm.AllowRememberConsent = client.AllowRememberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同理自动登录咋实现的呢？
             //vm.RemeberConsent = client.AllowRememberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同理自动登录咋实现的呢？
-            vm.RemeberConsent = model.RemeberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同
+            vm.RemeberConsent = remeberConsent;//这些都是从请求的url中传过来的，  如果为true时，仅需第一次点授权，之后都是自动授权  那同
 
 
             vm.IdentityScopes = resources.IdentityResources.Select(i => CreateScopeViewModel(i,selectedScopes.Contains(i.Name)||model==null));//遍历所有元素，对每一元素施加function，当然func可以操作 元素，也可以不操作元素，但遍历必须进行的

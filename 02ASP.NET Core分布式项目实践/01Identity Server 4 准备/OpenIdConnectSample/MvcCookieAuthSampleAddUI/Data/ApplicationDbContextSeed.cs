@@ -41,7 +41,7 @@ namespace MvcCookieAuthSampleAddUI.Data
                 };
 
                 
-               var result= await _userManager.CreateAsync(defaultUser, "password");
+               var result= await _userManager.CreateAsync(defaultUser, "123456");
                 if (!result.Succeeded)//如果创建失败，怎么办呢？
                 {
                     throw new Exception("初始默认用户失败，");

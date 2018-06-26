@@ -20,6 +20,10 @@ using Microsoft.Extensions.DependencyInjection;
 using IdentityServer4;//对应services.AddIdentityServer()
 using Microsoft.Extensions.Configuration;
 using MvcCookieAuthSampleAddUI.Services;
+using MvcCookieAuthSampleAddUI.Data;
+using MvcCookieAuthSampleAddUI.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace MvcCookieAuthSampleAddUI
 {
@@ -35,6 +39,30 @@ namespace MvcCookieAuthSampleAddUI
         public void ConfigureServices(IServiceCollection services)
         {
 
+            //配置EF
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));//EF使用SqlServer,并获取连接字符串,也就是获取配置信息
+            });
+
+            //配置Identity
+            services.AddIdentity<ApplicationUser, ApplicationUserRole>()//为啥是这两个参数
+                .AddEntityFrameworkStores<ApplicationDbContext>()//为啥有这步骤
+                .AddDefaultTokenProviders();//这个有啥用
+
+
+             //Identity默认情况下,对密码格式限制非常严格,我们修改下,应该是配置,那肯定是修改option了
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 2;
+            });
+
+
+
+
             //在添加mvc之前 添加 Identitysever
             services.AddIdentityServer()
                 .AddDeveloperSigningCredential()//我们要一个开发的证书
@@ -42,11 +70,14 @@ namespace MvcCookieAuthSampleAddUI
                 //更改Identity server 4配置 
                 .AddInMemoryApiResources(Config.GetResources())
                 .AddInMemoryClients(Config.GetClients())
-                //添加GetTestUsers到配置中区
-                .AddTestUsers(Config.GetTestUsers())
-
                 //添加identityResource
-                .AddInMemoryIdentityResources(Config.GetIdentityResources());
+                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+
+                ////添加GetTestUsers到配置中区  测试的
+                //.AddTestUsers(Config.GetTestUsers());
+
+                //真实的数据库
+                .AddAspNetIdentity<ApplicationUser>();
 
 
 

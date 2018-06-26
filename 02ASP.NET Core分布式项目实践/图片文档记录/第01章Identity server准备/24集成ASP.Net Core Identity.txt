@@ -1,71 +1,246 @@
-1.课程介绍
-这是一个实战的课程
-通过asp.net core高级开发过程中所遇到的
-技术上的问题
-项目管理上的问题
-与产品经理包括整个项目运维的问题。  产品理解的角度
-都会涉及到。
-希望能给大家的职业生涯发展有所帮助
-
-课程目标及面向群体
-1.进一步理解asp.net core 授权认证框架，mvc管道   
-这两部分比较难，所以本课程会更深入的讲解和做一些实践开发，在我们的项目开发中也会用到
-2.掌握Oauth2,结合Identity Server4实现OAuth2和OpenID Connect Server  
-授权认证的开源实现，我们要理解Oauth2的四种流程，以及结合Identity Server4实现OAuth2和OpenID Connect Server  也就是我们要做一个单点登录
-3.掌握asp.net core 与Redis MongoDB RabitMQ mySql 配合使用
-我们会在整个项目过程中 接触到Redis MongoDB RabitMQ mySql这些技术在asp.net core中使用
-4.理解DDD，学会在项目中进行领域分析与建模，并使用CQRS进行项目开发
-我们会在这个项目中，引入DDD开发，ddd是面向领域驱动设计，所以我们也会在这个过程当中，一起来做领域分析与建模，并使用CQRS进行项目开发
-5.掌握Docker，并能够利用Docker+GitlabCI/CD 快速部署整套测试环境
-我们在测试环境，用docker和gitlab 来做测试环境的持续的发布和部署
-
-面向群体
+问题1：模仿十分钟速成课
+问题2： 模拟的好处
 
 
 
+上节课我们把consent这块完成了 我们再次启动来看下
+如果是启动两个项目的话，我还是建议用命令行方式来启动  效率会高些
+dotnet run
+
+本节课在原来代码的基础上，集成 identity
+修改startup
+     //配置EF
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));//EF使用SqlServer,并获取连接字符串,也就是获取配置信息
+            });
+
+            //配置Identity
+            services.AddIdentity<ApplicationUser, ApplicationUserRole>()//为啥是这两个参数
+                .AddEntityFrameworkStores<ApplicationDbContext>()//为啥有这步骤
+                .AddDefaultTokenProviders();//这个有啥用
+
+
+添加IdentityServer4.AspNetIdentity包
+修改配置
+      //在添加mvc之前 添加 Identitysever
+            services.AddIdentityServer()
+                .AddDeveloperSigningCredential()//我们要一个开发的证书
+
+                //更改Identity server 4配置 
+                .AddInMemoryApiResources(Config.GetResources())
+                .AddInMemoryClients(Config.GetClients())
+                //添加identityResource
+                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+
+                ////添加GetTestUsers到配置中区  测试的
+                //.AddTestUsers(Config.GetTestUsers());
+
+                //真实的数据库
+                .AddAspNetIdentity<ApplicationUser>();
+
+
+此时配置完成
+修改accountController的逻辑，以前用的TestUserstore
+修改构造函数
+    private UserManager<ApplicationUser> _userManager;//与user的管理有关, 增删改查
+        private SignInManager<ApplicationUser> _signInManager;//与登录的管理有关,
+        private IIdentityServerInteractionService _interaction;
+
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IIdentityServerInteractionService interaction)//通过依赖注入,获取实例
+        {
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _interaction = interaction;
+        }
+
+修改register action
+
+
+ [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel viewModel, string returnUrl = null)
+        {
+
+            if (ModelState.IsValid) //model验证成功,此处是EF绑定的验证通过,内部处理还可能有错误
+            {
+
+                //有了viewmodel我们就可以创建我们的用户
+                var identityUser = new ApplicationUser
+                {
+                    Email = viewModel.Email,
+                    UserName = viewModel.Email,
+                    NormalizedUserName = viewModel.Email
+                };
+
+                //因为CreateAsync为异步方法,所有要用await来接收, 所有Register也要修改为异步方法
+                var identityResult = await _userManager.CreateAsync(identityUser, viewModel.Password);
+                if (identityResult.Succeeded)//创建成功
+                {
+                    //_signInManager.SignInAsync是这个HttpContext.SignInAsync()方法的封装
+                    await _signInManager.SignInAsync(identityUser, new AuthenticationProperties { IsPersistent = true });
+                    //return RedirectToAction("Index", "Home");
+                    return RedirectToLocal(returnUrl);//ReturnUrl 需要做判断, 存在多个地方,所以 抽象个私有方法, IActionResult 可以多次传递
+                }
+                else//创建失败,此处是不符合Identity的密码规则.
+                {
+                    AddErrors(identityResult);
+                }
+
+            }
+
+            return View();//model验证不成功,,modelstate中的错误信息显示在view中
+        }
+
+修改login  action
+
+使用_userManager和_signInManager来做用户的管理和登录 工作。 提供的封装的方法
+   [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel viewModel,string returnUrl=null)
+        {
+            if (ModelState.IsValid) //model验证成功 此处是EF绑定的验证通过,内部处理还可能有错误
+            {
+                //校验用户是否存在
+                var user = await _userManager.FindByEmailAsync(viewModel.Email);
+                if (user == null)//用户不存在
+                {
+
+                    ModelState.AddModelError(nameof(viewModel.Email), "username not exists");
+                }
+                else
+                {
+                    if (await _userManager.CheckPasswordAsync(user, viewModel.Password))//密码正确
+                    {
+                        //处理登录成功的逻辑
+
+                        //记住功能
+                        var props = new AuthenticationProperties
+                        {
+                            IsPersistent = true,
+                            ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromMinutes(30))
+                        };
+
+                        await _signInManager.SignInAsync(user, props);
+
+                        if (_interaction.IsValidReturnUrl(returnUrl))
+                        {
+                            return RedirectToLocal(returnUrl);//ReturnUrl 需要做判断, 存在多个地方,所以 抽象个私有方法, IActionResult 可以多次传递
+                        }
+                        //方式一
+                        //else
+                        //{
+                        //    return Redirect("~/");
+                        //}
+                        
+                        //方式二
+                        return Redirect("~/");
+                    }
+                    ////方式一
+                    //else//密码不正确 也就是登录不成功的逻辑
+                    //{
+                    //    ModelState.AddModelError(nameof(viewModel.Password), "wrong password");
+                    //}
+
+                    //方式二
+                    ModelState.AddModelError(nameof(viewModel.Password), "wrong password");
+                }
+
+                
+                
+            }
+            return View(viewModel);//model验证不成功,,modelstate中的错误信息显示在view中
+        }
 
 
 
-2最小可行化产品MVP
-我们来看下产品开发的过程。
-首先我们要知道一个软件是如何被生产出来的，然后再参与到生产当中
-我们会给大家讲两点
-1.产品MVP的概念
-2.两种软件开发模式 一个是瀑布（传统的），一个是敏捷
 
-产品MVP概念 最小可行化产品
-是一种避免开发出客户并不真正需要的产品的开发策略。
-不知道大家会不会有这样的经历，你们开发出来的产品，不是客户想要的，在早期开发中，我们可能还接触不到这一点，刚作为一个程序员，我们只是写写代码就可以了，等你越往高级的程度去过渡，你就要开始思考下，你所开发的东西，是否能真正满足用户的需求，这时候我们就要思考用户的需求到底是什么？我们需要开发的是什么样的一个东西，在一些失败的经验当中，有一些产品往往被设计的过渡复杂，以至于导致开发周期特别的长
-比如说一个产品 一个大的功能要经历一个月 两个月 甚至半年 一年的时间去开发的话，往往在开发完成之后，这个功能可能就跟用户想象的差得比较远，甚至技术与需求早就发生了变化，特别是在互联网公司，节奏要求更快，而且用户的想法也会变得很快
-
-
-所以产品mvp就是：
-快速地构建出符合产品预期功能的最小功能集合，我们只开发一部分功能 然后通过不断的迭代来改进这个产品。
-是让开发团队用最小的代价实现一个产品，同时去了解和验证这个产品有没有满足用户需求， 以此最大程度上了解和验证对用户问题的解决程度。
-
-对于mvp的理解
-开发一个汽车：
-错误的理解：
-先做一块的零件，在做一块的零件，最后拼成一辆车
-正确的理解：
-而是我们真正理解用户的需求是我们需要帮助他出行，当然我们不是要做一个滴滴打车软件，而是做一个工具，这个工具是实用性质的，最开始是滑板，同样可以让的出行变得方便，然后变成自行车，后面是摩托车，最后是变成四个轮子的车，最终我们的目的是让用户越来越爽，可以坐在这里很轻松，很快的到达某个地点，这个就是四个迭代的版本，每个版本都满足了用户的需求，只是在每个版本的基础之上，这个需求会让用户的满足程度更高，
-所以我们需要特别注意的一点就是 在最小化和可用之间找到一个平衡点，我们既不是要最大化的可用，把所有的功能都加进来，也不是说越少越好，开发越少的功能越好，在每一个版本推出的时候，我们至少要做出来一些对用户有用的东西，能够满足他需求的东西
-
-我们再看下完整的过程。也就是我们所说的迭代的过程，它本身在一开始最早的时候，我们是去做一个实验和构建，有一个想法，然后呢，我们在开发出来之后，其实是需要去测量，我们需要拿到用户的反馈，去进行一些学习和分析，因为往往，在最开始 一开始去做一件事情的时候，包括我们这一次做视频这样的一个产品，我们也并不是非常了解到底我们需要的是什么样的一个东西，如果我们只是按照自己脑子里的所想的去YY的话，可能做出来的东西，并没有那么好的去满足用户的需求，也就是说视频可能做得不是你最终想要的所有的东西，在我们测量的过程当中，发布一版之后，去拿到反馈之后，再去学习用户的一些想法和过程，不断的去改进我们的产品，在这个过程当中 我们是要以用户问题为中心，而不是以解决方案为中心  我们最终是去解决问题， 而不是我推出的就是这样的一个东西，这样的一个解决方案，然后呢  用户反馈的需求 进行改进,逐步改进我们产品的设计和实现,针对我们做得这个视频项目,大家也可以在群里去提意见和反馈,包括你想要的一些东西,我们这一次围绕整体的目标,去
-不断的把我们这个视频项目 内容做到更全更完善,以帮助大家实现从中高级开发人员进阶的过程,
-
-我们再回顾一下
-1.以用户问题为中心,而是以你要推出的东西为中心,因为我们真正要解决的是问题.
-2.不断的去迭代,去反馈,改进我们的产品
-3.每一个迭代的过程中,所推出来用户看到的东西,都是有用的,
-所以在这个过程中,我希望大家也能够给我积极的提供一些反馈和意见,然后这个视频项目内容的改善,也离不开你们的帮助,希望我们的这个视频可以帮助到未来所有想高级asp.net core开发人员过渡这一阶段的同伴
-
-以用户问题为中心，而不是以解决方案为中心 
-首先着眼于基本的客户需求，通过客户反馈，逐步修正产品设计和实现
-在各个迭代版本中,做出来的产品始终是可为客户所用的产品
+两种方式的区别
+//方式一
+//else
+//{
+//    return Redirect("~/");
+//}
+                        
+//方式二
+return Redirect("~/");
 
 
+是否记住功能
+
+  public class LoginViewModel
+    {
+        [Required]
+        public string Email { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+        public bool RemeberMe { get; set; }
+
+       
+    }
+
+修改login  action中的 记住功能
+//记住功能
+AuthenticationProperties props = null;
+if (viewModel.RemeberMe)
+{
+        props = new AuthenticationProperties
+    {
+        IsPersistent = true,
+        ExpiresUtc = DateTimeOffset.UtcNow.Add(TimeSpan.FromMinutes(30))
+    };
+}
+
+
+最后check下 view 
+
+
+修改program。cs文件
+
+      public static void Main(string[] args)
+        {
+            //启动后第一件事情做，，或者启动之前先做 ，两个时候任意都可以，先把数据库跑一遍。
+            BuildWebHost(args)
+                .MigrateDbContext<ApplicationDbContext>((context, services) =>
+                {
+                    //我们在这里做我们的初始化
+                    new ApplicationDbContextSeed().SeedAsync(context, services)
+                    .Wait();//异步方法的同步执行。
+                })
+                .Run();
+        }
+
+
+编译下，然后启动，首次启动会自动创建默认用户
+
+出现了问题 identity默认的密码策略比较复杂 需要修改
+   //配置EF
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));//EF使用SqlServer,并获取连接字符串,也就是获取配置信息
+            });
+
+            //配置Identity
+            services.AddIdentity<ApplicationUser, ApplicationUserRole>()//为啥是这两个参数
+                .AddEntityFrameworkStores<ApplicationDbContext>()//为啥有这步骤
+                .AddDefaultTokenProviders();//这个有啥用
+
+
+             //Identity默认情况下,对密码格式限制非常严格,我们修改下,应该是配置,那肯定是修改option了
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 2;
+            });
 
 
 
-task3 两种软件开发模式 : 瀑布与敏捷
+用生成的用户名和密码登录下
+
+
+成功的话，就完成了替换testuserstore为asp.net core identity
+
+
+另外我们的client和apiresource还是从config中读取的，也属于测试数据，非真实的数据库

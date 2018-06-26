@@ -24,11 +24,19 @@
         <form asp-action="Index">
             <input type="hidden" asp-for="ReturnUrl" />
 
-            <div class="alert alert-danger">
-                <strong>Error</strong>
-                @*如果有key的话，会显示在对应的key旁边，如果没有key，就显示在all上面*@
-                <div asp-validation-summary="All"></div>
-            </div>
+           @*加个逻辑判断，当modelstate不为null的时候显示错误信息*@
+            @if (!ViewContext.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    @*strong的显示与否，需要我们自己控制，也就是加个if判断*@
+                    <strong>Error</strong>
+
+                    @*mvc本身会处理这下面的div的内容*@
+                    @*如果有key的话，会显示在对应的key旁边，如果没有key，就显示在all上面*@
+                    <div asp-validation-summary="All"></div>
+                </div>
+
+            }
 
 
             @if (Model.IdentityScopes.Any())//严谨，如果有就循环遍历输出
@@ -64,9 +72,9 @@
                         {
                             @Html.Partial("_ScopeListitem", scope)
                         }
-                     
+
                     </ul>
-                    </div>
+                </div>
             }
 
 
@@ -78,20 +86,20 @@
             </div>
 
 
-                    <div>
-                        <button name="button" value="yes" class="btn btn-primary"  autofocus>同意</button>
-                        <button name="button" value="no" >取消</button>
-                        @if (!string.IsNullOrEmpty(Model.ClientUrl))
-                        {
-                            <a href="@Model.ClientUrl" class="pull-right btn btn-default">
-                                <span class="glyphicon glyphicon-info-sign"></span>
-                                <strong>@Model.ClientUrl</strong>
-                            </a>
+            <div>
+                <button name="button" value="yes" class="btn btn-primary" autofocus>同意</button>
+                <button name="button" value="no">取消</button>
+                @if (!string.IsNullOrEmpty(Model.ClientUrl))
+                {
+                    <a href="@Model.ClientUrl" class="pull-right btn btn-default">
+                        <span class="glyphicon glyphicon-info-sign"></span>
+                        <strong>@Model.ClientUrl</strong>
+                    </a>
 
-                        }
-                    </div>
+                }
+            </div>
 
-            </form>
+        </form>
     </div>
 </div>
 
