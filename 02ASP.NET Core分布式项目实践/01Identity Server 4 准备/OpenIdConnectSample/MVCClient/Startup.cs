@@ -42,7 +42,7 @@ namespace MVCClient
                 options.SignInScheme = "Cookies";//mvc客户端使用网站这块的登录了
                 options.Authority = "http://localhost:5000"; //授权服务器地址
                 options.RequireHttpsMetadata = false;//我们也没有证书啥的
-                options.ResponseType = OpenIdConnectResponseType.CodeIdToken;//有啥意义
+                options.ResponseType = OpenIdConnectResponseType.CodeIdToken;//有啥意义  设置返回信息
 
                 //配置下客户端
                 options.ClientId = "mvc";

@@ -264,7 +264,7 @@ aspnetcore2.0 对opid	标准 做了一些更改，早期是不要加这些东西
 
             });
 
-profileservice是暴露给我们了一个地址		http://localhost:5000/connent/userinfo
+profileservice是暴露给我们了一个地址		http://localhost:5000/connent/userinfo   但这不是获取用户信息的api，只是给客户端调用的，
 
 
 目前的做法是它是发起了另外一个请求，到5000的端口下http://localhost:5000/connent/userinfo 去获取用户的claims
