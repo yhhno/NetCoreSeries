@@ -36,7 +36,7 @@ namespace MvcCookieAuthSampleAddUI
                     ClientUri="http://localhost:5001",
                     LogoUri="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1524821554&di=5513cf737bfaec6739833409f485d080&imgtype=jpg&er=1&src=http%3A%2F%2Fjbcdn2.b0.upaiyun.com%2F2016%2F05%2Fb69607c7bb75c609307d5218a825cbd9.png",
                     AllowRememberConsent=true,
-                
+
 
                     AllowedGrantTypes=GrantTypes.Implicit,//允许访问的方式
                     ClientSecrets =
@@ -51,7 +51,7 @@ namespace MvcCookieAuthSampleAddUI
                     //当它退出的时候，会返回到这个地址
                     PostLogoutRedirectUris={"http://localhost:5001/signout-callback-oidc" },
 
-
+                    AlwaysIncludeUserClaimsInIdToken=true,//claims包括在IDtoken中
                     //这个地方就是用户来点那个按钮，你是不是同意我授权,,
                     //好奇如何实现的呢 
                     RequireConsent=true,

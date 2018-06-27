@@ -24,6 +24,7 @@ using MvcCookieAuthSampleAddUI.Data;
 using MvcCookieAuthSampleAddUI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using IdentityServer4.Services; //IProfileService
 
 namespace MvcCookieAuthSampleAddUI
 {
@@ -77,7 +78,9 @@ namespace MvcCookieAuthSampleAddUI
                 //.AddTestUsers(Config.GetTestUsers());
 
                 //真实的数据库
-                .AddAspNetIdentity<ApplicationUser>();
+                .AddAspNetIdentity<ApplicationUser>()
+                .Services.AddScoped<IProfileService, ProfileService>();//添加依赖注入
+            
 
 
 
@@ -108,7 +111,8 @@ namespace MvcCookieAuthSampleAddUI
             //    });//配置
             #endregion
 
-            services.AddScoped<ConsentService>();
+            services.AddScoped<ConsentService>();//自定义的依赖注入
+            //services.AddScoped<ProfileService>();//非自定义的依赖注入 这样写就不对了额
             services.AddMvc();
         }
 

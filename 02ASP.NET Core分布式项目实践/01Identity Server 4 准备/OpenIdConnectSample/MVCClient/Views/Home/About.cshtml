@@ -1,4 +1,6 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Authentication;
+@*应该是aspnetcore本身有一套抽象，显示留给了第三方，，也就是有了扩展能力*@
+@{
     ViewData["Title"] = "About";
 }
 <h2>@ViewData["Title"]</h2>
@@ -7,9 +9,15 @@
 <p>
     <dl>
         @foreach (var claim in User.Claims)
-    {
-        <dt>@claim.Type</dt>
-        <dt>@claim.Value</dt>
-}
+        {
+            <dt>@claim.Type</dt>
+            <dt>@claim.Value</dt>
+        }
+        <dt>Access Token</dt>
+        <dd>@await ViewContext.HttpContext.GetTokenAsync("access_token")</dd>
+        <dt>Reflesh Token</dt>
+        <dd>@await ViewContext.HttpContext.GetTokenAsync("refresh_token")</dd>
+        <dt>Id Token</dt>
+        <dd>@await ViewContext.HttpContext.GetTokenAsync("id_token")</dd>
     </dl>
 </p>

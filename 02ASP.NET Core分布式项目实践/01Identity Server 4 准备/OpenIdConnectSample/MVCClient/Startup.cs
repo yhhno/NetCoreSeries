@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 
 using Microsoft.AspNetCore.Authentication;//对应openidconnect
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;//OpenIdConnectResponseType
 
 namespace MVCClient
 {
@@ -41,11 +42,24 @@ namespace MVCClient
                 options.SignInScheme = "Cookies";//mvc客户端使用网站这块的登录了
                 options.Authority = "http://localhost:5000"; //授权服务器地址
                 options.RequireHttpsMetadata = false;//我们也没有证书啥的
+                options.ResponseType = OpenIdConnectResponseType.CodeIdToken;//有啥意义
 
                 //配置下客户端
                 options.ClientId = "mvc";
                 options.ClientSecret = "secret";
                 options.SaveTokens = true;//是不是保存cookies
+
+
+                options.GetClaimsFromUserInfoEndpoint = true;//它是发起了另外一个请求，到5000的端口下http://localhost:5000/connent/userinfo 去获取用户的claims
+                options.ClaimActions.MapJsonKey("sub", "sub");
+                options.ClaimActions.MapJsonKey("preferred_username", "preferred_username");
+                options.ClaimActions.MapJsonKey("avatar", "avatar");
+                options.ClaimActions.MapCustomJson("role", jobj=>jobj["role"].ToString());
+
+                options.Scope.Add("offline_access");
+                options.Scope.Add("opendi");
+                options.Scope.Add("profile");
+
             });
 
         }
