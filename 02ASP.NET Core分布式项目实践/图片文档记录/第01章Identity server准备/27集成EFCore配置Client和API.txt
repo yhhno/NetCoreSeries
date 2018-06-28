@@ -1,71 +1,167 @@
-1.课程介绍
-这是一个实战的课程
-通过asp.net core高级开发过程中所遇到的
-技术上的问题
-项目管理上的问题
-与产品经理包括整个项目运维的问题。  产品理解的角度
-都会涉及到。
-希望能给大家的职业生涯发展有所帮助
+开始时间6：00
 
-课程目标及面向群体
-1.进一步理解asp.net core 授权认证框架，mvc管道   
-这两部分比较难，所以本课程会更深入的讲解和做一些实践开发，在我们的项目开发中也会用到
-2.掌握Oauth2,结合Identity Server4实现OAuth2和OpenID Connect Server  
-授权认证的开源实现，我们要理解Oauth2的四种流程，以及结合Identity Server4实现OAuth2和OpenID Connect Server  也就是我们要做一个单点登录
-3.掌握asp.net core 与Redis MongoDB RabitMQ mySql 配合使用
-我们会在整个项目过程中 接触到Redis MongoDB RabitMQ mySql这些技术在asp.net core中使用
-4.理解DDD，学会在项目中进行领域分析与建模，并使用CQRS进行项目开发
-我们会在这个项目中，引入DDD开发，ddd是面向领域驱动设计，所以我们也会在这个过程当中，一起来做领域分析与建模，并使用CQRS进行项目开发
-5.掌握Docker，并能够利用Docker+GitlabCI/CD 快速部署整套测试环境
-我们在测试环境，用docker和gitlab 来做测试环境的持续的发布和部署
+学习能力当然包括纠错能力。
+十分钟速成课程：前因后果，发展历程，要点生动形象，逻辑过程清晰，结果是理解了并在心中有数， 相对应的是，前因后果不明，底层不清楚，原理不清楚，直接拿来就用，不理解啊，看的文章，逻辑不清晰，表述有问题，看了后晕头转向，乱七八糟，只是死记硬背，毫无理解，在心中也毫无印象。 
+如果没有类似十分钟速成课程的东西，自己去学，该怎么办呢？ 怎么做才能做到类似于它的效果呢？ 自己摘取信息？ 代入感？以教代学？
 
-面向群体
+问题1： 为啥有返工呢，因为有的东西因为陌生等原因，需要时间去理解。
+问题2： 出现问题如何正确的去做? 有逻辑的去分析  当出现PersistedGrantDbContext 没有找到的错误时，该怎么去排查， 一个劲的去想名字错误了，只想名字错误了
+问题3：不同的Context，比如PersistedGrantDbContext，它就属于不同的数据库，也就是说，之前只局限于在一个数据库一个context中，进行操作，现在是多个，存在思维局限问题？
+问题4：卡壳一般是什么原因造成的，1，基础知识欠缺。2，运用过程不清晰，也就是业务不清晰  3，接触一个事物属于一个比较高层次的抽象，底层不了解导致的内心恐慌，进而不知所措，
+
+问题5：看到复杂的东西，顿时心里有点蒙
+问题6.当听到在内存中模拟数据，蒙，当用完模拟数据听到要走数据，也蒙， 咋回事呢？ 原因1，identityserver4太复杂了，没搞清楚，就去用的时候，看到啥都是蒙的，因为知道的太少，看到啥 听到啥，听到要去做啥都蒙，那怎么办呢？ 原因2：有可能有一开始就想要全面理解的预期，但现实没有符合预期，就蒙了，也就是以啥都不知道去做很复杂的东西，当然没有底气了。  =》好的方法是不要多想，看到一步理解一步，每一步都走的踏实，降低预期。 蒙就是失去理智分析，裹足不前，消极情绪，不可取，
 
 
+到这里我们基本把oidc和oauth  identityserver4 使用基本上都讲了。 还有关于授权码过期 client apiresource 等还没涉及到 ， 自己看文档，去学习能不能有这效果。
+
+本节要把client apiresource identityresource切换到数据库， 我们用EF 现在sqlserver和mysql区别不是很大，只需要主要写sql时的一些细节。
+
+添加IdentityServer4.EntityFramework 包， 你看看，IdentityServer4肯定预留了接口，然后用ef实现其底层数据库操作。
+这里会有两个EF dbcontext，一个是我们的configration的context，一个是我们的 会保存一些授权的信息，token的信息
 
 
+配置configration的context
 
 
-2最小可行化产品MVP
-我们来看下产品开发的过程。
-首先我们要知道一个软件是如何被生产出来的，然后再参与到生产当中
-我们会给大家讲两点
-1.产品MVP的概念
-2.两种软件开发模式 一个是瀑布（传统的），一个是敏捷
+执行migration 方式一
+//启动后第一件事情做，，或者启动之前先做 ，两个时候任意都可以，先把数据库跑一遍。
+            BuildWebHost(args)
+                .MigrateDbContext<ApplicationDbContext>((context, services) =>
+                {
+                    //我们在这里做我们的初始化
+                    new ApplicationDbContextSeed().SeedAsync(context, services)
+                    .Wait();//异步方法的同步执行。
+                })
+                .Run();
+执行migration 方式二
 
-产品MVP概念 最小可行化产品
-是一种避免开发出客户并不真正需要的产品的开发策略。
-不知道大家会不会有这样的经历，你们开发出来的产品，不是客户想要的，在早期开发中，我们可能还接触不到这一点，刚作为一个程序员，我们只是写写代码就可以了，等你越往高级的程度去过渡，你就要开始思考下，你所开发的东西，是否能真正满足用户的需求，这时候我们就要思考用户的需求到底是什么？我们需要开发的是什么样的一个东西，在一些失败的经验当中，有一些产品往往被设计的过渡复杂，以至于导致开发周期特别的长
-比如说一个产品 一个大的功能要经历一个月 两个月 甚至半年 一年的时间去开发的话，往往在开发完成之后，这个功能可能就跟用户想象的差得比较远，甚至技术与需求早就发生了变化，特别是在互联网公司，节奏要求更快，而且用户的想法也会变得很快
-
-
-所以产品mvp就是：
-快速地构建出符合产品预期功能的最小功能集合，我们只开发一部分功能 然后通过不断的迭代来改进这个产品。
-是让开发团队用最小的代价实现一个产品，同时去了解和验证这个产品有没有满足用户需求， 以此最大程度上了解和验证对用户问题的解决程度。
-
-对于mvp的理解
-开发一个汽车：
-错误的理解：
-先做一块的零件，在做一块的零件，最后拼成一辆车
-正确的理解：
-而是我们真正理解用户的需求是我们需要帮助他出行，当然我们不是要做一个滴滴打车软件，而是做一个工具，这个工具是实用性质的，最开始是滑板，同样可以让的出行变得方便，然后变成自行车，后面是摩托车，最后是变成四个轮子的车，最终我们的目的是让用户越来越爽，可以坐在这里很轻松，很快的到达某个地点，这个就是四个迭代的版本，每个版本都满足了用户的需求，只是在每个版本的基础之上，这个需求会让用户的满足程度更高，
-所以我们需要特别注意的一点就是 在最小化和可用之间找到一个平衡点，我们既不是要最大化的可用，把所有的功能都加进来，也不是说越少越好，开发越少的功能越好，在每一个版本推出的时候，我们至少要做出来一些对用户有用的东西，能够满足他需求的东西
-
-我们再看下完整的过程。也就是我们所说的迭代的过程，它本身在一开始最早的时候，我们是去做一个实验和构建，有一个想法，然后呢，我们在开发出来之后，其实是需要去测量，我们需要拿到用户的反馈，去进行一些学习和分析，因为往往，在最开始 一开始去做一件事情的时候，包括我们这一次做视频这样的一个产品，我们也并不是非常了解到底我们需要的是什么样的一个东西，如果我们只是按照自己脑子里的所想的去YY的话，可能做出来的东西，并没有那么好的去满足用户的需求，也就是说视频可能做得不是你最终想要的所有的东西，在我们测量的过程当中，发布一版之后，去拿到反馈之后，再去学习用户的一些想法和过程，不断的去改进我们的产品，在这个过程当中 我们是要以用户问题为中心，而不是以解决方案为中心  我们最终是去解决问题， 而不是我推出的就是这样的一个东西，这样的一个解决方案，然后呢  用户反馈的需求 进行改进,逐步改进我们产品的设计和实现,针对我们做得这个视频项目,大家也可以在群里去提意见和反馈,包括你想要的一些东西,我们这一次围绕整体的目标,去
-不断的把我们这个视频项目 内容做到更全更完善,以帮助大家实现从中高级开发人员进阶的过程,
-
-我们再回顾一下
-1.以用户问题为中心,而是以你要推出的东西为中心,因为我们真正要解决的是问题.
-2.不断的去迭代,去反馈,改进我们的产品
-3.每一个迭代的过程中,所推出来用户看到的东西,都是有用的,
-所以在这个过程中,我希望大家也能够给我积极的提供一些反馈和意见,然后这个视频项目内容的改善,也离不开你们的帮助,希望我们的这个视频可以帮助到未来所有想高级asp.net core开发人员过渡这一阶段的同伴
-
-以用户问题为中心，而不是以解决方案为中心 
-首先着眼于基本的客户需求，通过客户反馈，逐步修正产品设计和实现
-在各个迭代版本中,做出来的产品始终是可为客户所用的产品
+  //配置configration的ef context 初始化数据库
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = builder =>
+                    {
+                        builder.UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=MVCEFIdentity;Trusted_Connection=True;MultipleActiveResultSets=true", sql => sql.MigrationsAssembly());//sql.MigrationsAssembly() 就是当有新的migration，就执行更新
+                    };
+                })
 
 
 
+完整代码
+     //配置configration的ef context 初始化数据库
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = builder =>
+                    {
+                        builder.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migartionAssembly);//sql.MigrationsAssembly() 就是当有新的migration，就执行更新
+                    };
+                })
+至此完成了对configrationstore的配置
+
+  
+然后还有一个operationstore 配置和configrationstore配置一样，这样其实有两套表，，一套是用来存储我们的clients scope等一些信息，  operation这套表是用来存储我们的token，grants 就是给客户端授权 行为上 操作上的一些信息 
+   //Operation context 初始化数据库
+                .AddConfigurationStore(options =>
+                {
+                    options.ConfigureDbContext = builder =>
+                    {
+                        builder.UseSqlServer(connectionString, sql => sql.MigrationsAssembly(migartionAssembly));//sql.MigrationsAssembly() 就是当有新的migration，就执行更新
+                    };
+                })
+Operation context和configration context 是在同一个数据库上的不同表，分属于不同的context。 比如PersistedGrantDbContext，他肯定有对应的model，migration命令可以识别出来。
 
 
-task3 两种软件开发模式 : 瀑布与敏捷
+删除的之前的内存中的 client等其他的配置。 
+
+
+我们的configrationstore 和operationstore通过ef core加进来了，，接下来我们呢要创建下数据库 也就是数据库的初始化
+Add-Migration initConfiguration -Context ConfigurationDbContext -OutputDir Data/Migrations/IdentityServer/ConfigurationDb 我们先让人出现在 OutputDir
+这个命令会帮我们把第一次的migration添加过来， 也就是包括创建数据库，这些信息
+
+
+Add-Migration initOperation -Context PersistedGrantDbContext -OutputDir Data/Migrations/IdentityServer/PersistedGrantDb
+问题3：
+不同的Context，比如PersistedGrantDbContext，它就属于不同的数据库，也就是说，之前只局限于在一个数据库一个context中，进行操作，现在是多个，存在思维局限问题？
+
+因为identityserver4 本身就有PersistedGrantDbContext和ConfigurationDbContext 两个东西，我们只是配置好，就可以使用了
+
+Update-Database -Context ConfigurationDbContext
+问题2： 当出现PersistedGrantDbContext 没有找到的错误时，该怎么去排查， 一个劲的去想名字错误了，只想名字错误了
+Update-Database -Context PersistedGrantDbContext
+
+至此数据库配置完成，并成功生效。
+
+至此我们还没有client，原先我们的client是通过config类来添加的，所以现在我们也要需要添加client，可以加一个初始化的方法来添加client，因为我们现在还有UI，有了UI之后，就可以通过UI来做添加client的事情和其他的一些信息，在没有的情况下，我们只能通过初始化方法来代码手工添加
+
+在startup类中，添加一个InitIdentityServerDataBase()方法，
+这里做的会跟我们ApplicationDbContextSeed类的SeedAsync方法有点像 
+添加一个参数 IApplicationBuilder app InitIdentityServerDataBase(IApplicationBuilder app)
+从app中获取一个IServiceProvider,来createScope，在此Scope下，所有的实例都是用完后销毁，
+scope的依赖注入来获取identityserver4中的context的实例，比如ConfigurationContext，获取后添加client，apiresource等
+
+ public void InitIdentityServerDataBase(IApplicationBuilder app)
+        {
+            using (var scope= app.ApplicationServices.CreateScope())
+            {
+                scope.ServiceProvider.GetRequiredService<PersistedGrantDbContext>().Database.Migrate();//执行PersistedGrantDbContext的migrate方法，因为不需要用PersistedGrantDbContext的实例来操作，所以没有赋值给一个变量
+                var configurationDbContext = scope.ServiceProvider.GetRequiredService<ConfigurationDbContext>();//获取ConfigurationDbContext的实例，来进行数据库操作，也就是添加client等
+
+                //下面的代码，说明client和apiresoource和identityresources等都全部走数据库，非内存
+                if(!configurationDbContext.Clients.Any())
+                {
+                    foreach (var client in Config.GetClients())//数据源为内存中的client集合
+                    {
+                        configurationDbContext.Clients.Add(client.ToEntity());//需要把client类型转化为IdentityServer4.EntityFramework.Entities.Client
+                    }
+                    configurationDbContext.SaveChanges();
+                }
+                if (!configurationDbContext.ApiResources.Any())
+                {
+                    foreach (var apiResource in Config.GetResources())//数据源为内存中的apiresource集合
+                    {
+                        configurationDbContext.ApiResources.Add(apiResource.ToEntity());//需要把apiresource类型转化为IdentityServer4.EntityFramework.Entities.ApiResource
+                    }
+                    configurationDbContext.SaveChanges();
+                }
+                if (!configurationDbContext.IdentityResources.Any())
+                {
+                    foreach (var identityResource in Config.GetIdentityResources())//数据源为内存中的IdentityResource集合
+                    {
+                        configurationDbContext.IdentityResources.Add(identityResource.ToEntity());//需要把client类型转化为IdentityServer4.EntityFramework.Entities.IdentityResource
+                    }
+                    configurationDbContext.SaveChanges();
+                }
+
+            }
+        }
+
+
+
+然后调用InitIdentityServerDataBase 方法
+
+ app.UseStaticFiles();
+
+            app.UseIdentityServer();
+
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Home}/{action=Index}/{id?}");
+            });
+
+            InitIdentityServerDataBase(app);
+
+它就会在每次启动的时候，去检查我们的数据库，判断是否执行这个方法执行这个方法
+
+
+编译下，运行server端 运行client端  client可以登录，登录成功后，可以返回用户信息，说明一切信息不是模拟了，都存在数据库了
+
+可以想象下，接下来的事情就很简单了，通过给系统加UI，加UI之后呢，通过ConfigurationContext，添加client，apiresource，identityresource等  
+大家可以去思考下如果你要做一个通过UI来配置的权限系统，你会怎么样来做 
+
+当调试出错时  错误提示 GrantTypes不对，也就是客户端请求的方式和允许的方式不对，想到修改server端代码 AllowedGrantTypes=GrantTypes.Hybrid,//允许访问的方式，但修改了没有效果，想到修改没有起到作用，因为修改实体不会更新到数据库， 然后就修改数据库， 至此发现一个问题，配置信息不能修改。只能到数据库中修改
+apiresource的请求也发生了错误。 修改下就完事了
+
+
+问题6.当听到在内存中模拟数据，蒙，当用完模拟数据听到要走数据，也蒙， 咋回事呢？ 原因1，identityserver4太复杂了，没搞清楚，就去用的时候，看到啥都是蒙的，因为知道的太少，看到啥 听到啥，听到要去做啥都蒙，那怎么办呢？ 原因2：有可能有一开始就想要全面理解的预期，但现实没有符合预期，就蒙了，也就是以啥都不知道去做很复杂的东西，当然没有底气了。  =》好的方法是不要多想，看到一步理解一步，每一步都走的踏实，降低预期。 蒙就是失去理智分析，裹足不前，消极情绪，不可取，

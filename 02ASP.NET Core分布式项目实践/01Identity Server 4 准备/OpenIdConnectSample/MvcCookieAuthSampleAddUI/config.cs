@@ -38,7 +38,7 @@ namespace MvcCookieAuthSampleAddUI
                     AllowRememberConsent=true,
 
 
-                    AllowedGrantTypes=GrantTypes.Implicit,//允许访问的方式
+                    AllowedGrantTypes=GrantTypes.Hybrid,//允许访问的方式
                     ClientSecrets =
                     {
                         new Secret("secret".Sha256())//我们最好对clientsecrect进行简单的加密  Sha256为Identity server的一个扩展方法
@@ -51,7 +51,7 @@ namespace MvcCookieAuthSampleAddUI
                     //当它退出的时候，会返回到这个地址
                     PostLogoutRedirectUris={"http://localhost:5001/signout-callback-oidc" },
 
-                    AlwaysIncludeUserClaimsInIdToken=true,//claims包括在IDtoken中
+                    //AlwaysIncludeUserClaimsInIdToken=true,//claims包括在IDtoken中
                     //这个地方就是用户来点那个按钮，你是不是同意我授权,,
                     //好奇如何实现的呢 
                     RequireConsent=true,
