@@ -195,64 +195,100 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "第02章Docker准备", "第
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "第03章项目开发-用户服务", "第03章项目开发-用户服务", "{0A83B19B-CE26-44EE-AE8D-5BCED69B2983}"
 	ProjectSection(SolutionItems) = preProject
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (10).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (10).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (11).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (11).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (12).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (12).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (13).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (13).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (14).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (14).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (15).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (15).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (16).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (16).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (17).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (17).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (18).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (18).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (19).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (19).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (2).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (2).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (20).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (20).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (21).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (21).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (22).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (22).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (3).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (3).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (4).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (4).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (5).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (5).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (6).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (6).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (7).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (7).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (8).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (8).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (9).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy (9).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document - Copy.txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\New Text Document.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务52： 架构设计之单体架构.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务52： 架构设计之单体架构.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务53： 系统扩展升级演进思路.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务53： 系统扩展升级演进思路.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务54： 微服务架构介绍.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务54： 微服务架构介绍.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务55： 面向微服务架构的单体架构.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务55： 面向微服务架构的单体架构.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务56： UML业务分析之用户.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务56： UML业务分析之用户.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务57： UML业务分析之项目机会与消息.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务57： UML业务分析之项目机会与消息.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务58： UML业务分析之项目流程详细介绍.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务58： UML业务分析之项目流程详细介绍.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务59： 微服务拆分与界限上下文的确定.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务59： 微服务拆分与界限上下文的确定.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务60： 用户服务EF Core模型设计.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务60： 用户服务EF Core模型设计.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务61： EF Core 数据库初始化.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务61： EF Core 数据库初始化.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务62： 用户服务API设计.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务62： 用户服务API设计.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务63： 获取用户信息-数据访问与模型处理.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务63： 获取用户信息-数据访问与模型处理.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务64： 全局异常处理与日志记录.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务64： 全局异常处理与日志记录.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务65： 通过HTTP Patch更新用户信息.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务65： 通过HTTP Patch更新用户信息.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务66： 单元测试初探.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务66： 单元测试初探.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务67： xunit+Moq+MemoryEFDbContext测试UserController.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务67： xunit+Moq+MemoryEFDbContext测试UserController.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务68： FluentAPI写UserController测试用例（上）.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务68： FluentAPI写UserController测试用例（上）.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务69： FluentAPI写UserController测试用例（下）.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务69： FluentAPI写UserController测试用例（下）.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务70： GitLab CI完整部署UserAPI到线上测试环境-上.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务70： GitLab CI完整部署UserAPI到线上测试环境-上.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务71： GitLab CI完整部署UserAPI到线上测试环境-中.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务71： GitLab CI完整部署UserAPI到线上测试环境-中.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务72： GitLab CI完整部署UserAPI到线上测试环境-下.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务72： GitLab CI完整部署UserAPI到线上测试环境-下.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务73： GitLab CI完整部署UserAPI到线上测试环境-Debug.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第03章项目开发-用户服务\任务73： GitLab CI完整部署UserAPI到线上测试环境-Debug.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "第04章项目开发-网关与认证", "第04章项目开发-网关与认证", "{1A8BB43D-4A70-4CF9-8517-99E8D1D0DBEF}"
 	ProjectSection(SolutionItems) = preProject
-		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (10).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (10).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (11).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (11).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (2).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (2).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (3).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (3).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (4).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (4).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (5).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (5).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (6).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (6).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (7).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (7).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (8).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (8).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (9).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy (9).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document - Copy.txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\New Text Document.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务74： API网关与服务发现.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务74： API网关与服务发现.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务75： 用户注册与登录.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务75： 用户注册与登录.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务76： IdentityService4自定义Validator.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务76： IdentityService4自定义Validator.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务77： 自定义Validator与UserService互通.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务77： 自定义Validator与UserService互通.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务78： 集成Identity Server4到Identity api并调试通过.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务78： 集成Identity Server4到Identity api并调试通过.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务79： 添加Ocelot网关并集成identity server4认证.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务79： 添加Ocelot网关并集成identity server4认证.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务80： Ocelot集成Consul服务发现.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务80： Ocelot集成Consul服务发现.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务81： 微服务之间的服务发现.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务81： 微服务之间的服务发现.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务82： Polly在eShopsOnContainer项目中的使用设计解析.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务82： Polly在eShopsOnContainer项目中的使用设计解析.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务83： 实现ResilienceHttpClient.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务83： 实现ResilienceHttpClient.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务84： 集成ResilienceHttpClient到IdentityAPI.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务84： 集成ResilienceHttpClient到IdentityAPI.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务85： 调试ResilienceHttpClient和IdentityAPI.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第04章项目开发-网关与认证\任务85： 调试ResilienceHttpClient和IdentityAPI.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "第05章项目开发-通讯录服务", "第05章项目开发-通讯录服务", "{5DC1264A-5527-4E92-9F73-5AE8747342ED}"
 	ProjectSection(SolutionItems) = preProject
-		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (10).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (10).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (11).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (11).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (2).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (2).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (3).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (3).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (4).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (4).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (5).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (5).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (6).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (6).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (7).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (7).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (8).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (8).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (9).txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy (9).txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document - Copy.txt
-		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\New Text Document.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务100： Contact API 完整运行.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务100： Contact API 完整运行.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务101： 服务交互 - RabbitMQ介绍.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务101： 服务交互 - RabbitMQ介绍.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务102： 服务交互 - EventBus 之 MediatR,RawRabbit, eShopsOnContainer.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务102： 服务交互 - EventBus 之 MediatR,RawRabbit, eShopsOnContainer.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务103： 集成Event Bus CAP.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务103： 集成Event Bus CAP.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务104： User API事件发送实现.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务104： User API事件发送实现.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务105： Contact API集成CAP.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务105： Contact API集成CAP.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务86： 通讯录服务实现章节介绍.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务86： 通讯录服务实现章节介绍.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务87： 详细业务分析设计及外部依赖检查.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务87： 详细业务分析设计及外部依赖检查.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务88： 外部依赖UserService实现.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务88： 外部依赖UserService实现.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务89： 内部实现 - 用户好友申请接口.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务89： 内部实现 - 用户好友申请接口.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务90： 内部实现 - 用户好友申请实现MongoRepository上.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务90： 内部实现 - 用户好友申请实现MongoRepository上.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务91： 实现 - 用户好友申请实现Mongo查询与更新的基本用法.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务91： 实现 - 用户好友申请实现Mongo查询与更新的基本用法.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务92： 实现 - 用户好友申请实现.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务92： 实现 - 用户好友申请实现.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务93： 实现 - 用户好友通过实现.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务93： 实现 - 用户好友通过实现.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务94： 将Contact API加入网关.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务94： 将Contact API加入网关.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务95： 将profile添加到identity api和网关.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务95： 将profile添加到identity api和网关.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务96： profile调试.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务96： profile调试.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务97： 在contact api 中获取profile.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务97： 在contact api 中获取profile.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务98： Contact API 调试.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务98： Contact API 调试.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务99： 实现Contact API 向 User API的调用.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第05章项目开发-通讯录服务\任务99： 实现Contact API 向 User API的调用.txt
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "第06章", "第06章", "{F6F458C4-350C-41E2-89A4-06252A1DA7F0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "第06章项目开发-项目推荐服务", "第06章项目开发-项目推荐服务", "{F6F458C4-350C-41E2-89A4-06252A1DA7F0}"
+	ProjectSection(SolutionItems) = preProject
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务106： 章节介绍.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务106： 章节介绍.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务107： DDD介绍-从三层到OOD OOP.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务107： DDD介绍-从三层到OOD OOP.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务108： DDD介绍-结合业务需求来认识各种名词.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务108： DDD介绍-结合业务需求来认识各种名词.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务109： DDD介绍-分层.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务109： DDD介绍-分层.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务110： DDD介绍-CQRS基本介绍.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务110： DDD介绍-CQRS基本介绍.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务111： 项目业务介绍 - 领域事件与集成事件.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务111： 项目业务介绍 - 领域事件与集成事件.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务112： 项目服务实现- 搭建框架.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务112： 项目服务实现- 搭建框架.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务113： 项目服务实现- 实现领域entity.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务113： 项目服务实现- 实现领域entity.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务114： 项目服务实现 -MediatR与领域事件.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务114： 项目服务实现 -MediatR与领域事件.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务115： 项目服务实现- 创建查看加入Commands.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务115： 项目服务实现- 创建查看加入Commands.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务116： 项目服务实现 -通过MediatR完成API到Commands调用.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务116： 项目服务实现 -通过MediatR完成API到Commands调用.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务117： 项目服务实现 -添加EF Repository.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务117： 项目服务实现 -添加EF Repository.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务118： 项目服务实现 - 实现EF Repository.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务118： 项目服务实现 - 实现EF Repository.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务119： 项目服务实现 - EF 实体配置和migrations数据库生成.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务119： 项目服务实现 - EF 实体配置和migrations数据库生成.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务120： 项目服务实现 - 添加推荐服务调用.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务120： 项目服务实现 - 添加推荐服务调用.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务121： 项目服务实现 - 添加Dapper Queries.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务121： 项目服务实现 - 添加Dapper Queries.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务122： 项目服务实现 - 添加Dapper Queries下.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务122： 项目服务实现 - 添加Dapper Queries下.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务123： 项目服务实现 - 添加服务注册与发现debugging queries.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务123： 项目服务实现 - 添加服务注册与发现debugging queries.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务124： 项目服务实现 - debugging commands.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务124： 项目服务实现 - debugging commands.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务125： 项目服务实现 - 响应领域事件发布集成事件上.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务125： 项目服务实现 - 响应领域事件发布集成事件上.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务126： 项目服务实现 - 响应领域事件发布集成事件下.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务126： 项目服务实现 - 响应领域事件发布集成事件下.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务127： 推荐服务实现 - 添加集成事件处理器.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务127： 推荐服务实现 - 添加集成事件处理器.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务128： 推荐服务实现 - 添加EF和生成数据库.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务128： 推荐服务实现 - 添加EF和生成数据库.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务129： 推荐服务实现 - 访问用户服务获取用户信息.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务129： 推荐服务实现 - 访问用户服务获取用户信息.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务130： 推荐服务实现 - 访问联系人服务获取好友信息.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务130： 推荐服务实现 - 访问联系人服务获取好友信息.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务131： 推荐服务实现 - 调试推荐服务.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务131： 推荐服务实现 - 调试推荐服务.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务132： 推荐服务实现 - 推荐服务加入网关.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第06章项目开发-项目推荐服务\任务132： 推荐服务实现 - 推荐服务加入网关.txt
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClientCredentialApi", "02ASP.NET Core分布式项目实践\01Identity Server 4 准备\IdentityServerSample\ClientCredentialApi\ClientCredentialApi.csproj", "{3DDA9103-0BE9-4A23-973D-97E70498ADF8}"
 EndProject
@@ -276,7 +312,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dockerbuild", "dockerbuild"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "02ASP.NET Core分布式项目实践\02Docker\dockerbuild\ConsoleApp\ConsoleApp.csproj", "{53ABBDC3-464C-41B5-A307-9202AA753CC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "User.API", "02ASP.NET Core分布式项目实践\02Docker\dockerbuild\User.API\User.API.csproj", "{A2B2FFA3-03F2-4EFD-AA55-76F2AAA68081}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "User.API", "02ASP.NET Core分布式项目实践\02Docker\dockerbuild\User.API\User.API.csproj", "{A2B2FFA3-03F2-4EFD-AA55-76F2AAA68081}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "第07章微服务监控", "第07章微服务监控", "{2B4456D4-FFA1-463F-B518-48E21C2B8BA9}"
+	ProjectSection(SolutionItems) = preProject
+		02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\New Text Document - Copy (11) - Copy.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\New Text Document - Copy (11) - Copy.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\New Text Document - Copy (13) - Copy - Copy.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\New Text Document - Copy (13) - Copy - Copy.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\New Text Document - Copy (14) - Copy - Copy.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\New Text Document - Copy (14) - Copy - Copy.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\New Text Document - Copy (15) - Copy - Copy.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\New Text Document - Copy (15) - Copy - Copy.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\New Text Document - Copy (16) - Copy - Copy.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\New Text Document - Copy (16) - Copy - Copy.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\New Text Document - Copy (18) - Copy - Copy.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\New Text Document - Copy (18) - Copy - Copy.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\New Text Document - Copy (19) - Copy - Copy.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\New Text Document - Copy (19) - Copy - Copy.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\New Text Document - Copy (21) - Copy - Copy.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\New Text Document - Copy (21) - Copy - Copy.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\任务133： 分布式追踪介绍以及zipkin server初始化.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\任务133： 分布式追踪介绍以及zipkin server初始化.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\任务134： 集成zipkin需要安装的nuget包.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\任务134： 集成zipkin需要安装的nuget包.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\任务135： 使用zipkin .NET客户端完成追踪和数据发送.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\任务135： 使用zipkin .NET客户端完成追踪和数据发送.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\任务136： 在ResilienceHttpClient中添加 zipkin TrackingHandler.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\任务136： 在ResilienceHttpClient中添加 zipkin TrackingHandler.txt
+		02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\任务137： Elastic Search30分钟快速入门.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\任务137： Elastic Search30分钟快速入门.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -412,6 +465,7 @@ Global
 		{88678EAB-2873-4424-B588-0579D49FE5F6} = {33F6E98A-41ED-48A6-B6A0-4F8E448007AF}
 		{53ABBDC3-464C-41B5-A307-9202AA753CC7} = {88678EAB-2873-4424-B588-0579D49FE5F6}
 		{A2B2FFA3-03F2-4EFD-AA55-76F2AAA68081} = {88678EAB-2873-4424-B588-0579D49FE5F6}
+		{2B4456D4-FFA1-463F-B518-48E21C2B8BA9} = {84447735-6D13-493D-97A3-281CFE5E930A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8A31F480-001A-4E05-B2EE-5DCE2F5B36A8}
