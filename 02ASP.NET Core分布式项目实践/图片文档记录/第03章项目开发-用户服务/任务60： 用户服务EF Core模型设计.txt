@@ -1,0 +1,268 @@
+重大问题：没有目标呀，没有以终为始。
+问题0：老问题，逻辑要清晰，仅仅最后一个结果，一段文字而已，没什么用
+问题1：每次开始都是适应下这个节奏，切换到这个节奏，有种身体到了，但精神没到的感觉？身体被强行驱使。不情愿，
+是不是进入的姿态不对？硬生生的要切换到这个节奏？ 如何切换状态，切换节奏？ 是否有必要切换呢？
+问题2：没驱动时，啥也不想，有了驱动时，状态没跟上，身体被强行驱使。 驱动和状态啥关系呢？在有无驱动情况下，状态有啥不一样呢？ 状态好坏又和行动有啥关系呢？ 
+问题3：不要着急，一步，一点记录，从零开始嘛。为了学的仔细，也将来复习的仔细。
+问题4：不同性质的事情的切换，如原理性和操作性的的切换，对应的心态和行为都不一样，要做到应对自如，这点做的不好，感觉要全部记下来，有觉得没必要，有点纠结。
+问题5
+
+好，大家好，这节课我们接下来把这个我们EF里面的这个model给它去建立下
+首先我们基本上来说会有一个user的model。然后还有一个，就是，跟我们这个类图比较像，user userproerty usertag，bpfile四个model。应该是有四个这样的模型，
+好，我们在user这个地方呢 我们先写下，就是，
+我们的这个user的id呢，它是一个自增类型的一个id，好，id呢，我们是自增的，
+然后这个地方是我们的用户名称，
+ 然后这个是我们的公司
+ 下面呢是我们的这个职位，
+  然后呢，我们还会有一个这个手机号码
+  然后，我们的头像 它是一个string地址，来自于又拍云
+  然后详细地址，是一个文本
+  性别 byte
+  邮件
+  公司电话
+  省份id
+  省名称
+  城市id
+  城市名称
+  名片地址 我们会保存下它的名片地址
+  以及用户属性列表
+  这个地方我就不一个一个写了，给大家复制过来 ，因为这块我们原先在单体里，写完了。 为了节省时间
+
+  其实就是比照设计好的类图，只要类图设计好，就问题不大
+      public class  AppUser
+    {
+        public int Id { get; set; }
+        /// <summary>
+        /// 用户名称
+        /// </summary>
+        public string  Name { get; set; }
+        /// <summary>
+        /// 公司
+        /// </summary>
+        public string Company { get; set; }
+
+        /// <summary>
+        /// 职位
+        /// </summary>
+        public string Title { get; set; }
+        /// <summary>
+        /// 手机号码
+        /// </summary>
+        public string Phone { get; set; }
+        /// <summary>
+        /// 头像地址
+        /// </summary>
+        public string Avatar { get; set; }
+        /// <summary>
+        /// 性别 1：男 0：女
+        /// </summary>
+        public byte Gender { get; set; }
+        /// <summary>
+        /// 详细地址
+        /// </summary>
+        public string Address { get; set; }
+        /// <summary>
+        /// 邮箱
+        /// </summary>
+        public string Email { get; set; }
+        /// <summary>
+        /// 公司电话
+        /// </summary>
+        public string Tel { get; set; }
+        /// <summary>
+        /// 省id
+        /// </summary>
+        public int ProvinceId { get; set; }
+        /// <summary>
+        /// 省名称
+        /// </summary>
+        public string Province { get; set; }
+        /// <summary>
+        /// 城市id
+        /// </summary>
+        public int CityId { get; set; }
+        /// <summary>
+        /// 城市名称
+        /// </summary>
+        public string City { get; set; }
+        /// <summary>
+        /// 名片地址
+        /// </summary>
+        public string NameCard { get; set; }
+       /// <summary>
+       /// 用户属性列表
+       /// </summary>
+        public List<UserProperty> Properties { get; set; } 如何是之前看到这种字段，顶多是浏览过，不会深究它是什么含义，
+    }
+  
+  大家来看下这个我们个人信息 原型 这个地方呢 公司职位地区都有了，投资行业，投资规模，投资阶段这三个是没有的，我们就会把三个存在我们的userproperty里面，
+  所以在这里呢 我们再新建一个model UserProperty类，
+  UserProperty类里面呢，主要放这样几个东西
+  userid 
+  key 
+  Text
+  Value
+
+      public class UserProperty
+    {
+        public int UserId { get; set; }
+        public string Key { get; set; }
+        public string Text { get; set; }
+        public  string Value { get; set; } 如何是之前看到这种字段，顶多是浏览过，不会深究它是什么含义，
+    }
+
+  userid 是每一个用户它都会有一个这样的一个值.
+  key 比如说是投资行业，医药是key投资行业下的value数组中的一个，先给大家看下navicat for sql里面的原型数据。在这个地方，首先 这个UserProperty是存储过来的值，他还有一个元数据的这个表 就是在我们的finbook_metadata数据库中的meta_properties表，这地方就存了很多的key，这其实就是键值对嘛，只不过我们有一个text，就key/value然后还有一个text，防止我们的文本跟我们value不一样时候，我们把这个地方都存到这，而这个的时候当用户选择，比 如说选择这个投资行业的时候呢，它其实，选项列表就比如说 这个融资阶段，融资阶段时候，我们就会从fin_stage作为key，对应的value数组都拉过来，用户就会选 ，比如说选择了3个，那这个时候 我们就会把fin_stage作为key，这三个呢（其实就是投资行业，投资规模，投资阶段各自选一个对应的值），加上一个userid，，这是谁 用户选的，放到这个UserProperty类对应的表里面去，
+  好，那这是我们的UserProperty类，
+  然后，我们现在需要有一个这个 UserTag模型，UserTage呢，其实会，也比较简单，
+  新建UserTag类，然后UserTag类里面我们需要给它一个，同样有一个UserId，然后我们还需要给它一个 这个Tag，，好，在这个地方呢，我们有了它之后，UserTag和UserProperty两者里面都有UserId，很显然我们的user类跟UserTag和UserProperty是一对多的关系，
+
+    public class UserTag
+    {
+        public int UserId { get; set; }
+        public string Tag { get; set; }
+    }
+
+然后，我们接下来呢，还有一个 BPFile模型，
+新建BPFile类，在这个地方呢 bpfile里面，我们会放一个，它有一个他自己的id， 我们把它copy过来，还需要加上一个我们的Createtime创建时间，好，我们这个地方写下我们的备注
+其中，文件名称，我们应该没有，是作为，留着的，防止这个时候用户给它的这个 加了一个备注，保存的时候，加一个备注， 我们留着它，在我们的UI里没有这个功能，
+  public class BPFile
+    {
+        /// <summary>
+        /// bp id
+        /// </summary>
+    public int Id { get; set; }
+        /// <summary>
+        ///用户id
+        /// </summary>
+        public int UserId { get; set; }
+        /// <summary>
+        /// 文件名称
+        /// </summary>
+        public string FileName { get; set; } 如何是之前看到这种字段，顶多是浏览过，不会深究它是什么含义，
+        /// <summary>
+        /// 上传的源文件地址
+        /// </summary>
+        public string OriginFilePath { get; set; }  如何是之前看到这种字段，顶多是浏览过，不会深究它是什么含义，
+        /// <summary>
+        /// 格式转化后的文件地址
+        /// </summary>
+        public string FromatFilePath { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreatedTime { get; set; }
+    }
+
+	我们现在简单起见呢，我们在数据量不会特别大的情况下，我们用的都是自增id，当然，大家都知道自增id后面会有一个隐患就是，你在做数据同步的时候，包括你的数据有可能会被人猜出来，
+
+	好，BPFile完了之后呢，我们就在user类里面，，大家都知道， 就是我们现在已经有了List<UserProperty>,那我们的user里面，要不要去放这个BPFile，userTag 对吧，要不要呢取决于就是我们怎么样去查询，还记得我们给大家讲过这个聚合根的一个问题，在这个地方呢，就是说 我们肯定是以用户去查这个usertags，以及查这个userproperty，userproperty呢我们不会单独去查询，userproperty本身它就是属于用户的一部分，所以呢，我们把List<UserProperty>放到user里面，但是我们在这个地方呢，是会单独去查询这个tags和这个bpfiles的，因为这个用户，tags呢它 我们没有把它作为用户，这个，聚合根，说只能通过它来查询，所以我们会，要给大家，就是理解下这个聚合根，就是在一个聚合里面，这个比如说是我们一个聚合，里面会有一个聚合根，而这个聚合根，比如说是我们的userprofile的话，其他的tagsData和bp两个都是依托于在它的基础上，来进行数据的持久化，包括这个更新操作和这个查询的这个操作，那我们这种情况下，
+	就是由于聚合根造成的一个问题，就是我们的模型或者说我们数据这个操作方式是过于的僵化，怎么来理解、就是在这个地方，比如说如果我们把用户 在DDD里面以user作为一个领域的话，那么user设置成我们的聚合根，那么其他的的实体（entity），它呢，就是全部依托于在这个user下，通过user作为最外暴露的一个根，也就是它是整个聚合的访问和更新的一个入口，其他的都带依托于它，那这种情况下，就会造成我们，就是比如说我其实这个时候就有一个地方想单独查询一下我的tags，对吧，我有userid，那这是不允许操作的，我们先必须把用户user最大的这个根给拿出来，然后在去查这个tags，所以这种方式，其实，在ddd的情况下，就不太好，当然有它适用的场景，我们在这个地方就没有这样做，因为反而就是让我们这个效率变低了，所以大家要去取舍，当然在业务比较复杂的时候呢，需要这样做的，，
+	所以当然这个是 最开始的 ddd设计，而后期 在复杂的业务的时候，为什么会有cqrs，那我把读写分离开之后，你的查询业务其实就不属于这块了额，你自己随便怎么写sql或者随便怎么管其实是不相关的，我们在项目的那块的时候，实现项目那个服务的时候，会用到这块，，那我们在这个地方呢，主要就在我们的userController里面，
+	现这个地方在我们已经有了我们的这个四个model。bpfile，user，usertag，userproperty  ，
+
+问题2：学东西，不是一板一眼照着学的，重要的是理解。
+问题2：加映射很难吗？之前觉得好难，都不知道要干什么？ 这很大的错误。很大的问题。sql知识不足，要干什么不清楚
+	所以我们现在，在我们的UserContext里面呢，来给它做一下flown api的映射
+	首先第一个呢是我们把它映射到这个Users表里面，id作为key，然后我们的这个，
+
+	 modelBuilder.Entity<AppUser>()
+                .ToTable("Users")
+                .HasKey(u => u.Id);
+
+问题1:自己看到组合主键的时候，根本就没深入去思考这代表什么？只是看了一眼，不明白，就蒙了，，就算了。 这说明当时学习方式有问题、
+问题1：既然是联合主键，那和主键有什么区别呢？可以替换不？有什么问题呢？
+	然后还有一个是useProperty，我们用复数，然后HasKey，这个地方呢 我们要用一个组合的这个主键，因为在它里面呢，我们其实是会有三个主键，一个是我们的  我们要new一下，用这个方式来添加组合主键，主键有多个，u.UserId,U.key,U.value 这样，因为我们在同一个用户下呢，确实会放相同的key 然后不同的value，所以是由三个组成了一个主键（就是用三个才能确定唯一性），那这样看起来 其实 你想我们这个里面其实 这userid，key ，value这三个全是主键，不能有冲突，，当然你还有一种方式是可以自建id来进行主键，那我们这个地方就用这种组合方式就可以了，
+
+	  modelBuilder.Entity<UserProperty>()
+                .ToTable("UserProperties")
+                .HasKey(u => new { u.Key, u.UserId, u.Value });
+
+
+	我们再来加一个叫，usertag，映射表Usertags，haskey，usertag里面没有自增主键，同样采用组合主键，我们也可以给他加一个字段叫创建时间，注意在这个地方， 我们有一些表其实是没有创建时间的，而不会像有些系统可能它会在每个里面都创建一个createtime，其实对表来说，有时候没有必要，如果我们真要加这个的话，可以加一个这个操作表，就是，你到底 每条日志 你要加新增时间 修改时间，修改的记录是什么这个，都可以，在我们的这个里面呢 ，但是我们可以给他加一个创建时间，好，创建时间加进去之后呢》 
+
+	 public class UserTag
+    {
+        public int UserId { get; set; }
+        public string Tag { get; set; }
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreatedTime { get; set; }
+    }
+
+
+	 modelBuilder.Entity<UserTag>()
+                .ToTable("UserTags")
+                .HasKey(u => new {  u.UserId, u.Tag });
+
+
+已经三张表了，还有一个BPFile，映射UserBPFiles表，haskey，id为key，，
+
+ modelBuilder.Entity<BPFile>()
+               .ToTable("UserBPFiles")
+               .HasKey(u => u.Id);
+
+然后我们看下BPFile，这个地方呢在mysql里面，一旦作为主键的话呢，它的长度不能够超过应该是255，所以我们在这个地方呢，要给它设置一个长度，我们那个地方用了string做主键，就是UserTag里的Tag，联合主键，包括这个UserProperty里面的key和value，所以我们要给它设置这两个字段设置一个长度，如果没有这个长度限制的话，我们到时候mysql会出现访问的错误，我们看下这个，userproperty，userproperty的key，value我们给它设置成100,同样的操作在UserTag的tag，这个地方操作起来还真是有那么点麻烦。因为有有重复，还有我们这个地方不多，多的话，就单独写一个方法出来，，这样的话，我们整个user这块数据库就配置完了
+
+问题3：注意了，我们学的不是 一板一眼照搬，都记住了额，而是理解了额，融会贯通。
+问题3：排除错误也是比较有技巧的，比如发现不是一个扩展方法
+
+注意：Property不是一个扩展方法，所以不能和扩展方法一起使用，因为它没有返回值， 
+
+
+         modelBuilder.Entity<UserTag>().Property(u => u.Tag).HasMaxLength(100);
+            modelBuilder.Entity<UserProperty>().Property(u => u.Key).HasMaxLength(100);
+            modelBuilder.Entity<UserProperty>().Property(u => u.Value).HasMaxLength(100);
+
+
+这样的话，我们整个user这块数据库就配置完了
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)//重写方法，扩展点，
+        {
+            modelBuilder.Entity<AppUser>()
+                .ToTable("Users")
+                .HasKey(u => u.Id);
+
+            modelBuilder.Entity<UserProperty>()
+                .ToTable("UserProperties")
+                .HasKey(u => new { u.Key, u.UserId, u.Value });
+
+
+            modelBuilder.Entity<UserTag>()
+                .ToTable("UserTags")
+                .HasKey(u => new { u.UserId, u.Tag });
+
+
+            modelBuilder.Entity<BPFile>()
+               .ToTable("UserBPFiles")
+               .HasKey(u => u.Id);
+
+            modelBuilder.Entity<UserTag>().Property(u => u.Tag).HasMaxLength(100);
+            modelBuilder.Entity<UserProperty>().Property(u => u.Key).HasMaxLength(100);
+            modelBuilder.Entity<UserProperty>().Property(u => u.Value).HasMaxLength(100);
+
+          
+            base.OnModelCreating(modelBuilder);
+        }
+
+
+还有一个地方要注意的是，就是我们在这个地方会涉及到一对多，在user和userproperty 之间呢，如果我们要利用，后期要用这个include，在查user的时候，把userpropery给查出来的话，我们是需要用include。他之间要有关系的，默认情况情况下，我们可以用Conventions，就是契约的这种方式（约定），不需要去做fluent api或者是用attribute特性的这种方式去声明，我们只需要把这个id之间建好就可以了。例如，Appuser类的主键为id，appUser里面有list<UserProperty> Properties,用的是UserProperty，然后，我们在UserProperty里面只需要，把主键名称为AppUserId（类名+主键名），它呢，就可以自动建立映射，就是user和UserProperty之间的这个一对多关系，
+
+     public class  AppUser
+    {
+	 public List<UserProperty> Properties { get; set; }
+	 }
+
+ public class UserProperty
+    {
+        //public int UserId { get; set; }
+        public int AppUserId { get; set; }
+        public string Key { get; set; }
+        public string Text { get; set; }
+        public  string Value { get; set; }
+    }
+
+为什么我们类名会叫AppUser呢，因为命名空间带了user，如果不改这个名字的话，后期user可能会产生冲突。
+如果还有一些复杂的场景的话，比如说在这个地方一旦我们建立了两个这个，UserProperty里面，比如说一旦有两个user，这样引用的情况下，我们是需要用fluent api来单独去做的额，但是我们现在还没有遇到这样复杂的一些场景，复杂的情况下呢，这个时候大家再去单独建立这个，用fluent api去建立映射，
+好，下节课呢，我们就开始写api了额，这个模型这块也建立好了，好，我们这个时候，再把我们的docker打开，来测试一下，我们的这个，mysql，应该是没有启动，而且我们这个docker compose呢，我们看下这里有没有我们的mysql。已经没有了，，打开看下，我们这个docker compose，我们先不管这个docker-compose，后面我们再统一再去改，因为我们的docker-compose不可能每次的话都去把这个mysql给去重建，所以我们在这个地方，单独会去copy下之前的那个mysql的命令，把我们这个mysql先给他建立起来，，这个是我们的docker的命令清单，在之前时候我们在windows上，资料卷没有测试通过，这次呢我们来测试下，但是由于时间的关系呢，因为我尽量不想每节课超过20分钟，，所以我们把这个mysql的这个创建呢，放到下节课来讲，好这节课，主要我们讲的是关于，user这个领域 EF这块的4个entity的建立，和他们之间的关系的这块，，好下节课我们再把mysql给它生成起来，
