@@ -28,7 +28,7 @@ docker exec  ÕâÌõÃüÁîÊÇ¿ÉÒÔÓÃÀ´ ÎÒÃÇ¿ÉÒÔ½øÈëÈÝÆ÷ÀïÃæÈ¥ÔËÐÐ ÈÝÆ÷ËûÆäÊµ Ïàµ±ÓÚ ËüÒ
    ÊäÈë ; ÕâÑù¾ÍÖ´ÐÐ³É¹¦ÁË
    Ö´ÐÐ³É¹¦Ö®ºó£¬ÎÒÃÇÔÙÀ´ ²Ù×÷mysql ÃüÁî
    use mysql
-   select user£¬host from user  ²éÑ¯user±í
+   select user,host from user  ²éÑ¯user±í
 ÏÔÊ¾ÁËÎÒÃÇµÄrootÓÃ»§ Ö»ÄÜÍ¨¹ýlocalhostÀ´µÇÂ¼
 ËùÒÔÕâÊÇÎÒÃÇÎªÊ²Ã´²»ÄÜÍ¨¹ýhostÀ´Á¬½ÓmysqlµÄÔ­Òò
 Õâ¸öÊ±ºòÎÒÃÇ ×î¼òµ¥µÄ·½Ê½ °ÑrootµÄ host¸ø¸Äµô ¸Ä³É0.0.0.4 ÔÊÐíÈÎºÎipÀ´µÇÂ¼£¬µ«ÊÇÕâÑù×ö²»Ì«°²È«£¬ËùÒÔÒ»°ã³¬¼¶ÓÃ»§ÎÒÃÇ·Å¿ªËü£¬ÎÒÃÇÔÚÆôÓÃÒ»¸ö×Ô¼ºµÄÓÃ»§
