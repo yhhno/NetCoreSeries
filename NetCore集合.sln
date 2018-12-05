@@ -128,7 +128,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "06ASPNet core mvc", "06ASPN
 		01ASP.NET Core 入门\asp.net core入门记录\06ASPNet core mvc\EF Migraton 命令.png = 01ASP.NET Core 入门\asp.net core入门记录\06ASPNet core mvc\EF Migraton 命令.png
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02ASP.NET Core 分布式项目实战", "02ASP.NET Core 分布式项目实战", "{72D16933-C8D9-4CB9-8FAA-572679170112}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02ASP.NET Core 分布式项目（微服务）实战", "02ASP.NET Core 分布式项目（微服务）实战", "{72D16933-C8D9-4CB9-8FAA-572679170112}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01Identity Server 4 准备", "01Identity Server 4 准备", "{EA1D4649-8746-44DB-91C1-06767EF65CDF}"
 EndProject
@@ -331,6 +331,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "第07章微服务监控", "
 		02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\任务137： Elastic Search30分钟快速入门.txt = 02ASP.NET Core分布式项目实践\图片文档记录\第07章微服务监控\任务137： Elastic Search30分钟快速入门.txt
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03.Net Core 微服务 on K8S", "03.Net Core 微服务 on K8S", "{2819E9D4-750A-438E-973D-01540FB019A1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01Net Core on K8S快速入门", "01Net Core on K8S快速入门", "{C64DA65B-385F-4321-88BD-44BBBA0F3E36}"
+	ProjectSection(SolutionItems) = preProject
+		03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\01介绍k8s是什么 - Copy.txt = 03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\01介绍k8s是什么 - Copy.txt
+		03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\01介绍k8s是什么.txt = 03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\01介绍k8s是什么.txt
+		03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\02-为什么要学习k8s.txt = 03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\02-为什么要学习k8s.txt
+		03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\03-如何学习k8s.txt = 03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\03-如何学习k8s.txt
+		03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\04-K8S集群基本概念.txt = 03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\04-K8S集群基本概念.txt
+		03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\05-安装本地k8s单节点集群.txt = 03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\05-安装本地k8s单节点集群.txt
+		03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\06-K8S三大核心组件介绍.txt = 03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\06-K8S三大核心组件介绍.txt
+		03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\07-Service的三种类型及Dashboad部署.txt = 03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\07-Service的三种类型及Dashboad部署.txt
+		03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\08-kubectl工具命令介绍.txt = 03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\08-kubectl工具命令介绍.txt
+		03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\09-yaml部署文件格式介绍.txt = 03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\09-yaml部署文件格式介绍.txt
+		03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\10-部署netcore api到K8S.txt = 03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\10-部署netcore api到K8S.txt
+		03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\11-k8s高可用集群介绍.txt = 03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\11-k8s高可用集群介绍.txt
+		03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\12-进阶介绍.txt = 03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\12-进阶介绍.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -466,6 +485,7 @@ Global
 		{53ABBDC3-464C-41B5-A307-9202AA753CC7} = {88678EAB-2873-4424-B588-0579D49FE5F6}
 		{A2B2FFA3-03F2-4EFD-AA55-76F2AAA68081} = {88678EAB-2873-4424-B588-0579D49FE5F6}
 		{2B4456D4-FFA1-463F-B518-48E21C2B8BA9} = {84447735-6D13-493D-97A3-281CFE5E930A}
+		{C64DA65B-385F-4321-88BD-44BBBA0F3E36} = {2819E9D4-750A-438E-973D-01540FB019A1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8A31F480-001A-4E05-B2EE-5DCE2F5B36A8}
