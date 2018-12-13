@@ -1,0 +1,442 @@
+此时发现一个问题，就是不太享受这个学习过程。
+识别出自己之前的认识和腾飞的讲解有什么不同？ 找出他是如何得到这样的认识的？=》因为自己的认识和认识的方式有问题。
+自己看到东西，基本上就是几个文字而已，顶多照着demo做一遍vs大白话它是什么?能干什么？ 内部机制流程是什么？
+为什么听了他讲的后就很清楚，很明白，很容易理解呢？=》大白话，深入浅出，整体脉络都有，
+第一次尝试不能慌，不能手足无措
+
+0.乐趣所在，认真 等等积极东西
+1.不心生恐惧     等等负面东西
+2.罗列翻译，翻译翻译就是知道它的过程
+3.对比，条理，概况，学习框架   等等技巧
+4.做事总是不完整，缺乏了过程。=》积累就是过程的积累，是不可能偷懒的，一个名词就是一个过程，没有积累，你看到名词就是几个汉字，不知道其中的内容
+5:要自己能分析出这个过程 如：微服务带来的好处=》这是一个怎样的过程呢？要自己能分析出这个过程
+6.本质是什么？是开发过程？ 是单体时的开发过程和微服务时的开发过程，以及有了k8s之后，微服务的开发过程。
+7.总结出一个学习方法，
+
+
+问题0：工具在windows上安装可能会遇到问题？此时情绪上会怎么应对？行动上如何应对? =》最开始，肯定越简单越好。=》第一次尝试不能慌，不能手足无措
+问题1：出现问题，行动上，思路上该怎么办？  dockcer ce是docker的一个版本，慌什么 =》第一次尝试不能慌，不能手足无措
+问题2：主要的步骤要心中有数。=》第一次尝试不能慌，不能手足无措
+
+
+问题1：做的事情，学习的东西等，要做到心中有数？=》那就是要有个概况，=》这也是个过程
+1.k8s是什么？
+2.它能够干什么呢？ 为什么如此的重要？
+3.我们该如何来学习它？
+
+但是，在这里呢，我们先简单把它分为6个步骤
+1.先了解全貌和整体
+2.对整体结构进入拆分，梳理脉络
+3.马上开始行动
+4.在行动的过程中逐步加深，每一阶段有阶段性目标
+5.及时进行回顾与复盘，与理论相结合
+6.输出
+
+这个是我给大家推荐的一个k8s的这个学习路径
+1.了解基本概念及核心组件
+2.使用本地单节点集群来学习k8s
+3.用kubectl与本地集群建立连接
+4.部署服务到k8s集群
+5.对k8s服务进行扩容，更新
+6.进一步学习k8s资源（pod，deployment，service，statefulset，ingress。。。）
+7.设计微服务
+8.搭建k8s集群或者使用云服务商的k8s服务
+9.添加持续集成，日志搜集，监控和指标度量。跟踪
+
+我们会按照这样的步骤 
+1.k8s集群基本概念
+2.本地搭建k8s单节点集群
+3.pod&service&deployment
+4.service的三种类型
+5.yaml部署文件语法初体验
+6.初始化一个。net core api并push到docker hub
+7.把net coreapi 部署到k8s
+8.k8s集群高级概念
+
+大家好，我是jesee腾飞，欢迎大家继续跟我一起来学习kubernetes快速人们课程，这是本系列课程的第五小节
+问题0：工具在windows上安装可能会遇到问题？此时情绪上会怎么应对？行动上如何应对? =》最开始，肯定越简单越好。=》第一次尝试不能慌，不能手足无措
+我们将在这小节课里面，来学习用本地快速搭建一个单节点的k8s集群，通过这个集群，我们来学习后面的内容，那这个集群的搭建呢，其实我们会把它变得很简单，我并不想在这系列当中，讲过于复杂，或者说操作程度难度比较高的东西，所以我们会借助于这个k8s，其实创建k8s本地集群，有两种方法，一种是使用minikube，minikube其实在mac笔记本上操作，是非常容易的，这个大家如果用的是mac笔记本的话，可以自己来玩一下，其实比较容易通过，但是在windows上由于windows使用的是hype-v的虚拟机，然后整个在minikube搭建，启动的时候会出现一些问题，一些莫名其妙的问题i，
+问题1：出现问题，行动上，思路上该怎么办？  dockcer ce是docker的一个版本，慌什么=》第一次尝试不能慌，不能手足无措
+所以呢，在经过几次尝试之后，我们找到了一种现在来说更简单快速的办法，就是我们跳过安装层面的障碍，直接用docker ce的最新版本，大概是18.6，我们会把这篇文章发到群里面，大家可以跟着这个文章去走一遍， 我大致简单讲下， 这个过程走下来，基本上是没有任何障碍的，就直接安装下docker的最新版本，第一步是安装这个docker的最新版本，第二步呢 因为这个k8s集群用到了很多的镜像，这些镜像呢，我们需要从阿里云上把它pull下来，pull到本地，这个地方就他教我们用这个git把这个整个项目给它克隆本地，克隆本地之后呢，我们来启动下这个命令行sh脚本就可以了，当然在这个过程之前，我们需要把这个把镜像仓库设置https://registry.docker-cn.com  这个国内的镜像地址，有了它之后呢，才能更好的pull到google的一些开头的一些镜像，否则我们本地集群是创建不起来的，git完之后，需要run下脚本， 大家如果在windows下run不成功，我们也可以run一个powershell的脚本，run下来之后大致有哪些东西呢， 那个powershell也就是读配置文件，然后pull镜像， 
+问题2：主要的步骤要心中有数。=》第一次尝试不能慌，不能手足无措
+所以主要大的部分是一个是要下载最新的docker，然后呢修改镜像仓库， 然后git 项目， 运行powershell脚本， 大家注意运行的时候会报一个权限上的错误，这个时候你只需要把这个powershell的这个级别调整一下就可以了，这个问题我们会在群里给出具体的指导，接下来之后，就完了，
+
+PS C:\k8s> git clone https://github.com/AliyunContainerService/k8s-for-docker-desktop
+Cloning into 'k8s-for-docker-desktop'...
+remote: Enumerating objects: 51, done.
+remote: Counting objects: 100% (51/51), done.
+remote: Compressing objects: 100% (30/30), done.
+remote: Total 78 (delta 22), reused 49 (delta 21), pack-reused 27
+Unpacking objects: 100% (78/78), done.
+PS C:\k8s> cd k8s-for-docker-desktop
+PS C:\k8s\k8s-for-docker-desktop> ls
+
+
+    Directory: C:\k8s\k8s-for-docker-desktop
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----       12/13/2018   5:10 PM                images
+d-----       12/13/2018   5:10 PM                sample
+-a----       12/13/2018   5:10 PM            761 getLatestIstio.ps1
+-a----       12/13/2018   5:10 PM           1483 images.properties
+-a----       12/13/2018   5:10 PM           4785 kubernetes-dashboard.yaml
+-a----       12/13/2018   5:10 PM            245 load_images.ps1
+-a----       12/13/2018   5:10 PM            300 load_images.sh
+-a----       12/13/2018   5:10 PM           6839 README.md
+-a----       12/13/2018   5:10 PM           3787 README_en.md
+
+
+PS C:\k8s\k8s-for-docker-desktop> set-ExecutionPolicy RemoteSigned
+
+Execution Policy Change
+The execution policy helps protect you from scripts that you do not trust. Changing the execution policy might expose
+you to the security risks described in the about_Execution_Policies help topic at
+https:/go.microsoft.com/fwlink/?LinkID=135170. Do you want to change the execution policy?
+[Y] Yes  [A] Yes to All  [N] No  [L] No to All  [S] Suspend  [?] Help (default is "N"): N
+
+PS C:\k8s\k8s-for-docker-desktop> ./load_images.ps1
+k8s.gcr.io/pause-amd64:3.1=registry.cn-hangzhou.aliyuncs.com/google_containers/pause-amd64:3.1
+3.1: Pulling from google_containers/pause-amd64
+cf9202429979: Pull complete
+Digest: sha256:759c3f0f6493093a9043cc813092290af69029699ade0e3dbe024e968fcb7cca
+Status: Downloaded newer image for registry.cn-hangzhou.aliyuncs.com/google_containers/pause-amd64:3.1
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/pause-amd64:3.1
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/pause-amd64@sha256:759c3f0f6493093a9043cc813092290af69029699ade0e3dbe024e968fcb7cca
+k8s.gcr.io/kube-controller-manager-amd64:v1.10.3=registry.cn-hangzhou.aliyuncs.com/google_containers/kube-controller-manager-amd64:v1.10.3
+v1.10.3: Pulling from google_containers/kube-controller-manager-amd64
+032c9e83eacf: Pull complete
+15eed34a755a: Pull complete
+Digest: sha256:7dd9bda76d35971701a879132247fd25b91fbb9df42eb9c69ff9509e9ea6b0c0
+Status: Downloaded newer image for registry.cn-hangzhou.aliyuncs.com/google_containers/kube-controller-manager-amd64:v1.10.3
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/kube-controller-manager-amd64:v1.10.3
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/kube-controller-manager-amd64@sha256:7dd9bda76d35971701a879132247fd25b91fbb9df42eb9c69ff9509e9ea6b0c0
+k8s.gcr.io/kube-scheduler-amd64:v1.10.3=registry.cn-hangzhou.aliyuncs.com/google_containers/kube-scheduler-amd64:v1.10.3
+v1.10.3: Pulling from google_containers/kube-scheduler-amd64
+032c9e83eacf: Already exists
+70ade0f3cd17: Pull complete
+Digest: sha256:9169d3ec1d8afad74bd9b75e6165094191fef52b47767e7879da5044972464d8
+Status: Downloaded newer image for registry.cn-hangzhou.aliyuncs.com/google_containers/kube-scheduler-amd64:v1.10.3
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/kube-scheduler-amd64:v1.10.3
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/kube-scheduler-amd64@sha256:9169d3ec1d8afad74bd9b75e6165094191fef52b47767e7879da5044972464d8
+k8s.gcr.io/kube-proxy-amd64:v1.10.3=registry.cn-hangzhou.aliyuncs.com/google_containers/kube-proxy-amd64:v1.10.3
+v1.10.3: Pulling from google_containers/kube-proxy-amd64
+e22465b204dc: Pull complete
+7e16ccc2c5be: Pull complete
+a8cafb53097b: Pull complete
+Digest: sha256:27648ef94bebda5414d2bcb3fb77261420f8a4dcc0a9a0b9c83a96fae6e6d367
+Status: Downloaded newer image for registry.cn-hangzhou.aliyuncs.com/google_containers/kube-proxy-amd64:v1.10.3
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/kube-proxy-amd64:v1.10.3
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/kube-proxy-amd64@sha256:27648ef94bebda5414d2bcb3fb77261420f8a4dcc0a9a0b9c83a96fae6e6d367
+k8s.gcr.io/kube-apiserver-amd64:v1.10.3=registry.cn-hangzhou.aliyuncs.com/google_containers/kube-apiserver-amd64:v1.10.3
+v1.10.3: Pulling from google_containers/kube-apiserver-amd64
+032c9e83eacf: Already exists
+6957897068dc: Pull complete
+Digest: sha256:93d43868b5fdae9d5f6839b483562e8d4522293685636b309a25c0fbfad7e8cd
+Status: Downloaded newer image for registry.cn-hangzhou.aliyuncs.com/google_containers/kube-apiserver-amd64:v1.10.3
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/kube-apiserver-amd64:v1.10.3
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/kube-apiserver-amd64@sha256:93d43868b5fdae9d5f6839b483562e8d4522293685636b309a25c0fbfad7e8cd
+k8s.gcr.io/etcd-amd64:3.1.12=registry.cn-hangzhou.aliyuncs.com/google_containers/etcd-amd64:3.1.12
+3.1.12: Pulling from google_containers/etcd-amd64
+17ab9c1ae71e: Pull complete
+234f38785762: Pull complete
+a12f76be3e63: Pull complete
+Digest: sha256:a873afd0244c0029295899e3ab7ab7f474d097c42679a6d80c37f4017bc65598
+Status: Downloaded newer image for registry.cn-hangzhou.aliyuncs.com/google_containers/etcd-amd64:3.1.12
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/etcd-amd64:3.1.12
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/etcd-amd64@sha256:a873afd0244c0029295899e3ab7ab7f474d097c42679a6d80c37f4017bc65598
+k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.8=registry.cn-hangzhou.aliyuncs.com/google_containers/k8s-dns-sidecar-amd64:1.14.8
+1.14.8: Pulling from google_containers/k8s-dns-sidecar-amd64
+fcff032aa481: Pull complete
+32f866d07026: Pull complete
+Digest: sha256:8b88b6489862d7fce6ec004b865ec4019e94e688ed7b4be50d7f2191587a4547
+Status: Downloaded newer image for registry.cn-hangzhou.aliyuncs.com/google_containers/k8s-dns-sidecar-amd64:1.14.8
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/k8s-dns-sidecar-amd64:1.14.8
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/k8s-dns-sidecar-amd64@sha256:8b88b6489862d7fce6ec004b865ec4019e94e688ed7b4be50d7f2191587a4547
+k8s.gcr.io/k8s-dns-kube-dns-amd64:1.14.8=registry.cn-hangzhou.aliyuncs.com/google_containers/k8s-dns-kube-dns-amd64:1.14.8
+1.14.8: Pulling from google_containers/k8s-dns-kube-dns-amd64
+fcff032aa481: Already exists
+52289fe1eac2: Pull complete
+Digest: sha256:30a881d597e3f234e5f4264b7bf45ca3c7eb120a789c911f2c5ad9f86263322c
+Status: Downloaded newer image for registry.cn-hangzhou.aliyuncs.com/google_containers/k8s-dns-kube-dns-amd64:1.14.8
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/k8s-dns-kube-dns-amd64:1.14.8
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/k8s-dns-kube-dns-amd64@sha256:30a881d597e3f234e5f4264b7bf45ca3c7eb120a789c911f2c5ad9f86263322c
+k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.14.8=registry.cn-hangzhou.aliyuncs.com/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.8
+1.14.8: Pulling from google_containers/k8s-dns-dnsmasq-nanny-amd64
+935c89b81420: Pull complete
+a7b547e960f0: Pull complete
+643ab861079c: Pull complete
+954e9ec699a2: Pull complete
+0acbc5bb3ce1: Pull complete
+Digest: sha256:195d7a05078d84c9b796d0db268e8ef45401ac0ed8aa7c275dd0613d301d5ac0
+Status: Downloaded newer image for registry.cn-hangzhou.aliyuncs.com/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.8
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/k8s-dns-dnsmasq-nanny-amd64:1.14.8
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/k8s-dns-dnsmasq-nanny-amd64@sha256:195d7a05078d84c9b796d0db268e8ef45401ac0ed8aa7c275dd0613d301d5ac0
+k8s.gcr.io/kubernetes-dashboard-amd64:v1.10.0=registry.cn-hangzhou.aliyuncs.com/google_containers/kubernetes-dashboard-amd64:v1.10.0
+v1.10.0: Pulling from google_containers/kubernetes-dashboard-amd64
+833563f653b3: Pull complete
+Digest: sha256:1d2e1229a918f4bc38b5a3f9f5f11302b3e71f8397b492afac7f273a0008776a
+Status: Downloaded newer image for registry.cn-hangzhou.aliyuncs.com/google_containers/kubernetes-dashboard-amd64:v1.10.0
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/kubernetes-dashboard-amd64:v1.10.0
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/kubernetes-dashboard-amd64@sha256:1d2e1229a918f4bc38b5a3f9f5f11302b3e71f8397b492afac7f273a0008776a
+quay.io/coreos/hyperkube:v1.7.6_coreos.0=registry.cn-hangzhou.aliyuncs.com/coreos_containers/hyperkube:v1.7.6_coreos.0
+v1.7.6_coreos.0: Pulling from coreos_containers/hyperkube
+aa18ad1a0d33: Pull complete
+824a6a693fa2: Pull complete
+e506348552b3: Pull complete
+532bc23752fc: Pull complete
+1790c79c447f: Pull complete
+2cbd4a211f72: Pull complete
+Digest: sha256:0e6a84e6a4e17fcc311548eca35ee024827a4da1d44d3238170b15518db2d232
+Status: Downloaded newer image for registry.cn-hangzhou.aliyuncs.com/coreos_containers/hyperkube:v1.7.6_coreos.0
+Untagged: registry.cn-hangzhou.aliyuncs.com/coreos_containers/hyperkube:v1.7.6_coreos.0
+Untagged: registry.cn-hangzhou.aliyuncs.com/coreos_containers/hyperkube@sha256:0e6a84e6a4e17fcc311548eca35ee024827a4da1d44d3238170b15518db2d232
+quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.21.0=registry.cn-hangzhou.aliyuncs.com/google_containers/nginx-ingress-controller:0.21.0
+0.21.0: Pulling from google_containers/nginx-ingress-controller
+5024a93a5754: Pull complete
+e70292264e47: Pull complete
+be4ec9828bb3: Pull complete
+26ae8f47b247: Pull complete
+277954520d56: Pull complete
+9a313a2e0c25: Pull complete
+934cf96b97f2: Pull complete
+a07dba3e8ade: Pull complete
+97e025fbb48d: Pull complete
+11e868bba3c8: Pull complete
+e949ecea995c: Pull complete
+6fa5862d43bd: Pull complete
+Digest: sha256:a944178876522b97abc7206cb3b2231f4893dc05ffd0e95bd65ea5aeabcc7060
+Status: Downloaded newer image for registry.cn-hangzhou.aliyuncs.com/google_containers/nginx-ingress-controller:0.21.0
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/nginx-ingress-controller:0.21.0
+Untagged: registry.cn-hangzhou.aliyuncs.com/google_containers/nginx-ingress-controller@sha256:a944178876522b97abc7206cb3b2231f4893dc05ffd0e95bd65ea5aeabcc7060
+
+可以输入docker images 查看pull的images
+PS C:\k8s\k8s-for-docker-desktop> docker images
+REPOSITORY                                                       TAG                 IMAGE ID            CREATED             SIZE
+quay.io/kubernetes-ingress-controller/nginx-ingress-controller   0.21.0              01bd760f276c        2 weeks ago         568MB
+docker4w/nsenter-dockerd                                         latest              2f1c802f322f        2 months ago        187kB
+k8s.gcr.io/kubernetes-dashboard-amd64                            v1.10.0             0dab2435c100        3 months ago        122MB
+k8s.gcr.io/kube-proxy-amd64                                      v1.10.3             4261d315109d        6 months ago        97.1MB
+k8s.gcr.io/kube-apiserver-amd64                                  v1.10.3             e03746fe22c3        6 months ago        225MB
+k8s.gcr.io/kube-scheduler-amd64                                  v1.10.3             353b8f1d102e        6 months ago        50.4MB
+k8s.gcr.io/kube-controller-manager-amd64                         v1.10.3             40c8d10b2d11        6 months ago        148MB
+microsoft/aspnetcore-build                                       latest              2aeaf8ba976a        7 months ago        1.99GB
+microsoft/aspnetcore                                             latest              b8f4ecb4ec0c        7 months ago        345MB
+gitlab/gitlab-ce                                                 latest              e420c3fac3e3        7 months ago        1.39GB
+redis                                                            latest              bfcb1f6df2db        7 months ago        107MB
+mongo                                                            latest              14c497d5c758        7 months ago        366MB
+mysql/mysql-server                                               5.7                 3cc9613ef3ba        7 months ago        244MB
+k8s.gcr.io/etcd-amd64                                            3.1.12              52920ad46f5b        9 months ago        193MB
+registry                                                         latest              d1fd7d86a825        11 months ago       33.3MB
+localhost:5000/registry                                          local               d1fd7d86a825        11 months ago       33.3MB
+k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64                           1.14.8              c2ce1ffb51ed        11 months ago       41MB
+k8s.gcr.io/k8s-dns-sidecar-amd64                                 1.14.8              6f7f2dc7fab5        11 months ago       42.2MB
+k8s.gcr.io/k8s-dns-kube-dns-amd64                                1.14.8              80cc5ea4b547        11 months ago       50.5MB
+k8s.gcr.io/pause-amd64                                           3.1                 da86e6ba6ca1        11 months ago       742kB
+<none>                                                           <none>              cae870735e91        13 months ago       187kB
+konradkleine/docker-registry-frontend                            v2                  60d4b91e68fa        14 months ago       266MB
+quay.io/coreos/hyperkube                                         v1.7.6_coreos.0     2faf6f7a322f        15 months ago       699MB
+PS C:\k8s\k8s-for-docker-desktop>
+
+然后在docker settings  enalbe kubernetes
+它会自动帮我们安装好k8s集群
+
+就是安装好之后呢， 我们需要安装这个叫kubectl的东西，就是我们在上节课给大家讲的 这个地方有下载地址，下载下来之后呢，我们需要把它加到本地的paths中去，当你在cmd中输入kubectl，说明你已经把kubectl加到path中成功了，下载下来，它是一个文件， 大家如果是在mac上安装的话，可以用这个macports去安装，如果是window上，我建议大家用chocolatey，这个玩意就是类似于在linux上的yget以及yaml安装，在windows上可以很方便的安装这种工具， 我们只需要下载这个chocolatey， 然后通过choco install kubernetes-cli这个语句，就可以安装好，并且它的环境变量里会帮我们自动设置好， 它是安装到用户目录下 账号名 下的 .kube文件夹下，那它的安装呢，也是非常的简单  powershell中输入，并且管理员身份启动  Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+然后安装kubectl
+choco install kubernetes-cli
+
+PS C:\WINDOWS\system32> Set-ExecutionPolicy Bypass -Scope Process -Force; iex ((New-Object System.Net.WebClient).Downloa
+dString('https://chocolatey.org/install.ps1'))
+Getting latest version of the Chocolatey package for download.
+Getting Chocolatey from https://chocolatey.org/api/v2/package/chocolatey/0.10.11.
+Extracting C:\Users\DowmUp\AppData\Local\Temp\chocolatey\chocInstall\chocolatey.zip to C:\Users\DowmUp\AppData\Local\Temp\chocolatey\chocInstall...
+Installing chocolatey on this machine
+Creating ChocolateyInstall as an environment variable (targeting 'Machine')
+  Setting ChocolateyInstall to 'C:\ProgramData\chocolatey'
+WARNING: It's very likely you will need to close and reopen your shell
+  before you can use choco.
+Restricting write permissions to Administrators
+We are setting up the Chocolatey package repository.
+The packages themselves go to 'C:\ProgramData\chocolatey\lib'
+  (i.e. C:\ProgramData\chocolatey\lib\yourPackageName).
+A shim file for the command line goes to 'C:\ProgramData\chocolatey\bin'
+  and points to an executable in 'C:\ProgramData\chocolatey\lib\yourPackageName'.
+
+Creating Chocolatey folders if they do not already exist.
+
+WARNING: You can safely ignore errors related to missing log files when
+  upgrading from a version of Chocolatey less than 0.9.9.
+  'Batch file could not be found' is also safe to ignore.
+  'The system cannot find the file specified' - also safe.
+chocolatey.nupkg file not installed in lib.
+ Attempting to locate it from bootstrapper.
+PATH environment variable does not have C:\ProgramData\chocolatey\bin in it. Adding...
+WARNING: Not setting tab completion: Profile file does not exist at
+'C:\Users\DowmUp\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1'.
+Chocolatey (choco.exe) is now ready.
+You can call choco from anywhere, command line or powershell by typing choco.
+Run choco /? for a list of functions.
+You may need to shut down and restart powershell and/or consoles
+ first prior to using choco.
+Ensuring chocolatey commands are on the path
+Ensuring chocolatey.nupkg is in the lib folder
+PS C:\WINDOWS\system32> choco install kubernetes-cli
+Chocolatey v0.10.11
+Installing the following packages:
+kubernetes-cli
+By installing you accept licenses for the packages.
+Progress: Downloading kubernetes-cli 1.13.0... 100%
+
+kubernetes-cli v1.13.0 [Approved]
+kubernetes-cli package files install completed. Performing other installation steps.
+The package kubernetes-cli wants to run 'chocolateyInstall.ps1'.
+Note: If you don't run this script, the installation will fail.
+Note: To confirm automatically next time, use '-y' or consider:
+choco feature enable -n allowGlobalConfirmation
+Do you want to run the script?([Y]es/[N]o/[P]rint): y
+
+Extracting 64-bit C:\ProgramData\chocolatey\lib\kubernetes-cli\tools\kubernetes-client-windows-amd64.tar.gz to C:\ProgramData\chocolatey\lib\kubernetes-cli\tools...
+C:\ProgramData\chocolatey\lib\kubernetes-cli\tools
+Extracting 64-bit C:\ProgramData\chocolatey\lib\kubernetes-cli\tools\kubernetes-client-windows-amd64.tar to C:\ProgramData\chocolatey\lib\kubernetes-cli\tools...
+C:\ProgramData\chocolatey\lib\kubernetes-cli\tools
+ ShimGen has successfully created a shim for kubectl.exe
+ The install of kubernetes-cli was successful.
+  Software installed to 'C:\ProgramData\chocolatey\lib\kubernetes-cli\tools'
+
+Chocolatey installed 1/1 packages.
+ See the log for details (C:\ProgramData\chocolatey\logs\chocolatey.log).
+PS C:\WINDOWS\system32>
+
+然后输入kubectl，成功
+PS C:\WINDOWS\system32> kubectl
+kubectl controls the Kubernetes cluster manager.
+
+Find more information at: https://kubernetes.io/docs/reference/kubectl/overview/
+
+Basic Commands (Beginner):
+  create         Create a resource from a file or from stdin.
+  expose         Take a replication controller, service, deployment or pod and expose it as a new Kubernetes Service
+  run            Run a particular image on the cluster
+  set            Set specific features on objects
+  run-container  Run a particular image on the cluster. This command is deprecated, use "run" instead
+
+Basic Commands (Intermediate):
+  get            Display one or many resources
+  explain        Documentation of resources
+  edit           Edit a resource on the server
+  delete         Delete resources by filenames, stdin, resources and names, or by resources and label selector
+
+Deploy Commands:
+  rollout        Manage the rollout of a resource
+  rolling-update Perform a rolling update of the given ReplicationController
+  scale          Set a new size for a Deployment, ReplicaSet, Replication Controller, or Job
+  autoscale      Auto-scale a Deployment, ReplicaSet, or ReplicationController
+
+Cluster Management Commands:
+  certificate    Modify certificate resources.
+  cluster-info   Display cluster info
+  top            Display Resource (CPU/Memory/Storage) usage.
+  cordon         Mark node as unschedulable
+  uncordon       Mark node as schedulable
+  drain          Drain node in preparation for maintenance
+  taint          Update the taints on one or more nodes
+
+Troubleshooting and Debugging Commands:
+  describe       Show details of a specific resource or group of resources
+  logs           Print the logs for a container in a pod
+  attach         Attach to a running container
+  exec           Execute a command in a container
+  port-forward   Forward one or more local ports to a pod
+  proxy          Run a proxy to the Kubernetes API server
+  cp             Copy files and directories to and from containers.
+  auth           Inspect authorization
+
+Advanced Commands:
+  apply          Apply a configuration to a resource by filename or stdin
+  patch          Update field(s) of a resource using strategic merge patch
+  replace        Replace a resource by filename or stdin
+  convert        Convert config files between different API versions
+
+Settings Commands:
+  label          Update the labels on a resource
+  annotate       Update the annotations on a resource
+  completion     Output shell completion code for the specified shell (bash or zsh)
+
+Other Commands:
+  api-versions   Print the supported API versions on the server, in the form of "group/version"
+  config         Modify kubeconfig files
+  help           Help about any command
+  plugin         Runs a command-line plugin
+  version        Print the client and server version information
+
+Usage:
+  kubectl [flags] [options]
+
+Use "kubectl <command> --help" for more information about a given command.
+Use "kubectl options" for a list of global command-line options (applies to all commands).
+PS C:\WINDOWS\system32>
+安装cukectl后的配置信息
+apiVersion: v1
+clusters:
+- cluster:
+    insecure-skip-tls-verify: true
+    server: https://localhost:6445
+  name: docker-for-desktop-cluster
+contexts:
+- context:
+    cluster: docker-for-desktop-cluster
+    user: docker-for-desktop
+  name: docker-for-desktop
+current-context: docker-for-desktop
+kind: Config
+preferences: {}
+users:
+- name: docker-for-desktop
+  user:
+    client-certificate-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM5RENDQWR5Z0F3SUJBZ0lJQXI1bVRoSGFMSWN3RFFZSktvWklodmNOQVFFTEJRQXdGVEVUTUJFR0ExVUUKQXhNS2EzVmlaWEp1WlhSbGN6QWVGdzB4T0RFeE1qVXdOalV5TkRaYUZ3MHhPVEV5TVRNd09UTTFNRGRhTURZeApGekFWQmdOVkJBb1REbk41YzNSbGJUcHRZWE4wWlhKek1Sc3dHUVlEVlFRREV4SmtiMk5yWlhJdFptOXlMV1JsCmMydDBiM0F3Z2dFaU1BMEdDU3FHU0liM0RRRUJBUVVBQTRJQkR3QXdnZ0VLQW9JQkFRRGQzczRRR0o4WWdSUEkKNE0xUVFwcERrVnlnbWF6eUMwUzI4Y0hHaEZzblhYOWRHN3VDL09lQjF1RXpHQlppL3JmaHhSblhCeVl5L0lxSwpYNytjcG0wbFkxL1FuWlJVRlRvOHBmS0crdTYrK1ZFY1JIaGxkd2tXZytBR3VvbkszVVk0MkkxT1d4cVFiL1A3CjZMV2RsQ0YzeTVyRTQ0K0N4OFNuQjFkdHhmT3ZoNGxja01oMlFCKzJwNTVhVDdSQ0tjSWtYbXZsN05KMlR6cVEKaDc2NlZxSldIemh1RXhYdGRCWEdGWVAvK3JsVEUzc3JJSW1oZ3RVVG1oSHNwS3BrOWpSMUR3RHVjTDFNOHh1Kwo2NDIvdkxGSDZseEhxZ1Fuait6QjI3YVplblgrUWdieUpOOEdoclZGSDN0VEN1Vm0zdzloMDd0bHdZa1RpUTdQCnd2bUxhU3NWQWdNQkFBR2pKekFsTUE0R0ExVWREd0VCL3dRRUF3SUZvREFUQmdOVkhTVUVEREFLQmdnckJnRUYKQlFjREFqQU5CZ2txaGtpRzl3MEJBUXNGQUFPQ0FRRUFPYmZHdXJpYUgxVW8ySzc0bld1VTVVaCs2dExGWi93ZQpSb2xaV3p3N3JJVmxmaWovMjlhL1VTTE1JWG1hSWt2NVlWSnpoazRSc2V5allzTUpWR0c2NHVLVVo1WWJBWHNsClhKKy9ZMktXeDViM1JzdzFERXd1bmVqajF4SW1pMWx6YzBOUHFJdVlKNDMwdllPUXYzMjhNUFN3MzN3M0cvWGcKYzVUR01zaFFlcXMvMjRqaFQvSnpsRW4rWUd6bUlpcDl6bkZsTGEyM2tJYnR0ZzJRU3U2eG80MFVwMjlnV0IrWQo4dURMZktLQndTVEt5bWlDL2RaaHRESnQvYVZ2Syt3Nm9zRHE4eUo5UlowTU1QOUlhcUowTkhvcTFtZ2FCWEszClNvOVpYN1FxMUxzSUJjSnE4bytTMkhHaHJKZkNncW01ekdlSEIvSjlsU0haTWZRTmdkZTBBUT09Ci0tLS0tRU5EIENFUlRJRklDQVRFLS0tLS0K
+    client-key-data: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFb3dJQkFBS0NBUUVBM2Q3T0VCaWZHSUVUeU9ETlVFS2FRNUZjb0ptczhndEV0dkhCeG9SYkoxMS9YUnU3Cmd2em5nZGJoTXhnV1l2NjM0Y1VaMXdjbU12eUtpbCsvbktadEpXTmYwSjJVVkJVNlBLWHlodnJ1dnZsUkhFUjQKWlhjSkZvUGdCcnFKeXQxR09OaU5UbHNha0cveisraTFuWlFoZDh1YXhPT1Bnc2ZFcHdkWGJjWHpyNGVKWEpESQpka0FmdHFlZVdrKzBRaW5DSkY1cjVlelNkazg2a0llK3VsYWlWaDg0YmhNVjdYUVZ4aFdELy9xNVV4TjdLeUNKCm9ZTFZFNW9SN0tTcVpQWTBkUThBN25DOVRQTWJ2dXVOdjd5eFIrcGNSNm9FSjQvc3dkdTJtWHAxL2tJRzhpVGYKQm9hMVJSOTdVd3JsWnQ4UFlkTzdaY0dKRTRrT3o4TDVpMmtyRlFJREFRQUJBb0lCQVFDbTdhZGovT0pXY1djTgpUL1dwV1RMdmUwS1JvbzI0WGpvSTJzUE1OSERRb1V2ZUphdGkxaHpvVjErQUxiTktNQkx4VG5ZdWpqWnpUZ1orCkxhUGduR2FxSnFaRU13c1NhQlkwNHpZaDBGSW9aVFJkYkRhWlFJSVo2b1ozQ1luNms1anQxQ0Fjdi9hd2pVcW8KVVdHemVXdmswYzlVSzFJaU4yTUJ1RWhUVXdnUkd5V29QL1E1Z01qeDRYZ0paRG1PZWpuQWcrMXJNU2ZMeUtDRgpRbk15K2VyelRrc2dJY2tJTVRhTm15c2ZxenRsd3gzTENYYzl2ZmlXd0JBSkIzamdEbnJGdWpjL1BLRFZLYU5pCnpyb2w0a0c1NUgwSVdac2VCWGx5R0FpYkZib1Ava1ZXeFNlakhDUjRMOEs3RUhiVkpFRHBud29hRE1ZMFVna1MKQmtheFAwT0JBb0dCQU9YNEtycUFCU3I0OCt4U3ZlSDZ3T2xYbGkyeElKTzNTVGFyRVN6T0ljbENsVFZWRytYWQozd3cyU3dWNkoxSTk3eWlJdGVJZTRQaFQ4ZmxGdHNxbVRiS2k3NlltbTlyTUVpTVo3elErZGEzSEVzdXVUSG9VCkI3aVpvdTNpL1doSVl0bktqVE1LY0lhMmZXVGNvSFFaeXlQM0lEckhZb0pyNHNPRTYyOWhFcVA5QW9HQkFQYjcKODIvS0lzVWcxVVF5VkJDR2tIMmQ0WEhSWHU0L0xWT001VHk2TVZRSXE5bXlDWm83c2tOODkzNVNOTjU0SmR5awp2eFUxT2M0djNCQU1kck5lQW8rTUJ2MUhNdVlHUy9ELzc2S1B4VjFjOXhocDVldjUwYVBlQ0d4bi93MDVUcHVCCjRGTVQrR2RRRkpyY2FLV1FlUXZZaFFGdTdHakdkNW9LeHlFMWxYTDVBb0dBUjgvTC8vc1VJZ3dsbDJsckZCTUsKaEpNdU9VeHpnTTBlVnF6cXF4UWZac3FjNzArSmE2ZmlWdHpwWm1kenVmSFBLZGd1KzlKcXJBRUNzYlY4VkNIRQpaNEVMMXRWOW04Qlg5WkFXcXpqSjVKOGlsbW55UmJqVmhHYXRneDE3eGtHOFpJZ2t1WWlNQlBVZGlRNkFLR0VaCmx6eUhXdk9DSm5uc0VPUUQ1UDdxSkQwQ2dZQkVsc09NRC82SDhBNUoyaEF1WnJCSnNrYWhiUnVIM2xPZ0dFaXgKREtRV1NqSXZTcG9RRXZQMmVnWGhOc01uNVFYZXVJRzRTZ2U3a3Q3eU5nUGczQUtxQ3FFR1JYZUZHY3FOS3daSgpodE93a2RpdEZ2dWJCTTJMVEdYYWRTY0hiUnEvWk5uL09GU0xuRm1jaUFrbnNXOXNNcno5SU9qV1VBZDI1L2RVCjZhU1BRUUtCZ0FmbWQzOGVzNUtPMDQyQ1BZdDAraDBJb2lFSUQ1UHRjNDFoYVNrM2pCNXB0NmxDZTZXUko3SUwKdUlHOGMzV2tFR29sQ0ViZFQwUmg4Z0gzWUNBbjk5L1ZuOTdRa1dvb0FNMnNsTVcxSWQ0TVZSUUNNSFp2bUxobApLbUp5dWpzK3N3ZkxKbDI2Rk9xc0t0VFhldlRIK3MxNmVhWnVTVXJ5dGQ3cmJ1VUVvazVqCi0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0tCg==
+
+
+如果你此时本地k8s集群安装好了之后，你就可以用kubectl操作k8s集群了
+如kubectl get nodes，kuberctl get services
+
+PS C:\k8s\k8s-for-docker-desktop> kubectl get nodes
+NAME                 STATUS    ROLES     AGE       VERSION
+docker-for-desktop   Ready     master    15m       v1.10.3
+PS C:\k8s\k8s-for-docker-desktop> kubectl get services
+NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   15m
+PS C:\k8s\k8s-for-docker-desktop>
+
+
+
+
+文档
+文档地址： https://yq.aliyun.com/articles/508460?spm=a2c4e.11153940.blogcont221687.18.7dd57733hFolMo 
+
+Docker社区版中Kubernetes开发
+
+下载docker  ce 18.06
+https://store.docker.com/editions/community/docker-ce-desktop-windows
+
+安装 chocolately  https://chocolatey.org/install 
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "iex ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+
+choco install kubernetes-cli
+kubectl version
+
+
+在 Docker -> Preferences ... 中，配置 registry mirror 为?https://registry.docker-cn.com
+
+git clone https://github.com/AliyunContainerService/k8s-for-docker-desktop
+cd k8s-for-docker-desktop
+
+admin启动power shell\
+power shell 这里如果 遇取权限的问题
+
+
+使用kubectl 连接本地集群
+部署dashboard 
+kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+
