@@ -1,3 +1,6 @@
+问题3：  clone_url = "http://localhost:8090/"=》一直都没有找到错误的关键，在其他的地方持续，重复的瞎徘徊，要么是信息错误，要么是网络问题=》对自己不清楚的情况，往往举手无措，不知道怎么办？也进不去思考分析的步骤，所以多了解=》文档啊，文档最清楚，可以让我们了解更多
+
+
 大家好，这节课继续给大家gitlab的CI，CI的意思就是持续集成，这个会比较好玩点，大家都去尝试下，
 gitlab CI简单来讲，是有几个核心的部分组成，其中第一个 比较重要的一块就是即使gitlab server，它里面会包含所有的一些 管理我们一些状态 触发的一些机制都是由gitlab server来实现的
 下面我们就会跑好几runner，runner呢，一台机器上可以跑多台runner，也可以跑一个，都可以， 这runner相当于说 它是一个类似于 有一个 像发布订阅的东西，它可以去触发，当你做到什么事情的时候去触发这个runner，由gitlab push到runner 然后这个runner就会被执行， 这个runner是需要我们写代码的， 我们可以用shell来写，然后呢它里面同时也支持docker，docker的发布 ssh，kubemetes等，还有其他的 大家可以在gitlab官网上可以找到，我们今天呢 
@@ -23,6 +26,20 @@ false   是否锁定当前项目
 此时注册成功，在gitlab网站上，在runners列表上可以找到注册的runner
 此时我们的runner就可以工作了
 下节可以我们再来讲怎么让runner工作， 去部署docker image
+
+
+问题3：  clone_url = "http://localhost:8090/"=》一直都没有找到错误的关键，在其他的地方持续，重复的瞎徘徊，要么是信息错误，要么是网络问题=》对自己不清楚的情况，往往举手无措，不知道怎么办？也进不去思考分析的步骤，所以多了解=》文档啊，文档最清楚，可以让我们了解更多
+runner客户端配置文档
+concurrent = 1
+check_interval = 0
+[[runners]]
+  name = "local-win"
+  url = "http://localhost:8090/"
+  clone_url = "http://localhost:8090/"
+  token = "2e749f0348f6afa8758da22a8cb857"
+  executor = "shell"
+  [runners.cache]
+
 
 
 

@@ -12,6 +12,13 @@
 就忍受错误，没其他办法，fuck， 我不用资料卷好不。
 
 
+重大问题，
+1.因为widows下的资料卷有问题，所以在docker-compose的时候没有办法，给jesee用户添加全权限，这样外部就无法通过jesee访问mysql，所以要在docker-compose up 后，给mysql手工添加权限
+2.yaml语法中，最好不要出现注释，或者中文，会出错
+3.windows下执行命令，有时就是莫名出错，此时多试几次
+
+
+
 上节用docker compose构建了两个镜像之后（只是构建了镜像 ，还没有运行容器呢，相当于执行了dockerfile文件，说明啥问题？脉络不清晰），这节我们用compose ，我么先看下数据库 
 此时运行下docker ps  没有容器运行
 docker-compose down  停止并移除容器，并移除网络

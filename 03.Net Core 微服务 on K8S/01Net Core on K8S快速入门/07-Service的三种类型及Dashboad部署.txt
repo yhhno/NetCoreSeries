@@ -1,0 +1,158 @@
+此时发现一个问题，就是不太享受这个学习过程。
+识别出自己之前的认识和腾飞的讲解有什么不同？ 找出他是如何得到这样的认识的？=》因为自己的认识和认识的方式有问题。
+自己看到东西，基本上就是几个文字而已，顶多照着demo做一遍vs大白话它是什么?能干什么？ 内部机制流程是什么？
+为什么听了他讲的后就很清楚，很明白，很容易理解呢？=》大白话，深入浅出，整体脉络都有，
+第一次尝试不能慌，不能手足无措
+
+0.乐趣所在，认真 等等积极东西
+1.不心生恐惧     等等负面东西
+2.罗列翻译，翻译翻译就是知道它的过程
+3.对比，条理，概况，学习框架   等等技巧
+4.做事总是不完整，缺乏了过程。=》积累就是过程的积累，是不可能偷懒的，一个名词就是一个过程，没有积累，你看到名词就是几个汉字，不知道其中的内容
+5:要自己能分析出这个过程 如：微服务带来的好处=》这是一个怎样的过程呢？要自己能分析出这个过程
+6.本质是什么？是开发过程？ 是单体时的开发过程和微服务时的开发过程，以及有了k8s之后，微服务的开发过程。
+7.总结出一个学习方法，
+8.对心态有了新的认识=》例如不要收视频时间等因素的干扰，心无旁骛的去干该干的事情
+问题3：  clone_url = "http://localhost:8090/"=》一直都没有找到错误的关键，在其他的地方持续，重复的瞎徘徊，要么是信息错误，要么是网络问题=》对自己不清楚的情况，往往举手无措，不知道怎么办？也进不去思考分析的步骤，所以多了解=》文档啊，文档最清楚，可以让我们了解更多
+问题3：如果我们直接看到这句话开启api server的本地监听端口，照做会有什么问题呢？=》我们不知道它是通过开启代理，来访问集群内部的服务 这个本质的。
+问题0：翻译，能否自己独立看文档后翻译呢？
+
+
+问题3：  clone_url = "http://localhost:8090/"=》一直都没有找到错误的关键，在其他的地方持续，重复的瞎徘徊，要么是信息错误，要么是网络问题=》对自己不清楚的情况，往往举手无措，不知道怎么办？也进不去思考分析的步骤，所以多了解=》文档啊，文档最清楚，可以让我们了解更多
+问题3：如果我们直接看到这句话开启api server的本地监听端口，照做会有什么问题呢？=》我们不知道它是通过开启代理，来访问集群内部的服务 这个本质的。
+问题0：翻译，能否自己独立看文档后翻译呢？
+问题1：了解，以看文档方式了解就是翻译文档。以什么样的心态呢，肯定不会是惧怕，
+问题2：复制粘贴出现了问题后，心态是怎样的呢？
+问题4：clusterip比较麻烦，那有没有不麻烦的呢？
+问题5：clusterip用了之后，那试试其他service类型。
+问题6：https与证书关系
+
+
+问题1：做的事情，学习的东西等，要做到心中有数？=》那就是要有个概况，=》这也是个过程
+1.k8s是什么？
+2.它能够干什么呢？ 为什么如此的重要？
+3.我们该如何来学习它？
+
+但是，在这里呢，我们先简单把它分为6个步骤
+1.先了解全貌和整体
+2.对整体结构进入拆分，梳理脉络
+3.马上开始行动
+4.在行动的过程中逐步加深，每一阶段有阶段性目标
+5.及时进行回顾与复盘，与理论相结合
+6.输出
+
+这个是我给大家推荐的一个k8s的这个学习路径
+1.了解基本概念及核心组件
+2.使用本地单节点集群来学习k8s
+3.用kubectl与本地集群建立连接
+4.部署服务到k8s集群
+5.对k8s服务进行扩容，更新
+6.进一步学习k8s资源（pod，deployment，service，statefulset，ingress。。。）
+7.设计微服务
+8.搭建k8s集群或者使用云服务商的k8s服务
+9.添加持续集成，日志搜集，监控和指标度量。跟踪
+
+我们会按照这样的步骤 
+1.k8s集群基本概念
+2.本地搭建k8s单节点集群
+3.pod&service&deployment  
+4.service的三种类型  =》此步骤
+5.yaml部署文件语法初体验
+6.初始化一个。net core api并push到docker hub
+7.把net coreapi 部署到k8s
+8.k8s集群高级概念
+
+
+大家好。我是jesee腾飞，欢迎大家继续跟我一起来学k8s的快速入门课程，这是本系列的第七小节，
+这小节我们来看下，service，
+上节可以我们讲到了k8s的核心三大组件，pod和deployment，和service，
+这节课，我们来讲下，这个service的三种类型，那它有那三种类型呢
+1.clusterIP
+2.NodePort
+3.Loadbalaner
+问题0：翻译，能否自己独立看文档后翻译呢？
+http://dockone.io/article/4884
+clusterIp这个是集群ip
+第二个是Nodeport
+第三个是loadbalancer
+大家从字面意思上讲呢，比较好理解了，
+问题1：了解，以看文档方式了解就是翻译文档。以什么样的心态呢，肯定不会是惧怕，
+第一个就是一个集群ip，第二个是一个nodeport，那我们来看下，这三种是什么含义，这有一片文章，就是大家可以来进行参看，讲的比较好，
+第一个就是说 我们讲的是clusterip，这个clusterip它是一个集群内部的服务，也就是说你通过集群外部是没有办法访问的，大家也可以看到这个地方它的定义，我们上节课稍微讲了下这个yaml的定义，在service定义这个地方，它会有个type：clusterip，一旦写好之后，你通过集群外部，没有办法访问，大家可以看下文档，你需要启动kubernetes proxy代理之后呢，才可以访问，才可以通过这种方式（文档中提到的）访问，那么所有serivce在默认创建的时候，都是使用clusterip这种方式，默认你没有加type的话，它就是clusterip，你通过外部没有办法直接访问，只能通过kubernetes proxy方式才可以访问，
+那第二种方式呢，就是我们的nodeport，nodeport它会暴露出一个端口，暴露端口之后呢，你可以通过所有的node节点的ip来访问内部的服务， 假如说这个是我们的服务（文档中的案例），大家注意到 你看 你这边可以访问任何节点的这个 节点ip+端口都可以访问到这个服务，那怕你这个pod只是部署到其中某一台  只是在某一个vm上，在node上运行，你依旧是可以通过任何其他集群当中任何一个nodeportip来访问， 因为它本身在这个地方会，做一个代理的转发，会帮你找到那个nodeport，所以大家看到，nodeport的定义在service里只需要把它type：nodeport，同时呢，需要指定一个端口， nodeport：30036，就可以了，那这一种是我们在开发环境上，经常会用到的，因为我们不想每次都用代理方式，那么麻烦，直接使用端口号去访问我们的service， 就可以了，
+那么第三种方式呢，是loadbalancer，这个呢，一般是在我们的云服务商上，你需要有一个负载均衡器，来做一个统一的，它会帮你把这个loadbalancer对应上，有一个外部的ip，直接跟内部服务挂起来，这种是一个k8s来自动，要去云服务商或者你整个集群要去提供的，你的负载均衡器要在k8s上做一些集成，之后呢， 我们一般 在这个系列中不会涉及到这个loadbalance这方式，一般我们用到最多的就是nodeport和clusterip，
+那在这节课当中呢，我们在之前有一个叫做 k8s安装环境的时候，有个dashboard我们没有安装，那这个dashboard 可以看到它的service本身这里是没有任何定义的，就想我们刚刚讲的，它就把它定义为一个叫做clusterip的方式，我们通过nodeport没有办法直接访问，我们这个时候呢，我们看这个地方，我们来运行下这个脚本，我们之前看到的就是这个脚本
+kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+它默认用的是clusterip类型，所以我们访问它，必须用代理的这种方式，
+我们先来走一下，用代理的方式来访问它
+复制，在powershell粘贴运行，就可以了
+问题2：复制粘贴出现了问题后，心态是怎样的呢？
+PS C:\Users\DowmUp> kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommend
+ed/kubernetes-dashboard.yaml
+secret "kubernetes-dashboard-certs" created
+serviceaccount "kubernetes-dashboard" created
+role.rbac.authorization.k8s.io "kubernetes-dashboard-minimal" created
+rolebinding.rbac.authorization.k8s.io "kubernetes-dashboard-minimal" created
+deployment.apps "kubernetes-dashboard" created
+service "kubernetes-dashboard" created
+PS C:\Users\DowmUp>
+那全部创建好之后呢，
+我们来看下它的这个脚本，是会有一个namespace的一个概念，
+这个namespace也是kubernetes一个资源， 
+任何的资源呢 ，我们就可以通过kubectl get 资源名 来查看我们本地有多少个namespace，我们看到这个地方是 namespace：kube-system 它是把它部署到了kube-system里面，
+我们可以来看下，kubectl get deploy -n kube-system 用来查看这个命名空间下的这个deployment  叫做kubernetes—dashboard  
+有了他之后呢，我们还可以用kubectl get service -n kube-system 来看下我们这个命名空间下的这个service  大家可以看到这里有个clusterip列名  它有个10.98.210.85的一个服务在这里，
+我们现在怎么可以来访问我们的这个dashboard额，就是使用我们刚刚讲的 用代理的这种方式，在文档中，它教我们如何去开启代理，我们去看下
+问题3：如果我们直接看到这句话开启api server的本地监听端口，照做会有什么问题呢？=》我们不知道它是通过开启代理，来访问集群内部的服务 这个本质的。
+kubectl proxy 就可以了
+然后它需要通过一个连接来访问我们的服务的。
+http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/overview?namespace=default
+http://localhost:8001/api/v1/namespaces/kube-system/services 这些是不变的，但是你要告诉它，你想访问的是那个服务，https:kubernetes-dashboard:/proxy
+
+PS C:\Users\DowmUp> kubectl get namespace
+NAME          STATUS    AGE
+default       Active    10m
+docker        Active    9m
+kube-public   Active    10m
+kube-system   Active    10m
+PS C:\Users\DowmUp> kubectl get deploy -n kube-system
+NAME                   DESIRED   CURRENT   UP-TO-DATE   AVAILABLE   AGE
+kube-dns               1         1         1            1           11m
+kubernetes-dashboard   1         1         1            1           2m
+PS C:\Users\DowmUp> kubectl get service -n kube-system
+NAME                   TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)         AGE
+kube-dns               ClusterIP   10.96.0.10      <none>        53/UDP,53/TCP   11m
+kubernetes-dashboard   ClusterIP   10.99.118.108   <none>        443/TCP         2m
+PS C:\Users\DowmUp> kubectl proxy
+Starting to serve on 127.0.0.1:8001
+
+问题4：clusterip比较麻烦，那有没有不麻烦的呢？
+问题5：clusterip用了之后，那试试其他service类型。
+这种方式是非常麻烦的。
+那我们能不能改成nodeport方式访问呢。
+我们来试下
+首先我们需要把那个脚本保存起来，新建kubernetes-dashboard.yaml 文件，把脚本复制进去，复制进来，同样还是它，对不对，所有的内容其实我们都不会变，但是我们需要改唯一的一个地方，
+在serivce中的spec节点，添加type：NodePort，ports节点加一个nodePort：8005
+有了这个脚本后，我们一会要重新执行它，
+我们首先需要把我们原有的给它删掉， 我们把这个deployment删除掉，
+kubectl delete deploy kubernetes-dashboard -n kube-system
+同时我们还需要删除那个service
+kubectl delecte svc kubernetes-dashboard -n kube-system  后面加命名空间
+删除之后呢，我们在试着启动代理
+kubectl proxy
+然后访问下 dashboard web站点  那肯定是不能访问了嘛
+
+这个时候，接下来，我们该怎么办呢?
+kubectl create -f kubernetes-dashboard.yaml  本地路径文件， -f 代表我们要给它传一个配置文件
+失败，端口要在30000以上，修改下，
+再次启动，
+发现有很多的错误，都是一些东西，已经存在，但是没有报错
+我们查看下服务
+kubectl get svc -n kube-system
+发现kubernetes-dashboard 的type已经是 NodePort类型了，虽然的它的clusterip也有值，我们看到它有一个30065的端口， port就是我们设置的30065，
+我们这个时候呢，只需要访问127.0.0.1:30065，
+问题6：https与证书关系
+好，由于我们这个本地开的这个端口，它是30065，但是kubernetes-dashboard它是一个https，我们现在这个chrome，https证书是错误的，它不让我们去访问，但是这个操作方式是没有问题的，如果我们是https的话，需要给它加一个证书才可以进行访问，
+当然呢，我这边其实我们自己部署了一个helloword的api，默认它是给我们设置了31483的端口，也就是我们的 这个 127.0.0.1:30483/api/values 这个是我们部署的一个本地的端口，它是直接通过nodeport来访问的，
+所以大家知道下，它是怎么修改为nodeport，修改service的类型，就可以了，后面的话，我们还会详细的给大家去讲这个操作过程，  而dashboard的方式呢， 可能大家暂时要通过这个proxy代理的方式来访问了，另mac电脑可以直接访问，如果我发现更好的方式，在告诉大家啊，
+
