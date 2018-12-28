@@ -89,7 +89,7 @@ kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/
 我们先来走一下，用代理的方式来访问它
 复制，在powershell粘贴运行，就可以了
 问题2：复制粘贴出现了问题后，心态是怎样的呢？
-PS C:\Users\DowmUp> kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommend
+PS C:\Users\DowmUp> kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
 ed/kubernetes-dashboard.yaml
 secret "kubernetes-dashboard-certs" created
 serviceaccount "kubernetes-dashboard" created
