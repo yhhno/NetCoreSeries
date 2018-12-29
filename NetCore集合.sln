@@ -350,6 +350,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01Net Core on K8S快速入�
 		03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\12-进阶介绍.txt = 03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\12-进阶介绍.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "K8sDemo", "03.Net Core 微服务 on K8S\01Net Core on K8S快速入门\K8sDemo\K8sDemo.csproj", "{48D595D0-3D12-4B5A-BE1B-D21B97707B1D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -432,6 +434,10 @@ Global
 		{A2B2FFA3-03F2-4EFD-AA55-76F2AAA68081}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2B2FFA3-03F2-4EFD-AA55-76F2AAA68081}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2B2FFA3-03F2-4EFD-AA55-76F2AAA68081}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48D595D0-3D12-4B5A-BE1B-D21B97707B1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48D595D0-3D12-4B5A-BE1B-D21B97707B1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48D595D0-3D12-4B5A-BE1B-D21B97707B1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48D595D0-3D12-4B5A-BE1B-D21B97707B1D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -486,6 +492,7 @@ Global
 		{A2B2FFA3-03F2-4EFD-AA55-76F2AAA68081} = {88678EAB-2873-4424-B588-0579D49FE5F6}
 		{2B4456D4-FFA1-463F-B518-48E21C2B8BA9} = {84447735-6D13-493D-97A3-281CFE5E930A}
 		{C64DA65B-385F-4321-88BD-44BBBA0F3E36} = {2819E9D4-750A-438E-973D-01540FB019A1}
+		{48D595D0-3D12-4B5A-BE1B-D21B97707B1D} = {C64DA65B-385F-4321-88BD-44BBBA0F3E36}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8A31F480-001A-4E05-B2EE-5DCE2F5B36A8}
