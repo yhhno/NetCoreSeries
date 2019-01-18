@@ -281,6 +281,7 @@ You may need to shut down and restart powershell and/or consoles
  first prior to using choco.
 Ensuring chocolatey commands are on the path
 Ensuring chocolatey.nupkg is in the lib folder
+
 PS C:\WINDOWS\system32> choco install kubernetes-cli
 Chocolatey v0.10.11
 Installing the following packages:
