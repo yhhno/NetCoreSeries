@@ -43,10 +43,14 @@ check_interval = 0
 
 
 
-我来试试docker中运行  runner
+我来试试docker中注册  runner
 docker run -d --name gitlab-runner --restart always gitlab/gitlab-runner
 docker exec -it gitlab-runner gitlab-runner register
 失败
+
+
+
+安装gitlab-runner
 
 输入 gitlab-runner install
 输入 gitlab-runner start
